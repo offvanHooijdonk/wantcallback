@@ -7,8 +7,9 @@
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="18" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.READ_CALL_LOG"/>
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
 
     <application
         android:allowBackup="true"
@@ -24,7 +25,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="CallHandlerService" android:process=":callHandler"></service>
+        <activity android:name=".alarms.SetAlarmActivity" >
+        </activity>
+
+        <service
+            android:name="CallHandlerService"
+            android:process=":callHandler" >
+        </service>
     </application>
 
 </manifest>

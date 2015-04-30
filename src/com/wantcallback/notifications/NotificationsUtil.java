@@ -27,7 +27,7 @@ public class NotificationsUtil {
 		int id = NOTIFICATION_MISSED_CALL;
 		NotificationCompat.Builder builder = getCommonCallNBuilder(info.getPhone()).setContentTitle("Missed Call")
 				.addAction(R.drawable.ic_edit, "Change", createReminderIntent(info.getPhone(), tag, id))
-				.addAction(R.drawable.ic_forget, "Forget", null);
+				.addAction(R.drawable.ic_forget, "Forget", createForgetIntent(info.getPhone(), tag, id));
 
 		getNotificationManager().notify(tag, id, builder.build());
 	}
@@ -69,6 +69,15 @@ public class NotificationsUtil {
 		intent.putExtra(SetAlarmActivity.EXTRA_NOTIF_ID, notifId);
 		
 		return PendingIntent.getActivity(ctx, 0, intent, 0);
+	}
+	
+	private PendingIntent createForgetIntent(String phoneNumber, String notifTag, int notifId) {
+		Intent intent = new Intent(NotificationActionBroadcastReciever.ACTION_FORGET);
+		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_PHONE, phoneNumber);
+		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_NOTIF_TAG, notifTag);
+		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_NOTIF_ID, notifId);
+		
+		return PendingIntent.getBroadcast(ctx, 0, intent, 0);
 	}
 	
 	public void dismissNotification(String notifTag, int notifId) {

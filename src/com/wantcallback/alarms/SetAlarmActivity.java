@@ -20,6 +20,8 @@ public class SetAlarmActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.set_alarm);
 		
+		etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
+		
 		String phone = null;
 		
 		Intent intent = getIntent();
