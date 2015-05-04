@@ -1,11 +1,11 @@
-package com.wantcallback.observer.impl;
+package com.wantcallback.observer.listener.impl;
 
 import android.content.Context;
 
 import com.wantcallback.notifications.NotificationsUtil;
-import com.wantcallback.observer.CallInfo;
-import com.wantcallback.observer.CallInfo.TYPE;
-import com.wantcallback.observer.OnCallMissRejectListener;
+import com.wantcallback.observer.listener.OnCallMissRejectListener;
+import com.wantcallback.observer.model.CallInfo;
+import com.wantcallback.observer.model.CallInfo.TYPE;
 
 public class StandardMissRejectListener implements OnCallMissRejectListener {
 	

@@ -12,8 +12,8 @@ import android.widget.Button;
 
 import com.wantcallback.notifications.NotificationActionBroadcastReciever;
 import com.wantcallback.observer.CallLogObserver;
-import com.wantcallback.observer.OnCallMissRejectListener;
-import com.wantcallback.observer.impl.StandardMissRejectListener;
+import com.wantcallback.observer.listener.OnCallMissRejectListener;
+import com.wantcallback.observer.listener.impl.StandardMissRejectListener;
 
 public class MainActivity extends Activity {
 	

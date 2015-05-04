@@ -18,5 +18,11 @@
         android:textSize="14sp"
         android:inputType="phone"
         android:hint="Phone number"/>
+    
+    <TextView 
+        android:id="@+id/textContactInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etPhoneNumber"/>
 
 </RelativeLayout>

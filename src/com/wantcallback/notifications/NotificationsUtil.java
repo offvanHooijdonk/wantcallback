@@ -9,7 +9,9 @@ import android.support.v4.app.NotificationCompat;
 
 import com.wantcallback.R;
 import com.wantcallback.alarms.SetAlarmActivity;
-import com.wantcallback.observer.CallInfo;
+import com.wantcallback.data.ContactsUtil;
+import com.wantcallback.observer.model.CallInfo;
+import com.wantcallback.observer.model.ContactInfo;
 
 public class NotificationsUtil {
 	private static final int NOTIFICATION_MISSED_CALL = 0;
@@ -17,15 +19,19 @@ public class NotificationsUtil {
 	
 	private Context ctx;
 	private static NotificationManager mNotificationManager;
+	private ContactsUtil contactsUtil;
 	
 	public NotificationsUtil(Context context) {
 		this.ctx = context;
+		contactsUtil = new ContactsUtil(ctx);
 	}
 
 	public void showMissedCallNotification(CallInfo info) {
 		String tag = info.getPhone();
 		int id = NOTIFICATION_MISSED_CALL;
+		String callerLabel = getCallerLabel(info);
 		NotificationCompat.Builder builder = getCommonCallNBuilder(info.getPhone()).setContentTitle("Missed Call")
+				.setTicker("Missed Call from " + callerLabel)
 				.addAction(R.drawable.ic_edit, "Change", createReminderIntent(info.getPhone(), tag, id))
 				.addAction(R.drawable.ic_forget, "Forget", createForgetIntent(info.getPhone(), tag, id));
 
@@ -35,7 +41,9 @@ public class NotificationsUtil {
 	public void showRejectedCallNotification(CallInfo info) {
 		String tag = info.getPhone();
 		int id = NOTIFICATION_REJECTED_CALL;
+		String callerLabel = getCallerLabel(info);
 		NotificationCompat.Builder builder = getCommonCallNBuilder(info.getPhone()).setContentTitle("Rejected Call")
+				.setTicker("Rejected Call from " + callerLabel)
 				.addAction(R.drawable.ic_alarm_add, "Remind in 10m", createReminderIntent(info.getPhone(), tag, id));
 
 		getNotificationManager().notify(tag, id, builder.build());
@@ -68,7 +76,7 @@ public class NotificationsUtil {
 		intent.putExtra(SetAlarmActivity.EXTRA_NOTIF_TAG, notifTag);
 		intent.putExtra(SetAlarmActivity.EXTRA_NOTIF_ID, notifId);
 		
-		return PendingIntent.getActivity(ctx, 0, intent, 0);
+		return PendingIntent.getActivity(ctx, 0, intent,  PendingIntent.FLAG_CANCEL_CURRENT);
 	}
 	
 	private PendingIntent createForgetIntent(String phoneNumber, String notifTag, int notifId) {
@@ -78,6 +86,17 @@ public class NotificationsUtil {
 		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_NOTIF_ID, notifId);
 		
 		return PendingIntent.getBroadcast(ctx, 0, intent, 0);
+	}
+	
+	public String getCallerLabel(CallInfo callInfo) {
+		String label;
+		ContactInfo contactInfo = contactsUtil.findContactByPhone(callInfo.getPhone());
+		if (contactInfo != null) {
+			label = contactInfo.getDisplayName();
+		} else {
+			label = callInfo.getPhone();
+		}
+		return label;
 	}
 	
 	public void dismissNotification(String notifTag, int notifId) {

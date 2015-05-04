@@ -1,12 +1,15 @@
 package com.wantcallback.alarms;
 
 import com.wantcallback.R;
+import com.wantcallback.data.ContactsUtil;
 import com.wantcallback.notifications.NotificationsUtil;
+import com.wantcallback.observer.model.ContactInfo;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class SetAlarmActivity extends Activity {
 	public static final String EXTRA_PHONE = "extra_phone";
@@ -14,6 +17,7 @@ public class SetAlarmActivity extends Activity {
 	public static final String EXTRA_NOTIF_ID = "extra_notif_id";
 
 	private EditText etPhoneNumber;
+	private TextView textContactInfo;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +25,11 @@ public class SetAlarmActivity extends Activity {
 		setContentView(R.layout.set_alarm);
 		
 		etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
-		
+		textContactInfo = (TextView) findViewById(R.id.textContactInfo);
+	}
+	
+	@Override
+	protected void onResume() {
 		String phone = null;
 		
 		Intent intent = getIntent();
@@ -36,6 +44,13 @@ public class SetAlarmActivity extends Activity {
 		
 		if (phone != null) {
 			etPhoneNumber.setText(phone);
+			ContactsUtil contactsUtil = new ContactsUtil(this);
+			ContactInfo contactInfo = contactsUtil.findContactByPhone(phone);
+			if (contactInfo != null) {
+				textContactInfo.setText("ID: " + contactInfo.getId() + ", Name: " + contactInfo.getDisplayName());
+			}
 		}
+		
+		super.onStart();
 	}
 }
