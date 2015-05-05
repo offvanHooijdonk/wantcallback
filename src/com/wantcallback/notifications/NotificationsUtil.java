@@ -21,6 +21,8 @@ public class NotificationsUtil {
 	private static NotificationManager mNotificationManager;
 	private ContactsUtil contactsUtil;
 	
+	private static int requestIndex = 0;
+	
 	public NotificationsUtil(Context context) {
 		this.ctx = context;
 		contactsUtil = new ContactsUtil(ctx);
@@ -65,7 +67,7 @@ public class NotificationsUtil {
 	private PendingIntent createDialerIntent() {
 		Intent intentCallLog = new Intent(Intent.ACTION_VIEW);
 		intentCallLog.setType(CallLog.Calls.CONTENT_TYPE);
-		PendingIntent intent = PendingIntent.getActivity(ctx, 0, intentCallLog, 0);
+		PendingIntent intent = PendingIntent.getActivity(ctx, requestIndex++, intentCallLog, PendingIntent.FLAG_CANCEL_CURRENT);
 		
 		return intent;
 	}
@@ -75,8 +77,8 @@ public class NotificationsUtil {
 		intent.putExtra(SetAlarmActivity.EXTRA_PHONE, phoneNumber);
 		intent.putExtra(SetAlarmActivity.EXTRA_NOTIF_TAG, notifTag);
 		intent.putExtra(SetAlarmActivity.EXTRA_NOTIF_ID, notifId);
-		
-		return PendingIntent.getActivity(ctx, 0, intent,  PendingIntent.FLAG_CANCEL_CURRENT);
+		// TODO implement better way to apply index!
+		return PendingIntent.getActivity(ctx, requestIndex++, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 	}
 	
 	private PendingIntent createForgetIntent(String phoneNumber, String notifTag, int notifId) {
@@ -85,7 +87,7 @@ public class NotificationsUtil {
 		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_NOTIF_TAG, notifTag);
 		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_NOTIF_ID, notifId);
 		
-		return PendingIntent.getBroadcast(ctx, 0, intent, 0);
+		return PendingIntent.getBroadcast(ctx, requestIndex++, intent, 0);
 	}
 	
 	public String getCallerLabel(CallInfo callInfo) {
