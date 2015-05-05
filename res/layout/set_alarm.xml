@@ -19,10 +19,18 @@
         android:inputType="phone"
         android:hint="Phone number"/>
     
+    <ImageView 
+        android:id="@+id/photo"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_below="@id/etPhoneNumber"
+        android:src="@drawable/ic_contact_picture"/>
+    
     <TextView 
-        android:id="@+id/textContactInfo"
+        android:id="@+id/textContactName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/etPhoneNumber"/>
+        android:layout_below="@id/etPhoneNumber"
+        android:layout_toRightOf="@id/photo"/>
 
 </RelativeLayout>

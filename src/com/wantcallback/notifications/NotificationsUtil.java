@@ -21,8 +21,6 @@ public class NotificationsUtil {
 	private static NotificationManager mNotificationManager;
 	private ContactsUtil contactsUtil;
 	
-	private static int requestIndex = 0;
-	
 	public NotificationsUtil(Context context) {
 		this.ctx = context;
 		contactsUtil = new ContactsUtil(ctx);
@@ -32,10 +30,10 @@ public class NotificationsUtil {
 		String tag = info.getPhone();
 		int id = NOTIFICATION_MISSED_CALL;
 		String callerLabel = getCallerLabel(info);
-		NotificationCompat.Builder builder = getCommonCallNBuilder(info.getPhone()).setContentTitle("Missed Call")
+		NotificationCompat.Builder builder = getCommonCallNBuilder(info).setContentTitle("Missed Call")
 				.setTicker("Missed Call from " + callerLabel)
-				.addAction(R.drawable.ic_edit, "Change", createReminderIntent(info.getPhone(), tag, id))
-				.addAction(R.drawable.ic_forget, "Forget", createForgetIntent(info.getPhone(), tag, id));
+				.addAction(R.drawable.ic_edit, "Change", createReminderIntent(info, tag, id))
+				.addAction(R.drawable.ic_forget, "Forget", createForgetIntent(info, tag, id));
 
 		getNotificationManager().notify(tag, id, builder.build());
 	}
@@ -44,9 +42,9 @@ public class NotificationsUtil {
 		String tag = info.getPhone();
 		int id = NOTIFICATION_REJECTED_CALL;
 		String callerLabel = getCallerLabel(info);
-		NotificationCompat.Builder builder = getCommonCallNBuilder(info.getPhone()).setContentTitle("Rejected Call")
+		NotificationCompat.Builder builder = getCommonCallNBuilder(info).setContentTitle("Rejected Call")
 				.setTicker("Rejected Call from " + callerLabel)
-				.addAction(R.drawable.ic_alarm_add, "Remind in 10m", createReminderIntent(info.getPhone(), tag, id));
+				.addAction(R.drawable.ic_alarm_add, "Remind in 10m", createReminderIntent(info, tag, id));
 
 		getNotificationManager().notify(tag, id, builder.build());
 	}
@@ -56,38 +54,38 @@ public class NotificationsUtil {
 	 * @param phoneNumber
 	 * @return
 	 */
-	private NotificationCompat.Builder getCommonCallNBuilder(String phoneNumber) {
+	private NotificationCompat.Builder getCommonCallNBuilder(CallInfo info) {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.ic_launcher)
-				.setContentText(phoneNumber).setContentIntent(createDialerIntent()).setPriority(NotificationCompat.PRIORITY_HIGH)
+				.setContentText(info.getPhone()).setContentIntent(createDialerIntent(info)).setPriority(NotificationCompat.PRIORITY_HIGH)
 				.setCategory("call").setSmallIcon(R.drawable.ic_notify_call).setAutoCancel(true);
 		
 		return builder;
 	}
 	
-	private PendingIntent createDialerIntent() {
+	private PendingIntent createDialerIntent(CallInfo info) {
 		Intent intentCallLog = new Intent(Intent.ACTION_VIEW);
 		intentCallLog.setType(CallLog.Calls.CONTENT_TYPE);
-		PendingIntent intent = PendingIntent.getActivity(ctx, requestIndex++, intentCallLog, PendingIntent.FLAG_CANCEL_CURRENT);
+		PendingIntent intent = PendingIntent.getActivity(ctx, info.getId(), intentCallLog, 0);
 		
 		return intent;
 	}
 	
-	private PendingIntent createReminderIntent(String phoneNumber, String notifTag, int notifId) {
+	private PendingIntent createReminderIntent(CallInfo info, String notifTag, int notifId) {
 		Intent intent = new Intent(ctx, SetAlarmActivity.class);
-		intent.putExtra(SetAlarmActivity.EXTRA_PHONE, phoneNumber);
+		intent.putExtra(SetAlarmActivity.EXTRA_PHONE, info.getPhone());
 		intent.putExtra(SetAlarmActivity.EXTRA_NOTIF_TAG, notifTag);
 		intent.putExtra(SetAlarmActivity.EXTRA_NOTIF_ID, notifId);
-		// TODO implement better way to apply index!
-		return PendingIntent.getActivity(ctx, requestIndex++, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+		
+		return PendingIntent.getActivity(ctx, info.getId(), intent, 0);
 	}
 	
-	private PendingIntent createForgetIntent(String phoneNumber, String notifTag, int notifId) {
+	private PendingIntent createForgetIntent(CallInfo info, String notifTag, int notifId) {
 		Intent intent = new Intent(NotificationActionBroadcastReciever.ACTION_FORGET);
-		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_PHONE, phoneNumber);
+		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_PHONE, info.getPhone());
 		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_NOTIF_TAG, notifTag);
 		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_NOTIF_ID, notifId);
 		
-		return PendingIntent.getBroadcast(ctx, requestIndex++, intent, 0);
+		return PendingIntent.getBroadcast(ctx, info.getId(), intent, 0);
 	}
 	
 	public String getCallerLabel(CallInfo callInfo) {
