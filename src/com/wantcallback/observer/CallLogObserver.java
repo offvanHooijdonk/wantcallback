@@ -82,7 +82,7 @@ public class CallLogObserver extends ContentObserver {
 
 	private void updateLastId(List<CallInfo> calls) {
 		for (CallInfo info : calls) {
-			lastCallId = (info.getId() > lastCallId) ? info.getId() : lastCallId;
+			lastCallId = (info.getLogId() > lastCallId) ? info.getLogId() : lastCallId;
 		}
 	}
 }

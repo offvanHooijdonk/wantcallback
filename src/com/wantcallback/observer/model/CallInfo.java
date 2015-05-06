@@ -7,24 +7,24 @@ public class CallInfo {
 		MISSED, REJECTED
 	};
 
-	private int id;
+	private int logId;
 	private String phone;
 	private long date;
 	private TYPE type;
 
 	public CallInfo(int id, String phone, long date, TYPE type) {
-		this.id = id;
+		this.logId = id;
 		this.phone = phone;
 		this.date = date;
 		this.type = type;
 	}
 
-	public int getId() {
-		return id;
+	public int getLogId() {
+		return logId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setLogId(int id) {
+		this.logId = id;
 	}
 
 	public String getPhone() {

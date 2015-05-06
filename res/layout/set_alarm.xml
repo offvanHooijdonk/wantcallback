@@ -9,8 +9,9 @@
         android:layout_height="wrap_content"
         android:text="Add an alarm"
         android:textSize="18sp" />
-    
-    <EditText 
+
+    <!--
+         <EditText 
         android:id="@+id/etPhoneNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,19 +19,57 @@
         android:textSize="14sp"
         android:inputType="phone"
         android:hint="Phone number"/>
-    
-    <ImageView 
-        android:id="@+id/photo"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_below="@id/etPhoneNumber"
-        android:src="@drawable/ic_contact_picture"/>
-    
-    <TextView 
-        android:id="@+id/textContactName"
+        
+    -->
+
+    <AutoCompleteTextView
+        android:id="@+id/inputPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/etPhoneNumber"
-        android:layout_toRightOf="@id/photo"/>
+        android:layout_below="@id/title"
+        android:completionThreshold="3"
+        android:hint="Phone number" />
+
+    <RelativeLayout
+        android:id="@+id/blockContactInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/inputPhone" >
+
+        <ImageView
+            android:id="@+id/photo"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/ic_contact_picture" />
+
+        <TextView
+            android:id="@+id/textContactName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_toRightOf="@id/photo" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/blockReminderOptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/blockContactInfo" >
+
+        <TextView
+            android:id="@+id/textTime"
+            style="?android:attr/spinnerStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/blockReminderOptions"
+        android:text="Remind" />
 
 </RelativeLayout>

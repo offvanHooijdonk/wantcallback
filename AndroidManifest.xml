@@ -26,7 +26,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".alarms.SetAlarmActivity" >
+        <activity android:name="com.wantcallback.ui.SetAlarmActivity" >
         </activity>
 
         <service

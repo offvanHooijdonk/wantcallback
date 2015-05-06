@@ -52,11 +52,10 @@ public class ContactsUtil {
 		
 		if (inputStream != null) {
             photo = BitmapFactory.decodeStream(inputStream);
+            inputStream.close();
         } else {
         	photo = null;
         }
-
-        inputStream.close();
         
         return photo;
 	}
