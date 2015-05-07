@@ -5,4 +5,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="date_expired">Sorry, the date has already expired, please select another date in the future.</string>
 </resources>

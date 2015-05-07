@@ -11,7 +11,7 @@ import com.wantcallback.R;
 import com.wantcallback.data.ContactsUtil;
 import com.wantcallback.observer.model.CallInfo;
 import com.wantcallback.observer.model.ContactInfo;
-import com.wantcallback.ui.SetAlarmActivity;
+import com.wantcallback.ui.SetReminderActivity;
 
 public class NotificationsUtil {
 	private static final int NOTIFICATION_MISSED_CALL = 0;
@@ -71,10 +71,11 @@ public class NotificationsUtil {
 	}
 	
 	private PendingIntent createReminderIntent(CallInfo info, String notifTag, int notifId) {
-		Intent intent = new Intent(ctx, SetAlarmActivity.class);
-		intent.putExtra(SetAlarmActivity.EXTRA_PHONE, info.getPhone());
-		intent.putExtra(SetAlarmActivity.EXTRA_NOTIF_TAG, notifTag);
-		intent.putExtra(SetAlarmActivity.EXTRA_NOTIF_ID, notifId);
+		Intent intent = new Intent(ctx, SetReminderActivity.class);
+		intent.putExtra(SetReminderActivity.EXTRA_PHONE, info.getPhone());
+		intent.putExtra(SetReminderActivity.EXTRA_CALL_ID, info.getLogId());
+		intent.putExtra(SetReminderActivity.EXTRA_NOTIF_TAG, notifTag);
+		intent.putExtra(SetReminderActivity.EXTRA_NOTIF_ID, notifId);
 		
 		return PendingIntent.getActivity(ctx, info.getLogId(), intent, 0);
 	}

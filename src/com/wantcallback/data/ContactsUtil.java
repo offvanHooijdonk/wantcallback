@@ -39,6 +39,7 @@ public class ContactsUtil {
             info.setId(id);
             info.setDisplayName(name);
 		}
+		cur.close();
 		
 		return info;
 	}

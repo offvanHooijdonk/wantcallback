@@ -63,6 +63,15 @@
             android:layout_height="wrap_content"
             android:text="00:00"
             android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textToday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/textTime"
+            android:layout_marginLeft="12dp"
+            android:text="@string/today"
+            android:textSize="16sp" />
     </RelativeLayout>
 
     <Button

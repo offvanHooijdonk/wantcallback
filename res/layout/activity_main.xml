@@ -6,12 +6,19 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.wantcallback.MainActivity" >
+    tools:context="com.wantcallback.ui.MainActivity" >
 
     <Button
-        android:id="@+id/btnStartService" 
+        android:id="@+id/btnStartService"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start Service"/>
+        android:text="Start Service" />
+
+    <Button
+        android:id="@+id/btnAddAlarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/btnStartService"
+        android:text="Add Alarm" />
 
 </RelativeLayout>

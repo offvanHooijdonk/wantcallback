@@ -31,7 +31,7 @@ public class CallLogUtil {
 		Cursor cursorRejected = ctx.getContentResolver().query(Calls.CONTENT_URI, null, Calls._ID + " > ? AND " + Calls.TYPE + " = ? AND " + Calls.DURATION + " = ? AND " + 
 				Calls.NEW + " = ? AND " + Calls.DATE + " > ? ",
 				new String[] {Integer.toString(startCallId), Integer.toString(Calls.INCOMING_TYPE), "0", "1", String.valueOf(startDate)}, Calls.DATE + " DESC ");
-		
+
 		return getCallsInfo(cursorRejected, TYPE.REJECTED);
 	}
 	
@@ -65,8 +65,8 @@ public class CallLogUtil {
 				CallInfo info = new CallInfo(id, number, callDate, callType);
 				calls.add(info);
 			}
-			cursor.close();
 		}
+		cursor.close();
 		
 		return calls;
 	}

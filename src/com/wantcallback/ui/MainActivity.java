@@ -1,6 +1,7 @@
-package com.wantcallback;
+package com.wantcallback.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +11,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.wantcallback.Constants;
+import com.wantcallback.R;
+import com.wantcallback.R.id;
+import com.wantcallback.R.layout;
+import com.wantcallback.R.menu;
 import com.wantcallback.notifications.NotificationActionBroadcastReciever;
 import com.wantcallback.observer.CallLogObserver;
 import com.wantcallback.observer.listener.OnCallMissRejectListener;
@@ -19,6 +25,7 @@ public class MainActivity extends Activity {
 	
 	private MainActivity that;
 	private Button btnStartService;
+	private Button btnAddAlarm;
 	private CallLogObserver callLogObserver;
 	private NotificationActionBroadcastReciever broadcastReciever;
 
@@ -30,6 +37,7 @@ public class MainActivity extends Activity {
 		that = this;
 		
 		btnStartService = (Button) findViewById(R.id.btnStartService);
+		btnAddAlarm = (Button) findViewById(R.id.btnAddAlarm);
 		
 		initCallObserver();
 		initBroadcastReciever();
@@ -40,6 +48,15 @@ public class MainActivity extends Activity {
 				// TODO disabled to test without starting service
 				/*Intent intent = new Intent(that, CallHandlerService.class);
 				that.startService(intent);*/
+			}
+		});
+		
+		btnAddAlarm.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(MainActivity.this, SetReminderActivity.class);
+				intent.putExtra(SetReminderActivity.EXTRA_PHONE, "+375447897897");
+				startActivity(intent);
 			}
 		});
 	}
