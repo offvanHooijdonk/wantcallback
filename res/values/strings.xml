@@ -7,5 +7,7 @@
 
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
-    <string name="date_expired">Sorry, the date has already expired, please select another date in the future.</string>
+    <string name="date_expired_title">Date warning</string>
+    <string name="date_expired">Sorry, the date has already expired, please select a new one</string>
+    <string name="date_experid_button">OK</string>
 </resources>
