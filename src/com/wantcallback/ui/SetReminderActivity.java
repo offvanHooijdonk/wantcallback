@@ -71,6 +71,8 @@ public class SetReminderActivity extends FragmentActivity implements RadialTimeP
 		textToday = (TextView) findViewById(R.id.textToday);
 		btnSave = (Button) findViewById(R.id.btnSave);
 
+		// TODO check if any reminders on that phone number already in DB
+		
 		/* Time */
 		initRemindTime();
 		
@@ -96,7 +98,7 @@ public class SetReminderActivity extends FragmentActivity implements RadialTimeP
 				Calendar picked = Calendar.getInstance();
 				picked.setTime(remindDate);
 				if (picked.before(now)) {
-					// TODO Alert that time already expired and need new time
+					// Alert that time already expired and need new time
 					AlertDialog.Builder builder = new AlertDialog.Builder(SetReminderActivity.this);
 					builder.setTitle(R.string.date_expired_title).setMessage(R.string.date_expired)
 							.setPositiveButton(R.string.date_experid_button, new DialogInterface.OnClickListener() {
@@ -107,14 +109,13 @@ public class SetReminderActivity extends FragmentActivity implements RadialTimeP
 							});
 					builder.show();
 				} else {
-					// TODO create a broadcast to accept reminders
-					ReminderUtil.createNewReminder(SetReminderActivity.this, callId, phoneNumber, remindDate);
-					
+					// TODO create a broadcast to accept reminders (??)
 					ReminderInfo info = new ReminderInfo();
 					info.setId(callId);
 					info.setPhone(phoneNumber);
 					info.setDate(remindDate.getTime());
-					reminderDao.save(info);
+					
+					ReminderUtil.createNewReminder(SetReminderActivity.this, info);
 					
 					Toast.makeText(SetReminderActivity.this, "Will remind at " + sdfDateTime.format(remindDate), Toast.LENGTH_LONG).show();
 					finish();

@@ -34,7 +34,7 @@ public class NotificationsUtil {
 				.setTicker("Missed Call from " + callerLabel)
 				.addAction(R.drawable.ic_edit, "Change", createReminderIntent(info, tag, id))
 				.addAction(R.drawable.ic_forget, "Forget", createForgetIntent(info, tag, id));
-
+		
 		getNotificationManager().notify(tag, id, builder.build());
 	}
 	

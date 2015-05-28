@@ -1,5 +1,8 @@
 package com.wantcallback.dao.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -64,5 +67,22 @@ public class ReminderDao {
 		}
 		
 		return info;
+	}
+	
+	public List<ReminderInfo> getAll() {
+		List<ReminderInfo> reminders = new ArrayList<ReminderInfo>();
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		
+		Cursor cursor = db.query(TABLE, null, null, null, null, null, ReminderInfo.DATE + " desc");
+		if (cursor.moveToFirst()) { // assume phone is a unique field
+			ReminderInfo info = new ReminderInfo();
+			info.setId(cursor.getInt(cursor.getColumnIndex(ReminderInfo.ID)));
+			info.setDate(cursor.getInt(cursor.getColumnIndex(ReminderInfo.DATE)) * DATE_MULT);
+			info.setPhone(cursor.getString(cursor.getColumnIndex(ReminderInfo.PHONE)));
+			
+			reminders.add(info);
+		}
+		
+		return reminders;
 	}
 }
