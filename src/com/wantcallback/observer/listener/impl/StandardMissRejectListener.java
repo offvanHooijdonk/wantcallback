@@ -21,7 +21,8 @@ public class StandardMissRejectListener implements OnCallMissRejectListener {
 
 	@Override
 	public void onCallMissed(CallInfo info) {
-		// TODO create Reminder if none yet created for previous calls
+		// TODO create Reminder and notify if none yet created for previous calls
+		reminderDao.findByPhone(info.getPhone());
 		pushNotification(info);
 	}
 
