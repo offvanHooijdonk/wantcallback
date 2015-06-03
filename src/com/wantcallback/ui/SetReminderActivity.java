@@ -37,7 +37,6 @@ public class SetReminderActivity extends FragmentActivity implements RadialTimeP
 	public static final String EXTRA_NOTIF_ID = "extra_notif_id";
 
 	private static final String TAG_TIME_DIALOG = "tag_time_dialog";
-	private static final int DEFAULT_TIME_ADD = 10;
 
 	// private EditText etPhoneNumber;
 	private TextView textContactName;
@@ -205,14 +204,13 @@ public class SetReminderActivity extends FragmentActivity implements RadialTimeP
 	}
 
 	private void initRemindTime() {
-		Calendar calendar = Calendar.getInstance();
-		int todayDayNum = calendar.get(Calendar.DAY_OF_MONTH);
-		calendar.set(Calendar.SECOND, 0);
-		calendar.set(Calendar.MILLISECOND, 0);
-		calendar.add(Calendar.MINUTE, DEFAULT_TIME_ADD);
-		remindDate = calendar.getTime();
+		long remindDate = ReminderUtil.calcDeafaultRemindDate(Calendar.getInstance().getTimeInMillis());
+		Calendar remindCalendar = Calendar.getInstance();
+		remindCalendar.setTimeInMillis(remindDate);
+		int todayDayNum = remindCalendar.get(Calendar.DAY_OF_MONTH);
+		
 		// if day changed - we moved to the next day
-		isToday = todayDayNum == calendar.get(Calendar.DAY_OF_MONTH);
+		isToday = todayDayNum == remindCalendar.get(Calendar.DAY_OF_MONTH);
 	}
 
 	private void setTodayText(boolean today) {

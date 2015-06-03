@@ -3,10 +3,13 @@ package com.wantcallback.observer.listener.impl;
 import android.content.Context;
 
 import com.wantcallback.dao.impl.ReminderDao;
+import com.wantcallback.dao.model.ReminderInfo;
+import com.wantcallback.helper.Helper;
 import com.wantcallback.notifications.NotificationsUtil;
 import com.wantcallback.observer.listener.OnCallMissRejectListener;
 import com.wantcallback.observer.model.CallInfo;
 import com.wantcallback.observer.model.CallInfo.TYPE;
+import com.wantcallback.reminder.ReminderUtil;
 
 public class StandardMissRejectListener implements OnCallMissRejectListener {
 	
@@ -22,8 +25,13 @@ public class StandardMissRejectListener implements OnCallMissRejectListener {
 	@Override
 	public void onCallMissed(CallInfo info) {
 		// TODO create Reminder and notify if none yet created for previous calls
-		reminderDao.findByPhone(info.getPhone());
-		pushNotification(info);
+		ReminderInfo reminderInfo = reminderDao.findByPhone(info.getPhone());
+		if (reminderInfo == null) { // no reminders yet
+			reminderInfo = Helper.convertCallToReminder(info);
+			reminderInfo.setDate(ReminderUtil.calcDeafaultRemindDate(reminderInfo.getDate()));
+			ReminderUtil.createNewReminder(ctx, reminderInfo);
+			pushNotification(info);
+		}
 	}
 
 	@Override
