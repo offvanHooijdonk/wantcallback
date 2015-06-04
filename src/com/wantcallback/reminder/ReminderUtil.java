@@ -13,7 +13,7 @@ public class ReminderUtil {
 	
 	public static void createNewReminder(Context ctx, ReminderInfo info) {
 		// TODO try exceptions ?
-		AlarmUtil.createNewReminder(ctx, info.getId(), info.getPhone(), new Date(info.getDate()));
+		AlarmUtil.createNewReminderAlarm(ctx, info.getId(), info.getPhone(), new Date(info.getDate()));
 		
 		ReminderDao reminderDao = new ReminderDao(ctx);
 		reminderDao.save(info);
@@ -28,5 +28,9 @@ public class ReminderUtil {
 		calendar.set(Calendar.MILLISECOND, 0);
 		calendar.add(Calendar.MINUTE, DEFAULT_TIME_ADD);
 		return calendar.getTimeInMillis();
+	}
+	
+	public static int getDefaultRemindMinutes() {
+		return DEFAULT_TIME_ADD;
 	}
 }

@@ -24,6 +24,20 @@ public class StandardMissRejectListener implements OnCallMissRejectListener {
 
 	@Override
 	public void onCallMissed(CallInfo info) {
+		// create Reminder and notify if none yet created for previous calls
+		ReminderInfo reminderInfo = reminderDao.findByPhone(info.getPhone());
+		if (reminderInfo == null) { // no reminders yet
+			reminderInfo = Helper.convertCallToReminder(info);
+			reminderInfo.setDate(ReminderUtil.calcDeafaultRemindDate(reminderInfo.getDate()));
+			ReminderUtil.createNewReminder(ctx, reminderInfo);
+			pushNotification(info);
+		} else {
+			// no action
+		}
+	}
+
+	@Override
+	public void onCallRejected(CallInfo info) {
 		// TODO create Reminder and notify if none yet created for previous calls
 		ReminderInfo reminderInfo = reminderDao.findByPhone(info.getPhone());
 		if (reminderInfo == null) { // no reminders yet
@@ -31,13 +45,9 @@ public class StandardMissRejectListener implements OnCallMissRejectListener {
 			reminderInfo.setDate(ReminderUtil.calcDeafaultRemindDate(reminderInfo.getDate()));
 			ReminderUtil.createNewReminder(ctx, reminderInfo);
 			pushNotification(info);
+		} else {
+			// TODO no action or notification "you already have a reminder"? 
 		}
-	}
-
-	@Override
-	public void onCallRejected(CallInfo info) {
-		// TODO check if has reminders already, if does - do not show notification
-		pushNotification(info);
 	}
 
 	private void pushNotification(CallInfo info) {

@@ -38,12 +38,12 @@ public class SetReminderActivity extends FragmentActivity implements RadialTimeP
 
 	private static final String TAG_TIME_DIALOG = "tag_time_dialog";
 
-	// private EditText etPhoneNumber;
 	private TextView textContactName;
 	private ImageView ivPhoto;
 	private AutoCompleteTextView inputPhone;
 	private TextView textTime;
 	private TextView textToday;
+	private TextView textHasReminder;
 	private Button btnSave;
 
 	private static DateFormat sdfTime = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT);
@@ -62,21 +62,13 @@ public class SetReminderActivity extends FragmentActivity implements RadialTimeP
 		
 		reminderDao = new ReminderDao(this);
 
-		// etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
 		inputPhone = (AutoCompleteTextView) findViewById(R.id.inputPhone);
 		textContactName = (TextView) findViewById(R.id.textContactName);
 		ivPhoto = (ImageView) findViewById(R.id.photo);
 		textTime = (TextView) findViewById(R.id.textTime);
 		textToday = (TextView) findViewById(R.id.textToday);
+		textHasReminder = (TextView) findViewById(R.id.textHasReminder);
 		btnSave = (Button) findViewById(R.id.btnSave);
-
-		// TODO check if any reminders on that phone number already in DB
-		
-		/* Time */
-		initRemindTime();
-		
-		textTime.setText(sdfTime.format(remindDate));
-		setTodayText(isToday);
 		
 		textTime.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -108,7 +100,6 @@ public class SetReminderActivity extends FragmentActivity implements RadialTimeP
 							});
 					builder.show();
 				} else {
-					// TODO create a broadcast to accept reminders (??)
 					ReminderInfo info = new ReminderInfo();
 					info.setId(callId);
 					info.setPhone(phoneNumber);
@@ -166,6 +157,16 @@ public class SetReminderActivity extends FragmentActivity implements RadialTimeP
 				textContactName.setVisibility(View.GONE);
 				ivPhoto.setVisibility(View.GONE);
 			}
+			
+			// Check if there is already a reminder for the number and reflect it on the activity screen
+			ReminderInfo reminderInfo = reminderDao.findByPhone(phoneNumber);
+			if (reminderInfo != null) {
+				displayReminderTime(reminderInfo.getDate());
+				textHasReminder.setVisibility(View.VISIBLE);
+			} else { // if not reminders yet - set default time to the picker
+				displayReminderTime(ReminderUtil.calcDeafaultRemindDate(Calendar.getInstance().getTimeInMillis()));
+				textHasReminder.setVisibility(View.GONE);
+			}
 
 		} else {
 			// TODO handle if phone is empty somehow
@@ -183,34 +184,29 @@ public class SetReminderActivity extends FragmentActivity implements RadialTimeP
 			calendarPicked.set(Calendar.SECOND, 0);
 			calendarPicked.set(Calendar.MILLISECOND, 0);
 
-			if (isTodayTime(Calendar.getInstance(), calendarPicked)) {
-				remindDate = calendarPicked.getTime();
-				isToday = true;
-			} else {
-				calendarPicked.add(Calendar.DAY_OF_MONTH, 1);
-				remindDate = calendarPicked.getTime();
-				isToday = false;
-			}
-
-			String timeString = sdfTime.format(remindDate);
-			textTime.setText(timeString);
-			setTodayText(isToday);
-
+			displayReminderTime(calendarPicked.getTimeInMillis());
 		}
+	}
+	
+	private void displayReminderTime(long time) {
+		Calendar calendarRem = Calendar.getInstance();
+		calendarRem.setTimeInMillis(time);
+		
+		if (isTodayTime(Calendar.getInstance(), calendarRem)) {
+			isToday = true;
+		} else {
+			calendarRem.add(Calendar.DAY_OF_MONTH, 1);
+			isToday = false;
+		}
+		remindDate = calendarRem.getTime();
+		
+		String timeString = sdfTime.format(remindDate);
+		textTime.setText(timeString);
+		setTodayText(isToday);
 	}
 
 	private boolean isTodayTime(Calendar now, Calendar picked) {
 		return picked.after(now);
-	}
-
-	private void initRemindTime() {
-		long remindDate = ReminderUtil.calcDeafaultRemindDate(Calendar.getInstance().getTimeInMillis());
-		Calendar remindCalendar = Calendar.getInstance();
-		remindCalendar.setTimeInMillis(remindDate);
-		int todayDayNum = remindCalendar.get(Calendar.DAY_OF_MONTH);
-		
-		// if day changed - we moved to the next day
-		isToday = todayDayNum == remindCalendar.get(Calendar.DAY_OF_MONTH);
 	}
 
 	private void setTodayText(boolean today) {

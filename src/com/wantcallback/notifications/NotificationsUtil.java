@@ -11,6 +11,7 @@ import com.wantcallback.R;
 import com.wantcallback.data.ContactsUtil;
 import com.wantcallback.observer.model.CallInfo;
 import com.wantcallback.observer.model.ContactInfo;
+import com.wantcallback.reminder.ReminderUtil;
 import com.wantcallback.ui.SetReminderActivity;
 
 public class NotificationsUtil {
@@ -32,8 +33,9 @@ public class NotificationsUtil {
 		String callerLabel = getCallerLabel(info);
 		NotificationCompat.Builder builder = getCommonCallNBuilder(info).setContentTitle("Missed Call")
 				.setTicker("Missed Call from " + callerLabel)
-				.addAction(R.drawable.ic_edit, "Change", createReminderIntent(info, tag, id))
-				.addAction(R.drawable.ic_forget, "Forget", createForgetIntent(info, tag, id));
+				.setContentIntent(createDialerIntent(info)) // dial if missed call
+				.addAction(R.drawable.ic_edit, "Change reminder", createReminderIntent(info, tag, id)) // change reminder created
+				.addAction(R.drawable.ic_forget, "Forget", createForgetIntent(info, tag, id)); // remove reminder created
 		
 		getNotificationManager().notify(tag, id, builder.build());
 	}
@@ -42,9 +44,11 @@ public class NotificationsUtil {
 		String tag = info.getPhone();
 		int id = NOTIFICATION_REJECTED_CALL;
 		String callerLabel = getCallerLabel(info);
+		int defaultMin = ReminderUtil.getDefaultRemindMinutes();
 		NotificationCompat.Builder builder = getCommonCallNBuilder(info).setContentTitle("Rejected Call")
 				.setTicker("Rejected Call from " + callerLabel)
-				.addAction(R.drawable.ic_alarm_add, "Remind in 10m", createReminderIntent(info, tag, id));
+				.setContentIntent(createReminderIntent(info, tag, id)) // open activity to set custom info
+				.addAction(R.drawable.ic_alarm_add, "Remind in " + defaultMin + "m", createDefaultReminderIntent(info, tag, id)); // create default reminder silently
 
 		getNotificationManager().notify(tag, id, builder.build());
 	}
@@ -56,7 +60,7 @@ public class NotificationsUtil {
 	 */
 	private NotificationCompat.Builder getCommonCallNBuilder(CallInfo info) {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.ic_launcher)
-				.setContentText(info.getPhone()).setContentIntent(createDialerIntent(info)).setPriority(NotificationCompat.PRIORITY_HIGH)
+				.setContentText(info.getPhone()).setPriority(NotificationCompat.PRIORITY_HIGH)
 				.setCategory("call").setSmallIcon(R.drawable.ic_notify_call).setAutoCancel(true);
 		
 		return builder;
@@ -81,6 +85,15 @@ public class NotificationsUtil {
 	}
 	
 	private PendingIntent createForgetIntent(CallInfo info, String notifTag, int notifId) {
+		Intent intent = new Intent(NotificationActionBroadcastReciever.ACTION_FORGET);
+		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_PHONE, info.getPhone());
+		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_NOTIF_TAG, notifTag);
+		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_NOTIF_ID, notifId);
+		
+		return PendingIntent.getBroadcast(ctx, info.getLogId(), intent, 0);
+	}
+	
+	private PendingIntent createDefaultReminderIntent(CallInfo info, String notifTag, int notifId) {
 		Intent intent = new Intent(NotificationActionBroadcastReciever.ACTION_FORGET);
 		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_PHONE, info.getPhone());
 		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_NOTIF_TAG, notifTag);

@@ -10,4 +10,5 @@
     <string name="date_expired_title">Date warning</string>
     <string name="date_expired">Sorry, the date has already expired, please select a new one</string>
     <string name="date_experid_button">OK</string>
+    <string name="has_reminder">You already has a reminder for this number.</string>
 </resources>

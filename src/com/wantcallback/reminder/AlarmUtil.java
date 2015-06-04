@@ -14,7 +14,7 @@ public class AlarmUtil {
 	// TODO do it better way
 	//private static int index = 0;
 
-	public static void createNewReminder(Context ctx, int callId, String phoneNumber, Date date) {
+	public static void createNewReminderAlarm(Context ctx, int callId, String phoneNumber, Date date) {
 		Intent intent = new Intent(ctx, RemindActivity.class);
 		intent.putExtra(RemindActivity.EXTRA_PHONE, phoneNumber);
 		getAlarmManager(ctx).set(AlarmManager.RTC_WAKEUP, date.getTime(), PendingIntent.getActivity(ctx, callId, intent, PendingIntent.FLAG_UPDATE_CURRENT));

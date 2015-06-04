@@ -54,16 +54,20 @@ public class ReminderDao {
 		db.update(TABLE, cv, ReminderInfo.ID + " = ? ", new String[]{String.valueOf(info.getId())});
 	}
 	
-	public ReminderInfo findByPhone(String phone) {
+	public int deleteByPhone(String phoneNumber) {
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		
+		int count = db.delete(TABLE, ReminderInfo.PHONE + " = ? ", new String[]{phoneNumber});
+		return count;
+	}
+	
+	public ReminderInfo findByPhone(String phoneNumber) {
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		ReminderInfo info = null;
 		
-		Cursor cursor = db.query(TABLE, null, ReminderInfo.PHONE + " = ? ", new String[]{phone}, null, null, null);
+		Cursor cursor = db.query(TABLE, null, ReminderInfo.PHONE + " = ? ", new String[]{phoneNumber}, null, null, null);
 		if (cursor.moveToFirst()) { // assume phone is a unique field
-			info = new ReminderInfo();
-			info.setId(cursor.getInt(cursor.getColumnIndex(ReminderInfo.ID)));
-			info.setDate(cursor.getInt(cursor.getColumnIndex(ReminderInfo.DATE)) * DATE_MULT);
-			info.setPhone(cursor.getString(cursor.getColumnIndex(ReminderInfo.PHONE)));
+			info = cursorToBean(cursor);
 		}
 		
 		return info;
@@ -75,14 +79,18 @@ public class ReminderDao {
 		
 		Cursor cursor = db.query(TABLE, null, null, null, null, null, ReminderInfo.DATE + " desc");
 		if (cursor.moveToFirst()) { // assume phone is a unique field
-			ReminderInfo info = new ReminderInfo();
-			info.setId(cursor.getInt(cursor.getColumnIndex(ReminderInfo.ID)));
-			info.setDate(cursor.getInt(cursor.getColumnIndex(ReminderInfo.DATE)) * DATE_MULT);
-			info.setPhone(cursor.getString(cursor.getColumnIndex(ReminderInfo.PHONE)));
-			
-			reminders.add(info);
+			reminders.add(cursorToBean(cursor));
 		}
 		
 		return reminders;
+	}
+	
+	private ReminderInfo cursorToBean(Cursor cursor) {
+		ReminderInfo info = new ReminderInfo();
+		info.setId(cursor.getInt(cursor.getColumnIndex(ReminderInfo.ID)));
+		info.setDate(cursor.getInt(cursor.getColumnIndex(ReminderInfo.DATE)) * DATE_MULT);
+		info.setPhone(cursor.getString(cursor.getColumnIndex(ReminderInfo.PHONE)));
+		
+		return info;
 	}
 }
