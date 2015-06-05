@@ -32,9 +32,9 @@ public class NotificationsUtil {
 		int id = NOTIFICATION_MISSED_CALL;
 		String callerLabel = getCallerLabel(info);
 		NotificationCompat.Builder builder = getCommonCallNBuilder(info).setContentTitle("Missed Call")
-				.setTicker("Missed Call from " + callerLabel)
-				.setContentIntent(createDialerIntent(info)) // dial if missed call
-				.addAction(R.drawable.ic_edit, "Change reminder", createReminderIntent(info, tag, id)) // change reminder created
+				.setTicker("Missed Call from " + callerLabel) // TODO Show message 'Reminder create on 23:15'
+				.setContentIntent(createOpenRemindersIntent(info, tag, id)) // Open reminder settings
+				.addAction(R.drawable.ic_edit, "Call now", createDialerIntent(info)) // Dial missed call
 				.addAction(R.drawable.ic_forget, "Forget", createForgetIntent(info, tag, id)); // remove reminder created
 		
 		getNotificationManager().notify(tag, id, builder.build());
@@ -47,7 +47,7 @@ public class NotificationsUtil {
 		int defaultMin = ReminderUtil.getDefaultRemindMinutes();
 		NotificationCompat.Builder builder = getCommonCallNBuilder(info).setContentTitle("Rejected Call")
 				.setTicker("Rejected Call from " + callerLabel)
-				.setContentIntent(createReminderIntent(info, tag, id)) // open activity to set custom info
+				.setContentIntent(createOpenRemindersIntent(info, tag, id)) // open activity to set custom info
 				.addAction(R.drawable.ic_alarm_add, "Remind in " + defaultMin + "m", createDefaultReminderIntent(info, tag, id)); // create default reminder silently
 
 		getNotificationManager().notify(tag, id, builder.build());
@@ -74,7 +74,7 @@ public class NotificationsUtil {
 		return intent;
 	}
 	
-	private PendingIntent createReminderIntent(CallInfo info, String notifTag, int notifId) {
+	private PendingIntent createOpenRemindersIntent(CallInfo info, String notifTag, int notifId) {
 		Intent intent = new Intent(ctx, SetReminderActivity.class);
 		intent.putExtra(SetReminderActivity.EXTRA_PHONE, info.getPhone());
 		intent.putExtra(SetReminderActivity.EXTRA_CALL_ID, info.getLogId());

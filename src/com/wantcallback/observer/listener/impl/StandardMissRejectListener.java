@@ -20,6 +20,7 @@ public class StandardMissRejectListener implements OnCallMissRejectListener {
 	public StandardMissRejectListener(Context context) {
 		this.ctx = context;
 		notifyUtil = new NotificationsUtil(ctx);
+		reminderDao = new ReminderDao(ctx);
 	}
 
 	@Override
@@ -38,7 +39,7 @@ public class StandardMissRejectListener implements OnCallMissRejectListener {
 
 	@Override
 	public void onCallRejected(CallInfo info) {
-		// TODO create Reminder and notify if none yet created for previous calls
+		// create Reminder and notify if none yet created for previous calls
 		ReminderInfo reminderInfo = reminderDao.findByPhone(info.getPhone());
 		if (reminderInfo == null) { // no reminders yet
 			reminderInfo = Helper.convertCallToReminder(info);
