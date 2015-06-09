@@ -32,7 +32,7 @@ public class NotificationsUtil {
 		int id = NOTIFICATION_MISSED_CALL;
 		String callerLabel = getCallerLabel(info);
 		NotificationCompat.Builder builder = getCommonCallNBuilder(info).setContentTitle("Missed Call")
-				.setTicker("Missed Call from " + callerLabel) // TODO Show message 'Reminder create on 23:15'
+				.setTicker("Missed Call from " + callerLabel) // TODO Show message 'Reminder created on 23:15'
 				.setContentIntent(createOpenRemindersIntent(info, tag, id)) // Open reminder settings
 				.addAction(R.drawable.ic_edit, "Call now", createDialerIntent(info)) // Dial missed call
 				.addAction(R.drawable.ic_forget, "Forget", createForgetIntent(info, tag, id)); // remove reminder created
