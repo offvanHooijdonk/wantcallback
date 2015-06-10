@@ -8,7 +8,6 @@ import com.wantcallback.helper.Helper;
 import com.wantcallback.notifications.NotificationsUtil;
 import com.wantcallback.observer.listener.OnCallMissRejectListener;
 import com.wantcallback.observer.model.CallInfo;
-import com.wantcallback.observer.model.CallInfo.TYPE;
 import com.wantcallback.reminder.ReminderUtil;
 
 public class StandardMissRejectListener implements OnCallMissRejectListener {
@@ -29,9 +28,9 @@ public class StandardMissRejectListener implements OnCallMissRejectListener {
 		ReminderInfo reminderInfo = reminderDao.findByPhone(info.getPhone());
 		if (reminderInfo == null) { // no reminders yet
 			reminderInfo = Helper.convertCallToReminder(info);
-			reminderInfo.setDate(ReminderUtil.calcDeafaultRemindDate(reminderInfo.getDate()));
-			ReminderUtil.createNewReminder(ctx, reminderInfo);
-			pushNotification(info);
+
+			ReminderUtil.createNewDefaultReminder(ctx, reminderInfo);
+			notifyUtil.showMissedCallNotification(info);
 		} else {
 			// no action
 		}
@@ -42,22 +41,10 @@ public class StandardMissRejectListener implements OnCallMissRejectListener {
 		// TODO check if reminder exist and notify about call rejected showing if reminder exist and what its time
 		ReminderInfo reminderInfo = reminderDao.findByPhone(info.getPhone());
 		if (reminderInfo == null) { // no reminders yet
-			/*reminderInfo = Helper.convertCallToReminder(info);
-			reminderInfo.setDate(ReminderUtil.calcDeafaultRemindDate(reminderInfo.getDate()));
-			ReminderUtil.createNewReminder(ctx, reminderInfo);*/
-			// TODO add parameter to show if reminder exists
-			pushNotification(info);
+			notifyUtil.showRejectedCallNotification(info);
 		} else {
 			// TODO "you already have a reminder"
-			pushNotification(info);
-		}
-	}
-
-	private void pushNotification(CallInfo info) {
-		if (info.getType() == TYPE.MISSED) {
-			notifyUtil.showMissedCallNotification(info);
-		} else if (info.getType() == TYPE.REJECTED) {
-			notifyUtil.showRejectedCallNotification(info);
+			notifyUtil.showRejectedCallNotification(info, reminderInfo);
 		}
 	}
 

@@ -1,8 +1,6 @@
 package com.wantcallback.ui;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -26,6 +24,7 @@ import com.wantcallback.R;
 import com.wantcallback.dao.impl.ReminderDao;
 import com.wantcallback.dao.model.ReminderInfo;
 import com.wantcallback.data.ContactsUtil;
+import com.wantcallback.helper.Helper;
 import com.wantcallback.notifications.NotificationsUtil;
 import com.wantcallback.observer.model.ContactInfo;
 import com.wantcallback.reminder.ReminderUtil;
@@ -45,9 +44,6 @@ public class SetReminderActivity extends FragmentActivity implements RadialTimeP
 	private TextView textToday;
 	private TextView textHasReminder;
 	private Button btnSave;
-
-	private static DateFormat sdfTime = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT);
-	private static DateFormat sdfDateTime = SimpleDateFormat.getTimeInstance(SimpleDateFormat.MEDIUM);
 
 	private Date remindDate = null;
 	private boolean isToday = true;
@@ -107,7 +103,7 @@ public class SetReminderActivity extends FragmentActivity implements RadialTimeP
 					
 					ReminderUtil.createNewReminder(SetReminderActivity.this, info);
 					
-					Toast.makeText(SetReminderActivity.this, "Will remind at " + sdfDateTime.format(remindDate), Toast.LENGTH_LONG).show();
+					Toast.makeText(SetReminderActivity.this, "Will remind at " + Helper.sdfDateTime.format(remindDate), Toast.LENGTH_LONG).show();
 					finish();
 				}
 			}
@@ -200,7 +196,7 @@ public class SetReminderActivity extends FragmentActivity implements RadialTimeP
 		}
 		remindDate = calendarRem.getTime();
 		
-		String timeString = sdfTime.format(remindDate);
+		String timeString = Helper.sdfTime.format(remindDate);
 		textTime.setText(timeString);
 		setTodayText(isToday);
 	}

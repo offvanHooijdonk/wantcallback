@@ -11,13 +11,13 @@ import android.content.Intent;
 
 public class AlarmUtil {
 	private static AlarmManager alarmManager;
-	// TODO do it better way
-	//private static int index = 0;
 
 	public static void createNewReminderAlarm(Context ctx, int callId, String phoneNumber, Date date) {
-		Intent intent = new Intent(ctx, RemindActivity.class);
-		intent.putExtra(RemindActivity.EXTRA_PHONE, phoneNumber);
-		getAlarmManager(ctx).set(AlarmManager.RTC_WAKEUP, date.getTime(), PendingIntent.getActivity(ctx, callId, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+		getAlarmManager(ctx).set(AlarmManager.RTC_WAKEUP, date.getTime(), preparePendingIntent(ctx, callId, phoneNumber));
+	}
+	
+	public static void cancelAlarm(Context ctx, int callId, String phoneNumber) {
+		getAlarmManager(ctx).cancel(preparePendingIntent(ctx, callId, phoneNumber));
 	}
 	
 	private static AlarmManager getAlarmManager(Context ctx) {
@@ -26,5 +26,12 @@ public class AlarmUtil {
 		}
 		
 		return alarmManager;
+	}
+	
+	private static PendingIntent preparePendingIntent(Context ctx, int callId, String phoneNumber) {
+		Intent intent = new Intent(ctx, RemindActivity.class);
+		intent.putExtra(RemindActivity.EXTRA_PHONE, phoneNumber);
+		
+		return PendingIntent.getActivity(ctx, callId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 	}
 }

@@ -1,5 +1,7 @@
 package com.wantcallback.notifications;
 
+import java.util.Date;
+
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -8,7 +10,9 @@ import android.provider.CallLog;
 import android.support.v4.app.NotificationCompat;
 
 import com.wantcallback.R;
+import com.wantcallback.dao.model.ReminderInfo;
 import com.wantcallback.data.ContactsUtil;
+import com.wantcallback.helper.Helper;
 import com.wantcallback.observer.model.CallInfo;
 import com.wantcallback.observer.model.ContactInfo;
 import com.wantcallback.reminder.ReminderUtil;
@@ -53,6 +57,21 @@ public class NotificationsUtil {
 		getNotificationManager().notify(tag, id, builder.build());
 	}
 	
+	public void showRejectedCallNotification(CallInfo info, ReminderInfo reminderInfo) {
+		String tag = info.getPhone();
+		int id = NOTIFICATION_REJECTED_CALL;
+		String callerLabel = getCallerLabel(info);
+		
+		NotificationCompat.Builder builder = getCommonCallNBuilder(info).setContentTitle("Rejected Call")
+				.setContentText("You already have a reminder at " + Helper.sdfTime.format(new Date(reminderInfo.getDate())))
+				.setTicker("Rejected Call from " + callerLabel)
+				.setContentIntent(createOpenRemindersIntent(info, tag, id)) // open activity to set custom info
+				.addAction(R.drawable.ic_edit, "Call now", createDialerIntent(info)) // Dial missed call
+				.addAction(R.drawable.ic_forget, "Forget", createForgetIntent(info, tag, id)); // remove reminder created
+		
+		getNotificationManager().notify(tag, id, builder.build());
+	}
+	
 	/**
 	 * Create notification.builder that has settings common for typical Missed & Rejected notifications in the app
 	 * @param phoneNumber
@@ -94,10 +113,12 @@ public class NotificationsUtil {
 	}
 	
 	private PendingIntent createDefaultReminderIntent(CallInfo info, String notifTag, int notifId) {
-		Intent intent = new Intent(NotificationActionBroadcastReciever.ACTION_FORGET);
+		Intent intent = new Intent(NotificationActionBroadcastReciever.ACTION_DEFAULT_REMINDER);
 		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_PHONE, info.getPhone());
 		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_NOTIF_TAG, notifTag);
 		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_NOTIF_ID, notifId);
+		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_CALL_DATE_LONG, info.getDate());
+		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_CALL_ID, info.getLogId());
 		
 		return PendingIntent.getBroadcast(ctx, info.getLogId(), intent, 0);
 	}
@@ -124,4 +145,5 @@ public class NotificationsUtil {
 		
 		return mNotificationManager;
 	}
+
 }
