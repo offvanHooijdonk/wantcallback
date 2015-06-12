@@ -1,6 +1,8 @@
 package com.wantcallback.ui;
 
 import com.wantcallback.R;
+import com.wantcallback.dao.impl.ReminderDao;
+import com.wantcallback.dao.model.ReminderInfo;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -8,6 +10,7 @@ import android.widget.TextView;
 
 public class RemindActivity extends Activity {
 	public static final String EXTRA_PHONE = "extra_phone";
+	ReminderDao reminderDao;
 	
 	private TextView textPhone;
 
@@ -16,6 +19,7 @@ public class RemindActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.reminder);
 		
+		reminderDao = new ReminderDao(this);
 		textPhone = (TextView) findViewById(R.id.textPhone);
 		
 	}
@@ -27,7 +31,11 @@ public class RemindActivity extends Activity {
 		String phoneNumber = getIntent().getExtras().getString(EXTRA_PHONE);
 		
 		if (phoneNumber != null) {
-			textPhone.setText(phoneNumber);
+			ReminderInfo reminder = reminderDao.findByPhone(phoneNumber);
+			if (reminder != null) {
+				reminderDao.deleteByPhone(phoneNumber);
+				textPhone.setText(reminder.getPhone());
+			}
 		} else {
 			textPhone.setText("-");
 		}
