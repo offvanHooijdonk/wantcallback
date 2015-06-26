@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
 import android.provider.CallLog;
 import android.support.v4.app.NotificationCompat;
 
@@ -21,6 +22,7 @@ import com.wantcallback.ui.SetReminderActivity;
 public class NotificationsUtil {
 	private static final int NOTIFICATION_MISSED_CALL = 0;
 	private static final int NOTIFICATION_REJECTED_CALL = 1;
+	private static final int NOTIFICATION_REMINDER = 2;
 	
 	private Context ctx;
 	private static NotificationManager mNotificationManager;
@@ -72,6 +74,24 @@ public class NotificationsUtil {
 		getNotificationManager().notify(tag, id, builder.build());
 	}
 	
+	public void showReminderNotification(CallInfo callInfo, ReminderInfo reminderInfo) {
+		String tag = reminderInfo.getPhone();
+		int id = NOTIFICATION_REMINDER;
+		
+		NotificationCompat.Builder builder = getCommonCallNBuilder(callInfo).setContentTitle("Time to call back to" + reminderInfo.getPhone())
+				.setContentText("Call to " + reminderInfo.getPhone() + " that called you at " + Helper.sdfTime.format(new Date(callInfo.getDate())))
+				.setTicker("Call back to " + reminderInfo.getPhone())
+				.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+				.setLights(ctx.getResources().getColor(R.color.blue), 500, 500) // TODO make configurable
+				.setVibrate(new long[]{200,300,200,300,200,300})
+				.setContentIntent(createDialerIntent(callInfo))
+				.addAction(R.drawable.ic_edit, "Change", createOpenRemindersIntent(callInfo, tag, id))
+				.addAction(R.drawable.ic_forget, "Forget", createForgetIntent(callInfo, tag, id));
+		// TODO add Postpone action?
+		
+		getNotificationManager().notify(tag, id, builder.build());
+	}
+	
 	/**
 	 * Create notification.builder that has settings common for typical Missed & Rejected notifications in the app
 	 * @param phoneNumber
@@ -113,7 +133,7 @@ public class NotificationsUtil {
 	}
 	
 	private PendingIntent createDefaultReminderIntent(CallInfo info, String notifTag, int notifId) {
-		Intent intent = new Intent(NotificationActionBroadcastReciever.ACTION_DEFAULT_REMINDER);
+		Intent intent = new Intent(NotificationActionBroadcastReciever.ACTION_CREATE_DEFAULT_REMINDER);
 		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_PHONE, info.getPhone());
 		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_NOTIF_TAG, notifTag);
 		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_NOTIF_ID, notifId);
@@ -123,7 +143,7 @@ public class NotificationsUtil {
 		return PendingIntent.getBroadcast(ctx, info.getLogId(), intent, 0);
 	}
 	
-	public String getCallerLabel(CallInfo callInfo) {
+	private String getCallerLabel(CallInfo callInfo) {
 		String label;
 		ContactInfo contactInfo = contactsUtil.findContactByPhone(callInfo.getPhone());
 		if (contactInfo != null) {

@@ -2,12 +2,12 @@ package com.wantcallback.reminder;
 
 import java.util.Date;
 
-import com.wantcallback.ui.RemindActivity;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+
+import com.wantcallback.notifications.NotificationActionBroadcastReciever;
 
 public class AlarmUtil {
 	private static AlarmManager alarmManager;
@@ -29,9 +29,11 @@ public class AlarmUtil {
 	}
 	
 	private static PendingIntent preparePendingIntent(Context ctx, int callId, String phoneNumber) {
-		Intent intent = new Intent(ctx, RemindActivity.class);
-		intent.putExtra(RemindActivity.EXTRA_PHONE, phoneNumber);
+		Intent intent = new Intent(NotificationActionBroadcastReciever.ACTION_REMIND);
 		
-		return PendingIntent.getActivity(ctx, callId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_PHONE, phoneNumber);
+		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_CALL_ID, phoneNumber);
+		
+		return PendingIntent.getBroadcast(ctx, callId, intent, 0);
 	}
 }
