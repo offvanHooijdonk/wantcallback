@@ -1,24 +1,22 @@
 package com.wantcallback.ui;
 
-import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-
 import android.app.AlertDialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
 import com.wantcallback.Constants;
 import com.wantcallback.R;
 import com.wantcallback.dao.impl.ReminderDao;
@@ -29,13 +27,19 @@ import com.wantcallback.notifications.NotificationsUtil;
 import com.wantcallback.observer.model.ContactInfo;
 import com.wantcallback.reminder.ReminderUtil;
 
-public class SetReminderActivity extends FragmentActivity implements RadialTimePickerDialog.OnTimeSetListener {
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+
+public class SetReminderActivity extends FragmentActivity implements TimePickerDialog.OnTimeSetListener {
 	public static final String EXTRA_PHONE = "extra_phone";
 	public static final String EXTRA_CALL_ID = "extra_call_id";
 	public static final String EXTRA_NOTIF_TAG = "extra_notif_tag";
 	public static final String EXTRA_NOTIF_ID = "extra_notif_id";
 
 	private static final String TAG_TIME_DIALOG = "tag_time_dialog";
+
+	private SetReminderActivity that;
 
 	private TextView textContactName;
 	private ImageView ivPhoto;
@@ -55,7 +59,9 @@ public class SetReminderActivity extends FragmentActivity implements RadialTimeP
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.set_alarm);
-		
+
+		this.that = this;
+
 		reminderDao = new ReminderDao(this);
 
 		inputPhone = (AutoCompleteTextView) findViewById(R.id.inputPhone);
@@ -71,10 +77,10 @@ public class SetReminderActivity extends FragmentActivity implements RadialTimeP
 			public void onClick(View v) {
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTime(remindDate);
-				RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog
-                        .newInstance(SetReminderActivity.this, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),
-                        		android.text.format.DateFormat.is24HourFormat(SetReminderActivity.this));
-				timePickerDialog.show(getSupportFragmentManager(), TAG_TIME_DIALOG);
+				TimePickerDialog timePickerDialog = new TimePickerDialog(that, that, calendar.get(Calendar.HOUR_OF_DAY), calendar.get
+						(Calendar.MINUTE), DateFormat.is24HourFormat(that));
+
+				timePickerDialog.show();
 			}
 		});
 		
@@ -170,19 +176,6 @@ public class SetReminderActivity extends FragmentActivity implements RadialTimeP
 		}
 
 	}
-
-	@Override
-	public void onTimeSet(RadialTimePickerDialog dialog, int hourOfDay, int minute) {
-		if (dialog.getTag().equals(TAG_TIME_DIALOG)) {
-			Calendar calendarPicked = Calendar.getInstance();
-			calendarPicked.set(Calendar.HOUR_OF_DAY, hourOfDay);
-			calendarPicked.set(Calendar.MINUTE, minute);
-			calendarPicked.set(Calendar.SECOND, 0);
-			calendarPicked.set(Calendar.MILLISECOND, 0);
-
-			displayReminderTime(calendarPicked.getTimeInMillis());
-		}
-	}
 	
 	private void displayReminderTime(long time) {
 		Calendar calendarRem = Calendar.getInstance();
@@ -211,5 +204,17 @@ public class SetReminderActivity extends FragmentActivity implements RadialTimeP
 		} else {
 			textToday.setText(this.getResources().getString(R.string.tomorrow));
 		}
+	}
+
+	@Override
+	public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        // assume we have only one time picker dialog
+		Calendar calendarPicked = Calendar.getInstance();
+		calendarPicked.set(Calendar.HOUR_OF_DAY, hourOfDay);
+		calendarPicked.set(Calendar.MINUTE, minute);
+		calendarPicked.set(Calendar.SECOND, 0);
+		calendarPicked.set(Calendar.MILLISECOND, 0);
+
+		displayReminderTime(calendarPicked.getTimeInMillis());
 	}
 }

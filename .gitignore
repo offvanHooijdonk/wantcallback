@@ -1,6 +1,4 @@
-/assets/
-/bin/
-/gen/
-*.classpath
-*.project
-*project.properties
+/.gradle/
+/.idea/
+/build/
+/gradle/
