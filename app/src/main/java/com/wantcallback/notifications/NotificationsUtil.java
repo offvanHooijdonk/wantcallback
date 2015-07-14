@@ -94,10 +94,11 @@ public class NotificationsUtil {
 	
 	/**
 	 * Create notification.builder that has settings common for typical Missed & Rejected notifications in the app
-	 * @param phoneNumber
+	 * @param info
 	 * @return
 	 */
 	private NotificationCompat.Builder getCommonCallNBuilder(CallInfo info) {
+		// TODO remove one of icons
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.ic_launcher)
 				.setContentText(info.getPhone()).setPriority(NotificationCompat.PRIORITY_HIGH)
 				.setCategory("call").setSmallIcon(R.drawable.ic_notify_call).setAutoCancel(true);

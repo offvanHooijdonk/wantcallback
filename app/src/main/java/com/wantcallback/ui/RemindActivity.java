@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+@Deprecated
 public class RemindActivity extends Activity {
 	public static final String EXTRA_PHONE = "extra_phone";
 	ReminderDao reminderDao;
