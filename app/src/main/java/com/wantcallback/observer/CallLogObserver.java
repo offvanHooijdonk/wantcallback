@@ -8,8 +8,8 @@ import android.util.Log;
 import com.wantcallback.Constants;
 import com.wantcallback.data.CallLogUtil;
 import com.wantcallback.observer.listener.OnCallMissRejectListener;
-import com.wantcallback.observer.model.CallInfo;
-import com.wantcallback.observer.model.CallInfo.TYPE;
+import com.wantcallback.model.CallInfo;
+import com.wantcallback.model.CallInfo.TYPE;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,7 +30,7 @@ public class CallLogObserver extends ContentObserver {
 		super(handler);
 	}
 	
-	protected CallLogObserver(Handler handler, Context context) {
+	public CallLogObserver(Handler handler, Context context) {
 		this(handler);
 		this.ctx = context;
 		

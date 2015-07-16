@@ -20,11 +20,11 @@ import android.widget.Toast;
 import com.wantcallback.Constants;
 import com.wantcallback.R;
 import com.wantcallback.dao.impl.ReminderDao;
-import com.wantcallback.dao.model.ReminderInfo;
+import com.wantcallback.model.ReminderInfo;
 import com.wantcallback.data.ContactsUtil;
 import com.wantcallback.helper.AppHelper;
 import com.wantcallback.notifications.NotificationsUtil;
-import com.wantcallback.observer.model.ContactInfo;
+import com.wantcallback.model.ContactInfo;
 import com.wantcallback.reminder.ReminderUtil;
 
 import java.io.IOException;
@@ -58,7 +58,7 @@ public class SetReminderActivity extends FragmentActivity implements TimePickerD
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.set_alarm);
+		setContentView(R.layout.activity_set_alarm);
 
 		this.that = this;
 

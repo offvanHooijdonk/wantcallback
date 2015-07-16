@@ -7,20 +7,21 @@ import android.util.Log;
 
 import com.wantcallback.Constants;
 import com.wantcallback.dao.impl.ReminderDao;
-import com.wantcallback.dao.model.ReminderInfo;
+import com.wantcallback.model.ReminderInfo;
 
 public class DBHelperUtil extends SQLiteOpenHelper {
 	private static final String DB_NAME = "wantcallback_db";
 	
 	public DBHelperUtil(Context context) {
-		super(context, DB_NAME, null, 1);
+		super(context, DB_NAME, null, 2);
 		
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		String q = "CREATE TABLE " + ReminderDao.TABLE + " (" + ReminderInfo.ID + 
-				" integer primary key, " + ReminderInfo.PHONE + " string not null unique, " + ReminderInfo.DATE + " integer);";
+				" integer primary key, " + ReminderInfo.PHONE + " string not null unique, " + ReminderInfo.DATE + " integer, " +
+				ReminderInfo.CALL_ID + " integer, " + ReminderInfo.CALL_DATE + " integer, " + ReminderInfo.CALL_TYPE + " string " + ");";
 		try {
 			db.execSQL(q);
 		} catch (Exception e) {

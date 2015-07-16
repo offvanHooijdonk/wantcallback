@@ -13,7 +13,7 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.PhoneLookup;
 
-import com.wantcallback.observer.model.ContactInfo;
+import com.wantcallback.model.ContactInfo;
 
 public class ContactsUtil {
 

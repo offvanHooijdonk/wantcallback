@@ -2,7 +2,7 @@ package com.wantcallback.ui;
 
 import com.wantcallback.R;
 import com.wantcallback.dao.impl.ReminderDao;
-import com.wantcallback.dao.model.ReminderInfo;
+import com.wantcallback.model.ReminderInfo;
 
 import android.app.Activity;
 import android.os.Bundle;

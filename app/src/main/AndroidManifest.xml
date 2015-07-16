@@ -36,10 +36,8 @@
         </activity>
 
         <service
-            android:name=".service.CallHandlerService"
-            android:process=":callHandler">
+            android:name=".service.InitializerIntentService">
         </service>
-
     </application>
 
 </manifest>

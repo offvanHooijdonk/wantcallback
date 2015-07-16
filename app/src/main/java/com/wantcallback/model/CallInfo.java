@@ -1,4 +1,4 @@
-package com.wantcallback.observer.model;
+package com.wantcallback.model;
 
 public class CallInfo {
 	public static final long INVALID_DATE = -1L;

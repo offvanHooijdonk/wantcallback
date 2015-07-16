@@ -12,4 +12,13 @@
     <string name="date_experid_button">OK</string>
     <string name="has_reminder">You already has a reminder for this number.</string>
     <string name="edit_reminder_title">Reminder</string>
+
+    <string name="btn_save_reminder">Remind</string>
+
+    <string name="missed_at_time">Missed at %s</string>
+    <string name="rejected_at_time">Rejected at %s</string>
+    <string name="forget">Forget</string>
+
+    <string name="foreground_title"></string>
+    <string name="foreground_message"></string>
 </resources>

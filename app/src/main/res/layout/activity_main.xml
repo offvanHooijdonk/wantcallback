@@ -14,4 +14,11 @@
         android:layout_height="wrap_content"
         android:text="Add Alarm" />
 
+    <ListView
+        android:id="@+id/listReminders"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/btnAddAlarm"
+        android:divider="@color/app_accent"/>
+
 </RelativeLayout>

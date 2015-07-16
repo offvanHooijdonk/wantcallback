@@ -3,11 +3,11 @@ package com.wantcallback.observer.listener.impl;
 import android.content.Context;
 
 import com.wantcallback.dao.impl.ReminderDao;
-import com.wantcallback.dao.model.ReminderInfo;
+import com.wantcallback.model.ReminderInfo;
 import com.wantcallback.helper.AppHelper;
 import com.wantcallback.notifications.NotificationsUtil;
 import com.wantcallback.observer.listener.OnCallMissRejectListener;
-import com.wantcallback.observer.model.CallInfo;
+import com.wantcallback.model.CallInfo;
 import com.wantcallback.reminder.ReminderUtil;
 
 public class StandardMissRejectListener implements OnCallMissRejectListener {

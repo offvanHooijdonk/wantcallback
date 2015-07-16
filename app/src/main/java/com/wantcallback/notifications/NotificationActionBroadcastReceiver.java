@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.wantcallback.dao.impl.ReminderDao;
-import com.wantcallback.dao.model.ReminderInfo;
-import com.wantcallback.observer.model.CallInfo;
-import com.wantcallback.observer.model.CallInfo.TYPE;
+import com.wantcallback.model.ReminderInfo;
+import com.wantcallback.model.CallInfo;
+import com.wantcallback.model.CallInfo.TYPE;
 import com.wantcallback.reminder.ReminderUtil;
 
 import java.util.Date;
@@ -23,7 +23,7 @@ public class NotificationActionBroadcastReceiver extends BroadcastReceiver {
 	public static final String EXTRA_CALL_ID = "extra_notif_id";
 	public static final String EXTRA_CALL_DATE_LONG = "extra_call_date_long";
 
-	protected NotificationActionBroadcastReceiver() {
+	public NotificationActionBroadcastReceiver() {
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package com.wantcallback.observer.listener;
 
-import com.wantcallback.observer.model.CallInfo;
+import com.wantcallback.model.CallInfo;
 
 public interface OnCallMissRejectListener {
 	

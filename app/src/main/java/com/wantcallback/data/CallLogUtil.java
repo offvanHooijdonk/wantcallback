@@ -1,8 +1,5 @@
 package com.wantcallback.data;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.CallLog;
@@ -10,8 +7,11 @@ import android.provider.CallLog.Calls;
 import android.util.Log;
 
 import com.wantcallback.Constants;
-import com.wantcallback.observer.model.CallInfo;
-import com.wantcallback.observer.model.CallInfo.TYPE;
+import com.wantcallback.model.CallInfo;
+import com.wantcallback.model.CallInfo.TYPE;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CallLogUtil {
 	private Context ctx;
@@ -57,7 +57,7 @@ public class CallLogUtil {
 				try {
 					callDate = Long.parseLong(date);
 				} catch (NumberFormatException e) {
-					Log.e(Constants.LOG_TAG, "Error parcing call date from Calls Source!", e);
+					Log.e(Constants.LOG_TAG, "Error parsing call date from Calls Source!", e);
 				}
 				
 				Log.i(Constants.LOG_TAG, String.format("%s: %s | %s | %s", ++i, number, type, date));

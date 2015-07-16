@@ -1,4 +1,4 @@
-package com.wantcallback.observer.model;
+package com.wantcallback.model;
 
 public class ContactInfo {
 

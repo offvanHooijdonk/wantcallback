@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import com.wantcallback.dao.impl.ReminderDao;
-import com.wantcallback.dao.model.ReminderInfo;
+import com.wantcallback.model.ReminderInfo;
 
 import android.content.Context;
 import android.widget.Toast;

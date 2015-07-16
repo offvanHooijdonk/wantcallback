@@ -2,8 +2,8 @@ package com.wantcallback.helper;
 
 import android.content.Context;
 
-import com.wantcallback.dao.model.ReminderInfo;
-import com.wantcallback.observer.model.CallInfo;
+import com.wantcallback.model.ReminderInfo;
+import com.wantcallback.model.CallInfo;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -20,6 +20,7 @@ public class AppHelper {
 		reminderInfo.setDate(callInfo.getDate());
 		reminderInfo.setId(callInfo.getLogId());
 		reminderInfo.setPhone(callInfo.getPhone());
+		reminderInfo.setCallInfo(callInfo);
 		
 		return reminderInfo;
 	}
@@ -28,7 +29,7 @@ public class AppHelper {
 		return ctx.getSharedPreferences(FILE_PREF_LOCAL, Context.MODE_PRIVATE).getBoolean(PREF_APP_ENABLED, false);
 	}
 
-	public static void setApplicationEnabled(Context ctx, boolean enabled) {
+	public static void persistAppEnabledState(Context ctx, boolean enabled) {
 		ctx.getSharedPreferences(FILE_PREF_LOCAL, Context.MODE_PRIVATE).edit().putBoolean(PREF_APP_ENABLED, enabled).commit();
 	}
 }
