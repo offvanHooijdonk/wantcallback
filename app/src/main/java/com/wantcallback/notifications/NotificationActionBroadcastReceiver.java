@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.wantcallback.dao.impl.ReminderDao;
+import com.wantcallback.helper.AppHelper;
 import com.wantcallback.model.ReminderInfo;
 import com.wantcallback.model.CallInfo;
 import com.wantcallback.model.CallInfo.TYPE;
@@ -46,6 +47,7 @@ public class NotificationActionBroadcastReceiver extends BroadcastReceiver {
 				//TODO what to do if phoneNumber is null
 			}
 		} else if (ACTION_CREATE_DEFAULT_REMINDER.equals(action)) {
+			// TODO do not create anything if application is disabled
 			String phoneNumber = intent.getExtras().getString(EXTRA_PHONE);
 			int notifId = intent.getExtras().getInt(EXTRA_NOTIF_ID);
 			long callDateLong = intent.getExtras().getLong(EXTRA_CALL_DATE_LONG);
@@ -74,10 +76,13 @@ public class NotificationActionBroadcastReceiver extends BroadcastReceiver {
 			ReminderInfo reminderInfo = dao.findByPhone(phone);
 			
 			if (reminderInfo != null) {
-				NotificationsUtil notificationsUtil = new NotificationsUtil(ctx);
-				
-				CallInfo callInfo = new CallInfo(callId, phone, (new Date()).getTime(), TYPE.REJECTED); // TODO store call date and type in DB
-				notificationsUtil.showReminderNotification(callInfo, reminderInfo);
+				if (AppHelper.isApplicationEnabled(ctx)) {
+					NotificationsUtil notificationsUtil = new NotificationsUtil(ctx);
+
+					CallInfo callInfo = reminderInfo.getCallInfo();
+					notificationsUtil.showReminderNotification(callInfo, reminderInfo);
+				}
+				dao.deleteByPhone(phone);
 			}
 		}
 		

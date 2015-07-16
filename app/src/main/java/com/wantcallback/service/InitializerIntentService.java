@@ -37,15 +37,15 @@ public class InitializerIntentService extends Service {
 
 		if (AppHelper.isApplicationEnabled(this)) {
 			registerAll();
-		}
 
-		NotificationsUtil notificationsUtil = new NotificationsUtil(this);
-		startForeground(NotificationsUtil.NOTIFICATION_FOREGROUND_SERVICE, notificationsUtil.createForegroundServiceNotification());
+			NotificationsUtil notificationsUtil = new NotificationsUtil(this);
+			startForeground(NotificationsUtil.NOTIFICATION_FOREGROUND_SERVICE, notificationsUtil.createForegroundServiceNotification());
+		}
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		boolean isStart = intent.getBooleanExtra(EXTRA_START_SHUT, true);
+		boolean isStart = intent.getBooleanExtra(EXTRA_START_SHUT, false);
 
 		if (isStart) {
 			registerAll();

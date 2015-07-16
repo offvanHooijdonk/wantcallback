@@ -120,6 +120,8 @@ public class SetReminderActivity extends FragmentActivity implements TimePickerD
 	protected void onResume() {
 		super.onResume();
 
+		// TODO check if application enabled, if not - disable controls and show message
+
 		Intent intent = getIntent();
 		if (intent != null) {
 			callId = intent.getExtras().getInt(EXTRA_CALL_ID);
