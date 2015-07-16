@@ -2,32 +2,20 @@ package com.wantcallback.ui;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import com.wantcallback.Constants;
 import com.wantcallback.R;
-import com.wantcallback.R.id;
-import com.wantcallback.R.layout;
-import com.wantcallback.R.menu;
-import com.wantcallback.notifications.NotificationActionBroadcastReciever;
-import com.wantcallback.observer.CallLogObserver;
-import com.wantcallback.observer.listener.OnCallMissRejectListener;
-import com.wantcallback.observer.listener.impl.StandardMissRejectListener;
 
 public class MainActivity extends Activity {
 	
 	private MainActivity that;
-	private Button btnStartService;
 	private Button btnAddAlarm;
-	private CallLogObserver callLogObserver;
-	private NotificationActionBroadcastReciever broadcastReciever;
+	/*private CallLogObserver callLogObserver;
+	private NotificationActionBroadcastReceiver broadcastReceiver;*/
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,20 +24,10 @@ public class MainActivity extends Activity {
 		
 		that = this;
 		
-		btnStartService = (Button) findViewById(R.id.btnStartService);
 		btnAddAlarm = (Button) findViewById(R.id.btnAddAlarm);
 		
-		initCallObserver();
-		initBroadcastReciever();
-		
-		btnStartService.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// TODO disabled to test without starting service
-				/*Intent intent = new Intent(that, CallHandlerService.class);
-				that.startService(intent);*/
-			}
-		});
+		/*initCallObserver();
+		initBroadcastReceiver();*/
 		
 		btnAddAlarm.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -76,12 +54,12 @@ public class MainActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	private void initBroadcastReciever() {
-		broadcastReciever = new NotificationActionBroadcastReciever();
+	/*private void initBroadcastReceiver() {
+		broadcastReceiver = new NotificationActionBroadcastReceiver();
 		IntentFilter filter = new IntentFilter();
-		filter.addAction(NotificationActionBroadcastReciever.ACTION_FORGET);
+		filter.addAction(NotificationActionBroadcastReceiver.ACTION_FORGET);
 		
-		registerReceiver(broadcastReciever, filter);
+		registerReceiver(broadcastReceiver, filter);
 	}
 	
 	private void initCallObserver() {
@@ -94,9 +72,9 @@ public class MainActivity extends Activity {
 				.registerContentObserver(android.provider.CallLog.Calls.CONTENT_URI, true, callLogObserver);
 
 		Log.i(Constants.LOG_TAG, "Call observer initialized.");
-	}
+	}*/
 	
-	@Override
+	/*@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		if (callLogObserver != null) {
@@ -104,8 +82,8 @@ public class MainActivity extends Activity {
 					.unregisterContentObserver(callLogObserver);
 		}
 		
-		if (broadcastReciever != null) {
-			unregisterReceiver(broadcastReciever);
+		if (broadcastReceiver != null) {
+			unregisterReceiver(broadcastReceiver);
 		}
-	}
+	}*/
 }

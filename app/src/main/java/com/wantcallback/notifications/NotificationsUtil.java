@@ -13,7 +13,7 @@ import android.support.v4.app.NotificationCompat;
 import com.wantcallback.R;
 import com.wantcallback.dao.model.ReminderInfo;
 import com.wantcallback.data.ContactsUtil;
-import com.wantcallback.helper.Helper;
+import com.wantcallback.helper.AppHelper;
 import com.wantcallback.observer.model.CallInfo;
 import com.wantcallback.observer.model.ContactInfo;
 import com.wantcallback.reminder.ReminderUtil;
@@ -65,7 +65,7 @@ public class NotificationsUtil {
 		String callerLabel = getCallerLabel(info);
 		
 		NotificationCompat.Builder builder = getCommonCallNBuilder(info).setContentTitle("Rejected Call")
-				.setContentText("You already have a reminder at " + Helper.sdfTime.format(new Date(reminderInfo.getDate())))
+				.setContentText("You already have a reminder at " + AppHelper.sdfTime.format(new Date(reminderInfo.getDate())))
 				.setTicker("Rejected Call from " + callerLabel)
 				.setContentIntent(createOpenRemindersIntent(info, tag, id)) // open activity to set custom info
 				.addAction(R.drawable.ic_edit, "Call now", createDialerIntent(info)) // Dial missed call
@@ -79,10 +79,10 @@ public class NotificationsUtil {
 		int id = NOTIFICATION_REMINDER;
 		
 		NotificationCompat.Builder builder = getCommonCallNBuilder(callInfo).setContentTitle("Time to call back to" + reminderInfo.getPhone())
-				.setContentText("Call to " + reminderInfo.getPhone() + " that called you at " + Helper.sdfTime.format(new Date(callInfo.getDate())))
+				.setContentText("Call to " + reminderInfo.getPhone() + " that called you at " + AppHelper.sdfTime.format(new Date(callInfo.getDate())))
 				.setTicker("Call back to " + reminderInfo.getPhone())
 				.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-				.setLights(ctx.getResources().getColor(R.color.blue), 500, 500) // TODO make configurable
+				.setLights(ctx.getResources().getColor(R.color.led_blue), 500, 500) // TODO make configurable
 				.setVibrate(new long[]{200,300,200,300,200,300})
 				.setContentIntent(createDialerIntent(callInfo))
 				.addAction(R.drawable.ic_edit, "Change", createOpenRemindersIntent(callInfo, tag, id))
@@ -125,21 +125,21 @@ public class NotificationsUtil {
 	}
 	
 	private PendingIntent createForgetIntent(CallInfo info, String notifTag, int notifId) {
-		Intent intent = new Intent(NotificationActionBroadcastReciever.ACTION_FORGET);
-		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_PHONE, info.getPhone());
-		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_NOTIF_TAG, notifTag);
-		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_NOTIF_ID, notifId);
+		Intent intent = new Intent(NotificationActionBroadcastReceiver.ACTION_FORGET);
+		intent.putExtra(NotificationActionBroadcastReceiver.EXTRA_PHONE, info.getPhone());
+		intent.putExtra(NotificationActionBroadcastReceiver.EXTRA_NOTIF_TAG, notifTag);
+		intent.putExtra(NotificationActionBroadcastReceiver.EXTRA_NOTIF_ID, notifId);
 		
 		return PendingIntent.getBroadcast(ctx, info.getLogId(), intent, 0);
 	}
 	
 	private PendingIntent createDefaultReminderIntent(CallInfo info, String notifTag, int notifId) {
-		Intent intent = new Intent(NotificationActionBroadcastReciever.ACTION_CREATE_DEFAULT_REMINDER);
-		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_PHONE, info.getPhone());
-		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_NOTIF_TAG, notifTag);
-		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_NOTIF_ID, notifId);
-		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_CALL_DATE_LONG, info.getDate());
-		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_CALL_ID, info.getLogId());
+		Intent intent = new Intent(NotificationActionBroadcastReceiver.ACTION_CREATE_DEFAULT_REMINDER);
+		intent.putExtra(NotificationActionBroadcastReceiver.EXTRA_PHONE, info.getPhone());
+		intent.putExtra(NotificationActionBroadcastReceiver.EXTRA_NOTIF_TAG, notifTag);
+		intent.putExtra(NotificationActionBroadcastReceiver.EXTRA_NOTIF_ID, notifId);
+		intent.putExtra(NotificationActionBroadcastReceiver.EXTRA_CALL_DATE_LONG, info.getDate());
+		intent.putExtra(NotificationActionBroadcastReceiver.EXTRA_CALL_ID, info.getLogId());
 		
 		return PendingIntent.getBroadcast(ctx, info.getLogId(), intent, 0);
 	}

@@ -7,7 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
-import com.wantcallback.notifications.NotificationActionBroadcastReciever;
+import com.wantcallback.notifications.NotificationActionBroadcastReceiver;
 
 public class AlarmUtil {
 	private static AlarmManager alarmManager;
@@ -29,10 +29,10 @@ public class AlarmUtil {
 	}
 	
 	private static PendingIntent preparePendingIntent(Context ctx, int callId, String phoneNumber) {
-		Intent intent = new Intent(NotificationActionBroadcastReciever.ACTION_REMIND);
+		Intent intent = new Intent(NotificationActionBroadcastReceiver.ACTION_REMIND);
 		
-		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_PHONE, phoneNumber);
-		intent.putExtra(NotificationActionBroadcastReciever.EXTRA_CALL_ID, phoneNumber);
+		intent.putExtra(NotificationActionBroadcastReceiver.EXTRA_PHONE, phoneNumber);
+		intent.putExtra(NotificationActionBroadcastReceiver.EXTRA_CALL_ID, phoneNumber);
 		
 		return PendingIntent.getBroadcast(ctx, callId, intent, 0);
 	}

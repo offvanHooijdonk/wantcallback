@@ -1,7 +1,5 @@
 package com.wantcallback.notifications;
 
-import java.util.Date;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +10,9 @@ import com.wantcallback.observer.model.CallInfo;
 import com.wantcallback.observer.model.CallInfo.TYPE;
 import com.wantcallback.reminder.ReminderUtil;
 
-public class NotificationActionBroadcastReciever extends BroadcastReceiver {
+import java.util.Date;
+
+public class NotificationActionBroadcastReceiver extends BroadcastReceiver {
 	public static final String ACTION_FORGET = "action_forget";
 	public static final String ACTION_CREATE_DEFAULT_REMINDER = "action_create_default_reminder";
 	public static final String ACTION_REMIND = "action_reminde";
@@ -22,7 +22,10 @@ public class NotificationActionBroadcastReciever extends BroadcastReceiver {
 	public static final String EXTRA_NOTIF_ID = "extra_notif_id";
 	public static final String EXTRA_CALL_ID = "extra_notif_id";
 	public static final String EXTRA_CALL_DATE_LONG = "extra_call_date_long";
-	
+
+	protected NotificationActionBroadcastReceiver() {
+	}
+
 	@Override
 	public void onReceive(Context ctx, Intent intent) {
 	

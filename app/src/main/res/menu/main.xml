@@ -3,6 +3,12 @@
     tools:context="com.wantcallback.MainActivity" >
 
     <item
+        android:id="@+id/action_app_enable"
+        android:title=""
+        android:actionProviderClass="com.wantcallback.ui.actionbar.AppEnableActionProvider"
+        android:showAsAction="always"/>
+
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never"

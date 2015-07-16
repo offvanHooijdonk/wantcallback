@@ -22,7 +22,7 @@ import com.wantcallback.R;
 import com.wantcallback.dao.impl.ReminderDao;
 import com.wantcallback.dao.model.ReminderInfo;
 import com.wantcallback.data.ContactsUtil;
-import com.wantcallback.helper.Helper;
+import com.wantcallback.helper.AppHelper;
 import com.wantcallback.notifications.NotificationsUtil;
 import com.wantcallback.observer.model.ContactInfo;
 import com.wantcallback.reminder.ReminderUtil;
@@ -109,7 +109,7 @@ public class SetReminderActivity extends FragmentActivity implements TimePickerD
 					
 					ReminderUtil.createNewReminder(SetReminderActivity.this, info);
 					
-					Toast.makeText(SetReminderActivity.this, "Will remind at " + Helper.sdfDateTime.format(remindDate), Toast.LENGTH_LONG).show();
+					Toast.makeText(SetReminderActivity.this, "Will remind at " + AppHelper.sdfDateTime.format(remindDate), Toast.LENGTH_LONG).show();
 					finish();
 				}
 			}
@@ -189,7 +189,7 @@ public class SetReminderActivity extends FragmentActivity implements TimePickerD
 		}
 		remindDate = calendarRem.getTime();
 		
-		String timeString = Helper.sdfTime.format(remindDate);
+		String timeString = AppHelper.sdfTime.format(remindDate);
 		textTime.setText(timeString);
 		setTodayText(isToday);
 	}

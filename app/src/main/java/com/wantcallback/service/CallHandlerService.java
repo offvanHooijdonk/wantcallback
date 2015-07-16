@@ -11,6 +11,7 @@ import com.wantcallback.observer.CallLogObserver;
 import com.wantcallback.observer.listener.OnCallMissRejectListener;
 import com.wantcallback.observer.listener.impl.StandardMissRejectListener;
 
+@Deprecated
 public class CallHandlerService extends Service {
 
 	private CallLogObserver callLogObserver;
