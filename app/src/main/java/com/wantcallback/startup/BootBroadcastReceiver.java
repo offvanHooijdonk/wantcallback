@@ -15,7 +15,7 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
         boolean startService = AppHelper.isApplicationEnabled(ctx);
 
         if (startService) {
-            ctx.startActivity(AppHelper.getInitServiceIntent(ctx, true));
+            ctx.startService(AppHelper.getInitServiceIntent(ctx, true));
         }
     }
 }
