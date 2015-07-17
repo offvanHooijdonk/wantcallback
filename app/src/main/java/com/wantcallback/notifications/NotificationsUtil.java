@@ -45,7 +45,7 @@ public class NotificationsUtil {
 		NotificationCompat.Builder builder = getCommonCallNBuilder(info).setContentTitle("Missed Call")
 				.setTicker("Missed Call from " + callerLabel) // TODO Show message 'Reminder created on 23:15'
 				.setContentIntent(createOpenRemindersIntent(info, tag, id)) // Open reminder settings
-				.addAction(R.drawable.ic_edit, "Call now", createDialerIntent(info)) // Dial missed call
+				.addAction(R.drawable.ic_call, "Call now", createDialerIntent(info)) // Dial missed call
 				.addAction(R.drawable.ic_forget, "Forget", createForgetIntent(info, tag, id)); // remove reminder created
 		
 		getNotificationManager().notify(tag, id, builder.build());
@@ -99,7 +99,7 @@ public class NotificationsUtil {
 	}
 
 	public Notification createForegroundServiceNotification() {
-		NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx).setLargeIcon(getLargeIconBitmap(R.drawable.ic_launcher))
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx)//.setLargeIcon(getLargeIconBitmap(R.drawable.ic_launcher))
 				.setSmallIcon(R.drawable.ic_notify_call)
 				.setContentTitle(ctx.getString(R.string.foreground_title))
 				.setContentText(ctx.getString(R.string.foreground_message))

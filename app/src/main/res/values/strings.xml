@@ -19,6 +19,6 @@
     <string name="rejected_at_time">Rejected at %s</string>
     <string name="forget">Forget</string>
 
-    <string name="foreground_title"></string>
-    <string name="foreground_message"></string>
+    <string name="foreground_title">Want Call Back</string>
+    <string name="foreground_message">Application is launched</string>
 </resources>

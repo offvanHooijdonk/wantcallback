@@ -13,7 +13,6 @@ import com.wantcallback.R;
 import com.wantcallback.dao.impl.ReminderDao;
 import com.wantcallback.helper.AppHelper;
 import com.wantcallback.model.ReminderInfo;
-import com.wantcallback.service.InitializerIntentService;
 import com.wantcallback.ui.actionbar.AppEnableActionProvider;
 
 import java.util.List;
@@ -89,9 +88,8 @@ public class MainActivity extends Activity implements AppEnableActionProvider.To
 			initApp = false;
 			displayMainLayout(false);
 		}
-		Intent intent = new Intent(that, InitializerIntentService.class);
-		intent.putExtra(InitializerIntentService.EXTRA_START_SHUT, initApp);
-		startService(intent);
+
+		startService(AppHelper.getInitServiceIntent(that, initApp));
 	}
 
 	private void displayMainLayout(boolean display) {

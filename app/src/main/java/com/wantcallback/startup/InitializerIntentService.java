@@ -1,4 +1,4 @@
-package com.wantcallback.service;
+package com.wantcallback.startup;
 
 import android.app.Service;
 import android.content.Intent;
@@ -34,29 +34,28 @@ public class InitializerIntentService extends Service {
 		super.onCreate();
 
 		Log.i(Constants.LOG_TAG, "Service created.");
-
-		if (AppHelper.isApplicationEnabled(this)) {
-			registerAll();
-
-			NotificationsUtil notificationsUtil = new NotificationsUtil(this);
-			startForeground(NotificationsUtil.NOTIFICATION_FOREGROUND_SERVICE, notificationsUtil.createForegroundServiceNotification());
-		}
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		boolean isStart = intent.getBooleanExtra(EXTRA_START_SHUT, false);
+		if (intent.getExtras().containsKey(EXTRA_START_SHUT)) {
+			boolean isStart = intent.getBooleanExtra(EXTRA_START_SHUT, false);
 
-		if (isStart) {
-			registerAll();
-			AppHelper.persistAppEnabledState(this, true);
+			if (isStart) {
+				registerAll();
+				enableForeground();
+
+				AppHelper.persistAppEnabledState(this, true);
+			} else {
+				unregisterAll();
+				AppHelper.persistAppEnabledState(this, false);
+
+				this.stopSelf();
+			}
+			return START_STICKY;
 		} else {
-			unregisterAll();
-			AppHelper.persistAppEnabledState(this, false);
-
-			this.stopSelf();
+			throw new RuntimeException("Service startup intent is missing vital data");
 		}
-		return START_STICKY;
 	}
 
 	@Override
@@ -64,6 +63,11 @@ public class InitializerIntentService extends Service {
 		Log.i(Constants.LOG_TAG, "Service is being destroyed!");
 		unregisterAll();
 		super.onDestroy();
+	}
+
+	private void enableForeground() {
+		NotificationsUtil notificationsUtil = new NotificationsUtil(this);
+		startForeground(NotificationsUtil.NOTIFICATION_FOREGROUND_SERVICE, notificationsUtil.createForegroundServiceNotification());
 	}
 
 	private void registerAll() {

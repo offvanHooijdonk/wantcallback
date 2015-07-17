@@ -64,7 +64,7 @@ public class ReminderDao {
         if (cursor.moveToFirst()) { // assume phone is a unique field
             info = cursorToBean(cursor);
         }
-
+        cursor.close();
         return info;
     }
 
@@ -76,7 +76,7 @@ public class ReminderDao {
         if (cursor.moveToFirst()) { // assume phone is a unique field
             reminders.add(cursorToBean(cursor));
         }
-
+        cursor.close();
         return reminders;
     }
 
