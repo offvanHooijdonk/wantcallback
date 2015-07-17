@@ -94,7 +94,9 @@ public class InitializerIntentService extends Service {
 		if (receiver == null) {
 			receiver = new NotificationActionBroadcastReceiver();
 			filter = new IntentFilter();
-			filter.addAction(NotificationActionBroadcastReceiver.ACTION_FORGET);
+			for (String action : NotificationActionBroadcastReceiver.getAllActions()) {
+				filter.addAction(action);
+			}
 		}
 
 		this.registerReceiver(receiver, filter);

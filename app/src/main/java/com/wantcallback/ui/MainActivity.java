@@ -18,127 +18,105 @@ import com.wantcallback.ui.actionbar.AppEnableActionProvider;
 import java.util.List;
 
 public class MainActivity extends Activity implements AppEnableActionProvider.ToggleListener, ReminderMainAdapter.ReminderInteractionListener {
-	
-	private MainActivity that;
-	private Button btnAddAlarm;
-	private ListView listReminders;
 
-	private ReminderDao reminderDao;
-	private List<ReminderInfo> remindersList;
-	/*private CallLogObserver callLogObserver;
-	private NotificationActionBroadcastReceiver broadcastReceiver;*/
+    private MainActivity that;
+    private Button btnAddAlarm;
+    private ListView listReminders;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		
-		that = this;
-		
-		btnAddAlarm = (Button) findViewById(R.id.btnAddAlarm);
-		reminderDao = new ReminderDao(that);
-		
+    private ReminderDao reminderDao;
+    private List<ReminderInfo> remindersList;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        that = this;
+
+        btnAddAlarm = (Button) findViewById(R.id.btnAddAlarm);
+        reminderDao = new ReminderDao(that);
+
 		/*initCallObserver();
 		initBroadcastReceiver();*/
 
-		if (AppHelper.isApplicationEnabled(that)) {
-			displayMainLayout(true);
-		} else {
-			displayMainLayout(false);
-		}
+        if (AppHelper.isApplicationEnabled(that)) {
+            displayMainLayout(true);
+        } else {
+            displayMainLayout(false);
+        }
 
-		btnAddAlarm.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(MainActivity.this, SetReminderActivity.class);
-				intent.putExtra(SetReminderActivity.EXTRA_PHONE, "+375447897897");
-				startActivity(intent);
-			}
-		});
+        btnAddAlarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SetReminderActivity.class);
+                intent.putExtra(SetReminderActivity.EXTRA_PHONE, "+375447897897");
+                startActivity(intent);
+            }
+        });
 
-		listReminders = (ListView) findViewById(R.id.listReminders);
-		remindersList = reminderDao.getAll();
-		listReminders.setAdapter(new ReminderMainAdapter(that, remindersList, that));
-	}
+        listReminders = (ListView) findViewById(R.id.listReminders);
+        remindersList = reminderDao.getAll();
+        listReminders.setAdapter(new ReminderMainAdapter(that, remindersList, that));
+    }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-		AppEnableActionProvider provider = (AppEnableActionProvider) menu.findItem(R.id.action_app_enable).getActionProvider();
-		provider.addToggleListener(that);
-		return true;
-	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        AppEnableActionProvider provider = (AppEnableActionProvider) menu.findItem(R.id.action_app_enable).getActionProvider();
+        provider.addToggleListener(that);
+        return true;
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		/*int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}*/
-		return super.onOptionsItemSelected(item);
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_reload) {
+            setRemindersListData(reminderDao.getAll());
+        }
 
-	@Override
-	public void onStateChanged(boolean isChecked) {
-		boolean initApp;
-		if (isChecked) {
-			initApp = true;
-			displayMainLayout(true);
-		} else {
-			initApp = false;
-			displayMainLayout(false);
-		}
+        return super.onOptionsItemSelected(item);
+    }
 
-		startService(AppHelper.getInitServiceIntent(that, initApp));
-	}
+    @Override
+    public void onStateChanged(boolean isChecked) {
+        /*
+        TODO cancel all Alarms on disable (as Receivers are unregistered then), and reassign future Alarms otherwise.
+        TODO If alarms expired since then - show them all at once (create boolean preference for that)
+        */
 
-	private void displayMainLayout(boolean display) {
-		if (display) {
-			btnAddAlarm.setEnabled(true);
-		} else {
-			btnAddAlarm.setEnabled(false);
-		}
-	}
+        boolean initApp;
+        if (isChecked) {
+            initApp = true;
+            displayMainLayout(true);
+        } else {
+            initApp = false;
+            displayMainLayout(false);
+        }
 
-	@Override
-	public void onDeleteReminder(ReminderInfo info) {
-		// TODO make this cancelable
-		reminderDao.deleteByPhone(info.getPhone());
-		remindersList.clear();
-		remindersList.addAll(reminderDao.getAll());
+        startService(AppHelper.getInitServiceIntent(that, initApp));
+    }
 
-		((ReminderMainAdapter) listReminders.getAdapter()).notifyDataSetChanged();
-	}
-	/*private void initBroadcastReceiver() {
-		broadcastReceiver = new NotificationActionBroadcastReceiver();
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(NotificationActionBroadcastReceiver.ACTION_FORGET);
-		
-		registerReceiver(broadcastReceiver, filter);
-	}
-	
-	private void initCallObserver() {
-		OnCallMissRejectListener listener = new StandardMissRejectListener(that);
-		
-		callLogObserver = new CallLogObserver(new Handler(), that);
-		callLogObserver.addListener(listener);
-		
-		that.getApplicationContext().getContentResolver()
-				.registerContentObserver(android.provider.CallLog.Calls.CONTENT_URI, true, callLogObserver);
+    private void displayMainLayout(boolean display) {
+        if (display) {
+            btnAddAlarm.setEnabled(true);
+        } else {
+            btnAddAlarm.setEnabled(false);
+        }
+    }
 
-		Log.i(Constants.LOG_TAG, "Call observer initialized.");
-	}*/
-	
-	/*@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		if (callLogObserver != null) {
-			that.getApplicationContext().getContentResolver()
-					.unregisterContentObserver(callLogObserver);
-		}
-		
-		if (broadcastReceiver != null) {
-			unregisterReceiver(broadcastReceiver);
-		}
-	}*/
+    @Override
+    public void onDeleteReminder(ReminderInfo info) {
+        // TODO make this cancelable
+        reminderDao.deleteByPhone(info.getPhone());
+        setRemindersListData(reminderDao.getAll());
+    }
+
+    private void setRemindersListData(List<ReminderInfo> reminders) {
+        if (reminders != null) {
+            remindersList.clear();
+            remindersList.addAll(reminders);
+
+            ((ReminderMainAdapter) listReminders.getAdapter()).notifyDataSetChanged();
+        }
+    }
 }

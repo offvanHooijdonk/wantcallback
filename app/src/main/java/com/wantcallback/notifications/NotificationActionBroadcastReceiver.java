@@ -6,12 +6,9 @@ import android.content.Intent;
 
 import com.wantcallback.dao.impl.ReminderDao;
 import com.wantcallback.helper.AppHelper;
-import com.wantcallback.model.ReminderInfo;
 import com.wantcallback.model.CallInfo;
-import com.wantcallback.model.CallInfo.TYPE;
+import com.wantcallback.model.ReminderInfo;
 import com.wantcallback.reminder.ReminderUtil;
-
-import java.util.Date;
 
 public class NotificationActionBroadcastReceiver extends BroadcastReceiver {
 	public static final String ACTION_FORGET = "action_forget";
@@ -25,6 +22,10 @@ public class NotificationActionBroadcastReceiver extends BroadcastReceiver {
 	public static final String EXTRA_CALL_DATE_LONG = "extra_call_date_long";
 
 	public NotificationActionBroadcastReceiver() {
+	}
+
+	public static String[] getAllActions() {
+		return new String[] {ACTION_CREATE_DEFAULT_REMINDER, ACTION_FORGET, ACTION_REMIND};
 	}
 
 	@Override
@@ -76,7 +77,7 @@ public class NotificationActionBroadcastReceiver extends BroadcastReceiver {
 			ReminderInfo reminderInfo = dao.findByPhone(phone);
 			
 			if (reminderInfo != null) {
-				if (AppHelper.isApplicationEnabled(ctx)) {
+				if (AppHelper.isApplicationEnabled(ctx)) { // TODO remove this check as if app disable there must be no Receiver registered
 					NotificationsUtil notificationsUtil = new NotificationsUtil(ctx);
 
 					CallInfo callInfo = reminderInfo.getCallInfo();
