@@ -38,13 +38,11 @@ public class StandardMissRejectListener implements OnCallMissRejectListener {
 
 	@Override
 	public void onCallRejected(CallInfo info) {
-		// TODO check if reminder exist and notify about call rejected showing if reminder exist and what its time
 		ReminderInfo reminderInfo = reminderDao.findByPhone(info.getPhone());
 		if (reminderInfo == null) { // no reminders yet
 			notifyUtil.showRejectedCallNotification(info);
 		} else {
-			// TODO "you already have a reminder"
-			notifyUtil.showRejectedCallNotification(info, reminderInfo);
+			notifyUtil.showRejectedCallNotification(reminderInfo);
 		}
 	}
 

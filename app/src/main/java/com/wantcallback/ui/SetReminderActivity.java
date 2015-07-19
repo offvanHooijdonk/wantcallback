@@ -168,7 +168,7 @@ public class SetReminderActivity extends FragmentActivity implements TimePickerD
 				displayReminderTime(reminderInfo.getDate());
 				textHasReminder.setVisibility(View.VISIBLE);
 			} else { // if not reminders yet - set default time to the picker
-				displayReminderTime(ReminderUtil.calcDeafaultRemindDate(Calendar.getInstance().getTimeInMillis()));
+				displayReminderTime(ReminderUtil.calcDefaultRemindDate(Calendar.getInstance().getTimeInMillis()));
 				textHasReminder.setVisibility(View.GONE);
 			}
 

@@ -38,24 +38,22 @@ public class InitializerIntentService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (intent.getExtras().containsKey(EXTRA_START_SHUT)) {
+		if (intent.getExtras().containsKey(EXTRA_START_SHUT)) { // if it does not - we wanted something else
 			boolean isStart = intent.getBooleanExtra(EXTRA_START_SHUT, false);
 
 			if (isStart) {
-				registerAll();
-				enableForeground();
-
 				AppHelper.persistAppEnabledState(this, true);
+				enableForeground();
+				registerAll();
 			} else {
-				unregisterAll();
 				AppHelper.persistAppEnabledState(this, false);
+				unregisterAll();
 
 				this.stopSelf();
 			}
-			return START_STICKY;
-		} else {
-			throw new RuntimeException("Service startup intent is missing vital data");
 		}
+
+		return START_STICKY;
 	}
 
 	@Override

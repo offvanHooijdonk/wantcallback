@@ -23,8 +23,12 @@ public class CallLogUtil {
 	public List<CallInfo> getMissedCalls(int startCallId, long startDate) {
 		Cursor cursorMissed = ctx.getContentResolver().query(Calls.CONTENT_URI, null, Calls._ID + " > ? AND " + Calls.TYPE + " = ? AND " + Calls.NEW + " = ? AND " + Calls.DATE + " > ? ",
 				new String[] {Integer.toString(startCallId), Integer.toString(Calls.MISSED_TYPE), "1", String.valueOf(startDate)}, Calls.DATE + " DESC ");
-		
-		return getCallsInfo(cursorMissed, TYPE.MISSED);
+
+		List<CallInfo> list = getCallsInfo(cursorMissed, TYPE.MISSED);
+
+		cursorMissed.close();
+
+		return list;
 	}
 	
 	public List<CallInfo> getRejectedCalls(int startCallId, long startDate) {
@@ -32,7 +36,11 @@ public class CallLogUtil {
 				Calls.NEW + " = ? AND " + Calls.DATE + " > ? ",
 				new String[] {Integer.toString(startCallId), Integer.toString(Calls.INCOMING_TYPE), "0", "1", String.valueOf(startDate)}, Calls.DATE + " DESC ");
 
-		return getCallsInfo(cursorRejected, TYPE.REJECTED);
+		List<CallInfo> list = getCallsInfo(cursorRejected, TYPE.REJECTED);
+
+		cursorRejected.close();
+
+		return list;
 	}
 	
 	private List<CallInfo> getCallsInfo(Cursor cursor, TYPE callType) {
@@ -66,7 +74,6 @@ public class CallLogUtil {
 				calls.add(info);
 			}
 		}
-		cursor.close();
 		
 		return calls;
 	}

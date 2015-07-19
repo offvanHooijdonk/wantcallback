@@ -13,6 +13,7 @@ public class AlarmUtil {
 	private static AlarmManager alarmManager;
 
 	public static void createNewReminderAlarm(Context ctx, int callId, String phoneNumber, Date date) {
+		// TODO make reboot-proof
 		getAlarmManager(ctx).set(AlarmManager.RTC_WAKEUP, date.getTime(), preparePendingIntent(ctx, callId, phoneNumber));
 	}
 	

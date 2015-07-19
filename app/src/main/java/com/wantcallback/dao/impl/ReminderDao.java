@@ -10,6 +10,7 @@ import com.wantcallback.model.CallInfo;
 import com.wantcallback.model.ReminderInfo;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ReminderDao {
@@ -78,6 +79,25 @@ public class ReminderDao {
         }
         cursor.close();
         return reminders;
+    }
+
+    public List<ReminderInfo> getAllSince(Date sinceDate) {
+        List<ReminderInfo> reminders = new ArrayList<ReminderInfo>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE, null, ReminderInfo.DATE + " >= ?", new String[] {String.valueOf(sinceDate.getTime() / DATE_MULT)},
+                null, null, ReminderInfo.DATE + "" + " desc");
+        if (cursor.moveToFirst()) { // assume phone is a unique field
+            reminders.add(cursorToBean(cursor));
+        }
+        cursor.close();
+        return reminders;
+    }
+
+    public void deleteAllBeforeDate(Date beforeDate) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        db.delete(TABLE, ReminderInfo.DATE + " < ?", new String[] {String.valueOf(beforeDate.getTime() / DATE_MULT)});
     }
 
     private ContentValues beanToCV(ReminderInfo info) {

@@ -64,17 +64,17 @@ public class NotificationsUtil {
         getNotificationManager().notify(tag, id, builder.build());
     }
 
-    public void showRejectedCallNotification(CallInfo info, ReminderInfo reminderInfo) {
-        String tag = info.getPhone();
+    public void showRejectedCallNotification(ReminderInfo reminderInfo) {
+        String tag = reminderInfo.getPhone();
         int id = NOTIFICATION_REJECTED_CALL;
-        String callerLabel = getCallerLabel(info);
+        String callerLabel = getCallerLabel(reminderInfo.getCallInfo());
 
-        NotificationCompat.Builder builder = getCommonCallNBuilder(info).setContentTitle("Rejected Call")
+        NotificationCompat.Builder builder = getCommonCallNBuilder(reminderInfo.getCallInfo()).setContentTitle("Rejected Call")
                 .setContentText("You already have a reminder at " + AppHelper.sdfTime.format(new Date(reminderInfo.getDate())))
                 .setTicker("Rejected Call from " + callerLabel)
-                .setContentIntent(createOpenRemindersIntent(info, tag, id)) // open activity to set custom info
-                .addAction(R.drawable.ic_call, "Call now", createDialerIntent(info)) // Dial missed call
-                .addAction(R.drawable.ic_forget, "Forget", createForgetIntent(info, tag, id)); // remove reminder created
+                .setContentIntent(createOpenRemindersIntent(reminderInfo.getCallInfo(), tag, id)) // open activity to set custom info
+                .addAction(R.drawable.ic_call, "Call now", createDialerIntent(reminderInfo.getCallInfo())) // Dial missed call
+                .addAction(R.drawable.ic_forget, "Forget", createForgetIntent(reminderInfo.getCallInfo(), tag, id)); // remove reminder created
 
         getNotificationManager().notify(tag, id, builder.build());
     }
@@ -82,7 +82,7 @@ public class NotificationsUtil {
     public void showReminderNotification(CallInfo callInfo, ReminderInfo reminderInfo) {
         String tag = reminderInfo.getPhone();
         int id = NOTIFICATION_REMINDER;
-
+// TODO make a custom layout
         NotificationCompat.Builder builder = getCommonCallNBuilder(callInfo).setContentTitle("Time to call back to" + reminderInfo.getPhone())
                 .setContentText("Call to " + reminderInfo.getPhone() + " that called you at " + AppHelper.sdfTime.format(new Date(callInfo.getDate())))
                 .setTicker("Call back to " + reminderInfo.getPhone())
@@ -116,8 +116,7 @@ public class NotificationsUtil {
      * @return
      */
     private NotificationCompat.Builder getCommonCallNBuilder(CallInfo info) {
-        // TODO remove one of icons
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.ic_launcher)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx).setLargeIcon(getLargeIconBitmap(R.drawable.ic_launcher))
                 .setContentText(info.getPhone()).setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory("call").setAutoCancel(true);
 
