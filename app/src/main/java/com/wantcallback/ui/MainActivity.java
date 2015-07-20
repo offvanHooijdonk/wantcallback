@@ -54,7 +54,7 @@ public class MainActivity extends Activity implements AppEnableActionProvider.To
         } else {
             displayMainLayout(false);
         }
-
+// implement FAB
         btnAddAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
