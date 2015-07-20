@@ -1,4 +1,6 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,19 +8,25 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.wantcallback.ui.MainActivity" >
-
-    <Button
-        android:id="@+id/btnAddAlarm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Alarm" />
+    tools:context="com.wantcallback.ui.MainActivity">
 
     <ListView
         android:id="@+id/listReminders"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/btnAddAlarm"
         android:divider="@color/app_accent"/>
 
-</RelativeLayout>
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/btnAddAlarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_alarm_add_white"
+        fab:fab_colorNormal="@color/app_accent"
+        fab:fab_colorPressed="@color/app_accent"
+        fab:fab_colorRipple="@color/action_button_ripple"
+        fab:fab_type="normal"
+        />
+
+</FrameLayout>

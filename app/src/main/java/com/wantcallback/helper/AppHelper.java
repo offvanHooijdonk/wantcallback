@@ -9,10 +9,11 @@ import com.wantcallback.startup.InitializerIntentService;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class AppHelper {
-	public static DateFormat sdfTime = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT);
-	public static DateFormat sdfDateTime = SimpleDateFormat.getTimeInstance(SimpleDateFormat.MEDIUM);
+	public static DateFormat sdfTime = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT, Locale.getDefault());
+	public static DateFormat sdfDateTime = SimpleDateFormat.getTimeInstance(SimpleDateFormat.MEDIUM, Locale.getDefault());
 
 	private static final String FILE_PREF_LOCAL = "local.xml";
 	private static final String PREF_APP_ENABLED = "app_enabled";

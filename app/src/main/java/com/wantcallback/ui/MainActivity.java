@@ -13,13 +13,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.melnykov.fab.FloatingActionButton;
 import com.wantcallback.R;
 import com.wantcallback.dao.impl.ReminderDao;
 import com.wantcallback.helper.AppHelper;
+import com.wantcallback.model.CallInfo;
 import com.wantcallback.model.ReminderInfo;
 import com.wantcallback.reminder.ReminderUtil;
 import com.wantcallback.ui.actionbar.AppEnableActionProvider;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends Activity implements AppEnableActionProvider.ToggleListener, ReminderMainAdapter
@@ -29,11 +33,12 @@ public class MainActivity extends Activity implements AppEnableActionProvider.To
     private static final String TASK_RECREATE_ACTUAL_REMINDERS = "task_recreate_actual_reminders";
 
     private MainActivity that;
-    private Button btnAddAlarm;
+    private FloatingActionButton btnAddAlarm;
     private ListView listReminders;
+    private ReminderMainAdapter reminderAdapter;
 
     private ReminderDao reminderDao;
-    private List<ReminderInfo> remindersList;
+    private List<ReminderInfo> remindersList = new ArrayList<>();
     private RemindersBroadcastReceiver remindersBroadcastReceiver;
 
     @Override
@@ -43,7 +48,7 @@ public class MainActivity extends Activity implements AppEnableActionProvider.To
 
         that = this;
 
-        btnAddAlarm = (Button) findViewById(R.id.btnAddAlarm);
+        btnAddAlarm = (FloatingActionButton) findViewById(R.id.btnAddAlarm);
         reminderDao = new ReminderDao(that);
 
 		/*initCallObserver();
@@ -54,7 +59,12 @@ public class MainActivity extends Activity implements AppEnableActionProvider.To
         } else {
             displayMainLayout(false);
         }
-// implement FAB
+
+        listReminders = (ListView) findViewById(R.id.listReminders);
+        //remindersList = reminderDao.getAll();
+        reminderAdapter = new ReminderMainAdapter(that, remindersList, that);
+        listReminders.setAdapter(reminderAdapter);
+
         btnAddAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,10 +73,12 @@ public class MainActivity extends Activity implements AppEnableActionProvider.To
                 startActivity(intent);
             }
         });
+        btnAddAlarm.attachToListView(listReminders);
+        btnAddAlarm.show();
 
-        listReminders = (ListView) findViewById(R.id.listReminders);
-        remindersList = reminderDao.getAll();
-        listReminders.setAdapter(new ReminderMainAdapter(that, remindersList, that));
+        RefreshRemindersListTask remindersListTask = new RefreshRemindersListTask();
+        remindersListTask.execute();
+
         // place this after Reminders List view is created and filled
         remindersBroadcastReceiver = new RemindersBroadcastReceiver();
         registerReceiver(remindersBroadcastReceiver, new IntentFilter(RemindersBroadcastReceiver.ACTION_ANY));
@@ -76,7 +88,7 @@ public class MainActivity extends Activity implements AppEnableActionProvider.To
     protected void onResume() {
         super.onResume();
 
-        reloadRemindersList();
+        //reloadRemindersList();
     }
 
     @Override
@@ -163,7 +175,7 @@ public class MainActivity extends Activity implements AppEnableActionProvider.To
     public class RefreshRemindersListTask extends AsyncTask<Void, Void, List<ReminderInfo>> {
         @Override
         protected List<ReminderInfo> doInBackground(Void... params) {
-            return remindersList = reminderDao.getAll();
+            return reminderDao.getAll();
         }
 
         @Override
@@ -177,12 +189,20 @@ public class MainActivity extends Activity implements AppEnableActionProvider.To
                 remindersList.clear();
                 remindersList.addAll(reminders);
 
-                ((ReminderMainAdapter) listReminders.getAdapter()).notifyDataSetChanged();
+                // test
+                /*ReminderInfo info = new ReminderInfo();
+                info.setId(456);
+                info.setDate(new Date().getTime());
+                info.setPhone("+375447778899");
+                info.setCallInfo(new CallInfo(456, "+375447778899", new Date().getTime(), CallInfo.TYPE.MISSED));
+                remindersList.add(info);*/
+
+                reminderAdapter.notifyDataSetChanged();
             }
         }
     }
 
-    public class BatchReminderOperationTask extends  AsyncTask<String, Void, Void> {
+    public class BatchReminderOperationTask extends AsyncTask<String, Void, Void> {
 
         private String task;
 
