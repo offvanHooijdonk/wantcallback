@@ -8,7 +8,7 @@
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="date_expired_title">Date warning</string>
-    <string name="date_expired">Sorry, the date has already expired, please select a new one</string>
+    <string name="date_expired">Sorry, the time has already expired, please select a new one</string>
     <string name="date_experid_button">OK</string>
     <string name="have_reminder">You already have a reminder for this number.</string>
     <string name="edit_reminder_title">Reminder</string>

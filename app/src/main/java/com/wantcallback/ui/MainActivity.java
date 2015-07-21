@@ -64,9 +64,8 @@ public class MainActivity extends Activity implements AppEnableActionProvider.To
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ReminderInfo info = remindersList.get(position);
-                Intent intent = new Intent(that, SetReminderActivity.class);
-                intent.putExtra(SetReminderActivity.EXTRA_PHONE, info.getPhone());
-                intent.putExtra(SetReminderActivity.EXTRA_CALL_ID, info.getCallInfo().getLogId());
+                Intent intent = new Intent(that, EditReminderActivity.class);
+                intent.putExtra(EditReminderActivity.EXTRA_REMINDER_ID, info.getId());
                 startActivity(intent);
             }
         });
@@ -74,7 +73,7 @@ public class MainActivity extends Activity implements AppEnableActionProvider.To
         btnAddAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SetReminderActivity.class);
+                Intent intent = new Intent(MainActivity.this, EditReminderActivity.class);
                 startActivity(intent);
             }
         });

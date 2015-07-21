@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.wantcallback.Constants;
-import com.wantcallback.data.CallLogUtil;
+import com.wantcallback.phone.CallLogUtil;
 import com.wantcallback.observer.listener.OnCallMissRejectListener;
 import com.wantcallback.model.CallInfo;
 import com.wantcallback.model.CallInfo.TYPE;

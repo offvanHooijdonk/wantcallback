@@ -20,7 +20,7 @@ public class DBHelperUtil extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		String q = "CREATE TABLE " + ReminderDao.TABLE + " (" + ReminderInfo.ID + 
-				" integer primary key, " + ReminderInfo.PHONE + " string not null unique, " + ReminderInfo.DATE + " integer, " +
+				" integer primary key AUTOINCREMENT, " + ReminderInfo.PHONE + " string not null unique, " + ReminderInfo.DATE + " integer, " +
 				ReminderInfo.CALL_ID + " integer, " + ReminderInfo.CALL_DATE + " integer, " + ReminderInfo.CALL_TYPE + " string " + ");";
 		try {
 			db.execSQL(q);

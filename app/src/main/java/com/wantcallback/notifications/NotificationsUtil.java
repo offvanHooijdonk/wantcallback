@@ -12,14 +12,14 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 
 import com.wantcallback.R;
-import com.wantcallback.data.ContactsUtil;
+import com.wantcallback.phone.ContactsUtil;
 import com.wantcallback.helper.AppHelper;
 import com.wantcallback.model.CallInfo;
 import com.wantcallback.model.ContactInfo;
 import com.wantcallback.model.ReminderInfo;
 import com.wantcallback.reminder.ReminderUtil;
 import com.wantcallback.ui.MainActivity;
-import com.wantcallback.ui.SetReminderActivity;
+import com.wantcallback.ui.EditReminderActivity;
 
 import java.util.Date;
 
@@ -132,11 +132,13 @@ public class NotificationsUtil {
     }
 
     private PendingIntent createOpenRemindersIntent(CallInfo info, String notifTag, int notifId) {
-        Intent intent = new Intent(ctx, SetReminderActivity.class);
-        intent.putExtra(SetReminderActivity.EXTRA_PHONE, info.getPhone());
-        intent.putExtra(SetReminderActivity.EXTRA_CALL_ID, info.getLogId());
-        intent.putExtra(SetReminderActivity.EXTRA_NOTIF_TAG, notifTag);
-        intent.putExtra(SetReminderActivity.EXTRA_NOTIF_ID, notifId);
+        Intent intent = new Intent(ctx, EditReminderActivity.class);
+        intent.putExtra(EditReminderActivity.EXTRA_PHONE, info.getPhone());
+        intent.putExtra(EditReminderActivity.EXTRA_CALL_ID, info.getLogId());
+        intent.putExtra(EditReminderActivity.EXTRA_CALL_TYPE, info.getType().toString());
+        intent.putExtra(EditReminderActivity.EXTRA_CALL_DATE, info.getDate());
+        intent.putExtra(EditReminderActivity.EXTRA_NOTIF_TAG, notifTag);
+        intent.putExtra(EditReminderActivity.EXTRA_NOTIF_ID, notifId);
 
         return PendingIntent.getActivity(ctx, info.getLogId(), intent, 0);
     }

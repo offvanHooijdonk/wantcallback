@@ -1,4 +1,4 @@
-package com.wantcallback.data;
+package com.wantcallback.phone;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -12,6 +12,7 @@ import android.provider.ContactsContract.PhoneLookup;
 
 import com.wantcallback.model.ContactInfo;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -33,16 +34,26 @@ public class ContactsUtil {
 			Cursor cur = cr.query(uri, null, null, null, null);
 
 			if (cur.moveToFirst()) {
-				String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
-				String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-
-				info = new ContactInfo();
-				info.setId(id);
-				info.setDisplayName(name);
+				info = toSingleContact(cur);
 			}
 			cur.close();
 		}
 		return info;
+	}
+
+	public ContactInfo getContactFromUri(Uri uri) {
+		ContactInfo contact = null;
+
+		Cursor cursor = ctx.getContentResolver()
+				.query(uri, null, null, null, null);
+
+		if (cursor.moveToFirst()) {
+			contact = toSingleContact(cursor);
+		}
+
+		cursor.close();
+
+		return contact;
 	}
 	
 	public Bitmap getContactPhoto(ContactInfo info) throws IOException {
@@ -50,7 +61,7 @@ public class ContactsUtil {
 		ContentResolver cr = ctx.getContentResolver();
 		
 		InputStream inputStream = ContactsContract.Contacts.openContactPhotoInputStream(cr,
-                ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.valueOf(info.getId())));
+				ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.valueOf(info.getId())));
 		
 		if (inputStream != null) {
             photo = BitmapFactory.decodeStream(inputStream);
@@ -58,7 +69,26 @@ public class ContactsUtil {
         } else {
         	photo = null;
         }
-        
+
         return photo;
+	}
+
+	private ContactInfo toSingleContact(Cursor cur) {
+		ContactInfo info = new ContactInfo();
+		String id = cur.getString(cur.getColumnIndex(ContactsContract.PhoneLookup._ID));
+		String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+		String defaultPhone = cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+		String photoString = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.PHOTO_URI));
+		if (photoString != null && !"".equals(photoString)) {
+			Uri photoUri = Uri.parse(photoString);
+			info.setPhotoUri(photoUri);
+		}
+
+		info.setId(id);
+		info.setDisplayName(name);
+		info.setPhoneNumber(defaultPhone);
+
+		return info;
 	}
 }

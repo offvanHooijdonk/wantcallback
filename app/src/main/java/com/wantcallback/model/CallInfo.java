@@ -4,7 +4,7 @@ public class CallInfo {
 	public static final long INVALID_DATE = -1L;
 
 	public static enum TYPE {
-		MISSED, REJECTED
+		MISSED, REJECTED, CREATED
 	};
 
 	private int logId;

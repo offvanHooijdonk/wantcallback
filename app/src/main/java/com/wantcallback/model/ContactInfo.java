@@ -1,9 +1,13 @@
 package com.wantcallback.model;
 
+import android.net.Uri;
+
 public class ContactInfo {
 
 	private String id;
 	private String displayName;
+	private String phoneNumber;
+	private Uri photoUri;
 
 	public String getId() {
 		return id;
@@ -21,4 +25,19 @@ public class ContactInfo {
 		this.displayName = displayName;
 	}
 
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public Uri getPhotoUri() {
+		return photoUri;
+	}
+
+	public void setPhotoUri(Uri photoUri) {
+		this.photoUri = photoUri;
+	}
 }

@@ -21,7 +21,6 @@ public class AppHelper {
 	public static ReminderInfo convertCallToReminder(CallInfo callInfo) {
 		ReminderInfo reminderInfo = new ReminderInfo();
 		reminderInfo.setDate(callInfo.getDate());
-		reminderInfo.setId(callInfo.getLogId());
 		reminderInfo.setPhone(callInfo.getPhone());
 		reminderInfo.setCallInfo(callInfo);
 		

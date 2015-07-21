@@ -69,6 +69,18 @@ public class ReminderDao {
         return info;
     }
 
+    public ReminderInfo getById(int id) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        ReminderInfo info = null;
+
+        Cursor cursor = db.query(TABLE, null, ReminderInfo.ID + " = ? ", new String[]{String.valueOf(id)}, null, null, null);
+        if (cursor.moveToFirst()) { // assume phone is a unique field
+            info = cursorToBean(cursor);
+        }
+        cursor.close();
+        return info;
+    }
+
     public List<ReminderInfo> getAll() {
         List<ReminderInfo> reminders = new ArrayList<ReminderInfo>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -85,7 +97,7 @@ public class ReminderDao {
         List<ReminderInfo> reminders = new ArrayList<ReminderInfo>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        Cursor cursor = db.query(TABLE, null, ReminderInfo.DATE + " >= ?", new String[] {String.valueOf(sinceDate.getTime() / DATE_MULT)},
+        Cursor cursor = db.query(TABLE, null, ReminderInfo.DATE + " >= ?", new String[]{String.valueOf(sinceDate.getTime() / DATE_MULT)},
                 null, null, ReminderInfo.DATE + "" + " desc");
         if (cursor.moveToFirst()) { // assume phone is a unique field
             reminders.add(cursorToBean(cursor));
@@ -97,12 +109,14 @@ public class ReminderDao {
     public void deleteAllBeforeDate(Date beforeDate) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        db.delete(TABLE, ReminderInfo.DATE + " < ?", new String[] {String.valueOf(beforeDate.getTime() / DATE_MULT)});
+        db.delete(TABLE, ReminderInfo.DATE + " < ?", new String[]{String.valueOf(beforeDate.getTime() / DATE_MULT)});
     }
 
     private ContentValues beanToCV(ReminderInfo info) {
         ContentValues cv = new ContentValues();
-        cv.put(ReminderInfo.ID, info.getId());
+        if (info.isNew()) {
+            cv.put(ReminderInfo.ID, info.getId());
+        }
         cv.put(ReminderInfo.PHONE, info.getPhone());
         cv.put(ReminderInfo.DATE, (int) (info.getDate() / DATE_MULT));
         cv.put(ReminderInfo.CALL_ID, info.getCallInfo().getLogId());

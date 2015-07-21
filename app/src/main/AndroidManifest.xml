@@ -33,7 +33,7 @@
         </activity>
 
         <activity
-            android:name="com.wantcallback.ui.SetReminderActivity"
+            android:name=".ui.EditReminderActivity"
             android:label="@string/edit_reminder_title"
             android:parentActivityName=".ui.MainActivity">
         </activity>
