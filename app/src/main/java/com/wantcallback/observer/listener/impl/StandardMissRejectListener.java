@@ -25,24 +25,30 @@ public class StandardMissRejectListener implements OnCallMissRejectListener {
 	@Override
 	public void onCallMissed(CallInfo info) {
 		// create Reminder and notify if none yet created for previous calls
-		ReminderInfo reminderInfo = reminderDao.findByPhone(info.getPhone());
-		if (reminderInfo == null) { // no reminders yet
-			reminderInfo = AppHelper.convertCallToReminder(info);
+		if (info.getPhone() != null && !"".equals(info.getPhone())) {
+			ReminderInfo reminderInfo = reminderDao.findByPhone(info.getPhone());
+			if (reminderInfo == null) { // no reminders yet
+				reminderInfo = AppHelper.convertCallToReminder(info);
 
-			ReminderUtil.createNewDefaultReminder(ctx, reminderInfo);
-			notifyUtil.showMissedCallNotification(info);
+				ReminderUtil.createNewDefaultReminder(ctx, reminderInfo);
+				notifyUtil.showMissedCallNotification(info);
+			}
 		} else {
-			// no action
+			// TODO handle hidden number
 		}
 	}
 
 	@Override
 	public void onCallRejected(CallInfo info) {
-		ReminderInfo reminderInfo = reminderDao.findByPhone(info.getPhone());
-		if (reminderInfo == null) { // no reminders yet
-			notifyUtil.showRejectedCallNotification(info);
+		if (info.getPhone() != null && !"".equals(info.getPhone())) {
+			ReminderInfo reminderInfo = reminderDao.findByPhone(info.getPhone());
+			if (reminderInfo == null) { // no reminders yet
+				notifyUtil.showRejectedCallNotification(info);
+			} else {
+				notifyUtil.showRejectedCallNotification(reminderInfo);
+			}
 		} else {
-			notifyUtil.showRejectedCallNotification(reminderInfo);
+			// TODO handle hidden number
 		}
 	}
 

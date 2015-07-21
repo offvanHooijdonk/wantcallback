@@ -29,4 +29,12 @@
         fab:fab_type="normal"
         />
 
+    <TextView
+        android:id="@+id/emptyReminderList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/empty_reminders_main"
+        android:textSize="18sp"
+        android:textColor="@color/text_comment"/>
 </FrameLayout>

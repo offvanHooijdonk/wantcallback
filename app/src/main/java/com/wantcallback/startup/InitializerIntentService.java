@@ -38,7 +38,7 @@ public class InitializerIntentService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (intent.getExtras().containsKey(EXTRA_START_SHUT)) { // if it does not - we wanted something else
+		if (intent.getExtras()!= null && intent.getExtras().containsKey(EXTRA_START_SHUT)) { // if it does not - we wanted something else
 			boolean isStart = intent.getBooleanExtra(EXTRA_START_SHUT, false);
 
 			if (isStart) {

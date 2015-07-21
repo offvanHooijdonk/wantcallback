@@ -10,7 +10,7 @@
     <string name="date_expired_title">Date warning</string>
     <string name="date_expired">Sorry, the date has already expired, please select a new one</string>
     <string name="date_experid_button">OK</string>
-    <string name="has_reminder">You already has a reminder for this number.</string>
+    <string name="have_reminder">You already have a reminder for this number.</string>
     <string name="edit_reminder_title">Reminder</string>
 
     <string name="btn_save_reminder">Remind</string>
@@ -22,4 +22,6 @@
     <string name="foreground_title">Want Call Back</string>
     <string name="foreground_message">Application is launched</string>
     <string name="action_refresh">Refresh</string>
+    <string name="empty_reminders_main">No upcoming reminders</string>
+    <string name="text_phone_number">Phone number</string>
 </resources>

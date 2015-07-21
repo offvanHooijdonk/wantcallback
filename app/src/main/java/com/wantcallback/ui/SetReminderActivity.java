@@ -46,7 +46,7 @@ public class SetReminderActivity extends FragmentActivity implements TimePickerD
 	private AutoCompleteTextView inputPhone;
 	private TextView textTime;
 	private TextView textToday;
-	private TextView textHasReminder;
+	private TextView textHaveReminder;
 	private Button btnSave;
 
 	private Date remindDate = null;
@@ -69,7 +69,7 @@ public class SetReminderActivity extends FragmentActivity implements TimePickerD
 		ivPhoto = (ImageView) findViewById(R.id.photo);
 		textTime = (TextView) findViewById(R.id.textTime);
 		textToday = (TextView) findViewById(R.id.textToday);
-		textHasReminder = (TextView) findViewById(R.id.textHasReminder);
+		textHaveReminder = (TextView) findViewById(R.id.textHaveReminder);
 		btnSave = (Button) findViewById(R.id.btnSave);
 		
 		textTime.setOnClickListener(new View.OnClickListener() {
@@ -123,10 +123,10 @@ public class SetReminderActivity extends FragmentActivity implements TimePickerD
 		// TODO check if application enabled, if not - disable controls and show message
 
 		Intent intent = getIntent();
-		if (intent != null) {
+		if (intent.getExtras() != null) {
 			callId = intent.getExtras().getInt(EXTRA_CALL_ID);
-			phoneNumber = intent.getExtras().getString(EXTRA_PHONE);
-			String tag = intent.getExtras().getString(EXTRA_NOTIF_TAG);
+			phoneNumber = intent.getExtras().getString(EXTRA_PHONE, null);
+			String tag = intent.getExtras().getString(EXTRA_NOTIF_TAG, null);
 			int id = intent.getExtras().getInt(EXTRA_NOTIF_ID);
 
 			if (tag != null) {
@@ -166,14 +166,19 @@ public class SetReminderActivity extends FragmentActivity implements TimePickerD
 			ReminderInfo reminderInfo = reminderDao.findByPhone(phoneNumber);
 			if (reminderInfo != null) {
 				displayReminderTime(reminderInfo.getDate());
-				textHasReminder.setVisibility(View.VISIBLE);
+				textHaveReminder.setVisibility(View.VISIBLE);
 			} else { // if not reminders yet - set default time to the picker
 				displayReminderTime(ReminderUtil.calcDefaultRemindDate(Calendar.getInstance().getTimeInMillis()));
-				textHasReminder.setVisibility(View.GONE);
+				textHaveReminder.setVisibility(View.GONE);
 			}
-
+			btnSave.setEnabled(true);
 		} else {
-			// TODO handle if phone is empty somehow
+			remindDate = Calendar.getInstance().getTime();
+			displayReminderTime(remindDate.getTime());
+			textContactName.setText(null);
+			textContactName.setText(null);
+			textHaveReminder.setVisibility(View.GONE);
+			inputPhone.setText(null);
 			btnSave.setEnabled(false);
 		}
 

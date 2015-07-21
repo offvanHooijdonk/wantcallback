@@ -10,20 +10,18 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.wantcallback.R;
 import com.wantcallback.dao.impl.ReminderDao;
 import com.wantcallback.helper.AppHelper;
-import com.wantcallback.model.CallInfo;
 import com.wantcallback.model.ReminderInfo;
 import com.wantcallback.reminder.ReminderUtil;
 import com.wantcallback.ui.actionbar.AppEnableActionProvider;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends Activity implements AppEnableActionProvider.ToggleListener, ReminderMainAdapter
@@ -40,6 +38,7 @@ public class MainActivity extends Activity implements AppEnableActionProvider.To
     private ReminderDao reminderDao;
     private List<ReminderInfo> remindersList = new ArrayList<>();
     private RemindersBroadcastReceiver remindersBroadcastReceiver;
+    /*private int i = 0;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +50,6 @@ public class MainActivity extends Activity implements AppEnableActionProvider.To
         btnAddAlarm = (FloatingActionButton) findViewById(R.id.btnAddAlarm);
         reminderDao = new ReminderDao(that);
 
-		/*initCallObserver();
-        initBroadcastReceiver();*/
-
         if (AppHelper.isApplicationEnabled(that)) {
             displayMainLayout(true);
         } else {
@@ -61,23 +57,28 @@ public class MainActivity extends Activity implements AppEnableActionProvider.To
         }
 
         listReminders = (ListView) findViewById(R.id.listReminders);
-        //remindersList = reminderDao.getAll();
+        listReminders.setEmptyView(findViewById(R.id.emptyReminderList));
         reminderAdapter = new ReminderMainAdapter(that, remindersList, that);
         listReminders.setAdapter(reminderAdapter);
+        listReminders.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ReminderInfo info = remindersList.get(position);
+                Intent intent = new Intent(that, SetReminderActivity.class);
+                intent.putExtra(SetReminderActivity.EXTRA_PHONE, info.getPhone());
+                intent.putExtra(SetReminderActivity.EXTRA_CALL_ID, info.getCallInfo().getLogId());
+                startActivity(intent);
+            }
+        });
 
         btnAddAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, SetReminderActivity.class);
-                intent.putExtra(SetReminderActivity.EXTRA_PHONE, "+375447897897");
                 startActivity(intent);
             }
         });
         btnAddAlarm.attachToListView(listReminders);
-        btnAddAlarm.show();
-
-        RefreshRemindersListTask remindersListTask = new RefreshRemindersListTask();
-        remindersListTask.execute();
 
         // place this after Reminders List view is created and filled
         remindersBroadcastReceiver = new RemindersBroadcastReceiver();
@@ -88,7 +89,7 @@ public class MainActivity extends Activity implements AppEnableActionProvider.To
     protected void onResume() {
         super.onResume();
 
-        //reloadRemindersList();
+        reloadRemindersList();
     }
 
     @Override
@@ -190,13 +191,15 @@ public class MainActivity extends Activity implements AppEnableActionProvider.To
                 remindersList.addAll(reminders);
 
                 // test
-                /*ReminderInfo info = new ReminderInfo();
-                info.setId(456);
-                info.setDate(new Date().getTime());
-                info.setPhone("+375447778899");
-                info.setCallInfo(new CallInfo(456, "+375447778899", new Date().getTime(), CallInfo.TYPE.MISSED));
-                remindersList.add(info);*/
-
+                /*if (i == 0) {
+                    ReminderInfo info = new ReminderInfo();
+                    info.setId(456);
+                    info.setDate(new Date().getTime());
+                    info.setPhone("+375447778899");
+                    info.setCallInfo(new CallInfo(456, "+375447778899", new Date().getTime(), CallInfo.TYPE.MISSED));
+                    remindersList.add(info);
+                }
+                i++;*/
                 reminderAdapter.notifyDataSetChanged();
             }
         }
