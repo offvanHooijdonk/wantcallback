@@ -24,4 +24,7 @@
     <string name="action_refresh">Refresh</string>
     <string name="empty_reminders_main">No upcoming reminders</string>
     <string name="text_phone_number">Phone number</string>
+    <string name="call_from_list">Call now</string>
+    <string name="contact_photo">Contact photo</string>
+    <string name="add_from_contacts">Add from contacts</string>
 </resources>

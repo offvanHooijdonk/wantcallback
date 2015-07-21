@@ -62,6 +62,8 @@ public class SetReminderActivity extends FragmentActivity implements TimePickerD
 
 		this.that = this;
 
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+
 		reminderDao = new ReminderDao(this);
 
 		inputPhone = (AutoCompleteTextView) findViewById(R.id.inputPhone);
@@ -71,6 +73,8 @@ public class SetReminderActivity extends FragmentActivity implements TimePickerD
 		textToday = (TextView) findViewById(R.id.textToday);
 		textHaveReminder = (TextView) findViewById(R.id.textHaveReminder);
 		btnSave = (Button) findViewById(R.id.btnSave);
+
+		// TODO implement picking a contact
 		
 		textTime.setOnClickListener(new View.OnClickListener() {
 			@Override

@@ -12,27 +12,49 @@
         android:id="@+id/inputPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/block_margin_small"
+        android:layout_marginRight="@dimen/block_margin_small"
+        android:layout_toLeftOf="@+id/imageContacts"
+        android:layout_toStartOf="@+id/imageContacts"
         android:completionThreshold="3"
+        android:lines="1"
+        android:maxLength="18"
         android:hint="@string/text_phone_number"/>
+
+    <ImageView
+        android:id="@+id/imageContacts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/inputPhone"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/inputPhone"
+        android:background="?android:selectableItemBackground"
+        android:contentDescription="@string/add_from_contacts"
+        android:padding="@dimen/icon_button_padding"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_find_contact"/>
 
     <RelativeLayout
         android:id="@+id/blockContactInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/inputPhone">
+        android:layout_below="@id/inputPhone"
+        android:layout_marginTop="@dimen/block_margin_med">
 
         <ImageView
             android:id="@+id/photo"
             android:layout_width="64dp"
             android:layout_height="64dp"
+            android:contentDescription="@string/contact_photo"
             android:src="@drawable/ic_contact_picture"/>
 
         <TextView
             android:id="@+id/textContactName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginStart="12dp"
+            android:layout_marginLeft="@dimen/block_margin_small"
+            android:layout_marginStart="@dimen/block_margin_small"
             android:layout_toEndOf="@id/photo"
             android:layout_toRightOf="@id/photo"/>
     </RelativeLayout>
@@ -41,42 +63,49 @@
         android:id="@+id/blockReminderOptions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/blockContactInfo">
+        android:layout_below="@id/blockContactInfo"
+        android:layout_marginTop="@dimen/block_margin_bigger">
 
         <TextView
             android:id="@+id/textTime"
-            style="?android:attr/spinnerStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="?android:selectableItemBackground"
+            android:padding="@dimen/icon_button_padding"
             android:text="00:00"
-            android:textSize="18sp"/>
+            android:textSize="24sp"/>
 
         <TextView
             android:id="@+id/textToday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginStart="12dp"
+            android:layout_alignBottom="@id/textTime"
+            android:layout_marginBottom="2dp"
+            android:layout_marginLeft="@dimen/block_margin_med"
+            android:layout_marginStart="@dimen/block_margin_med"
             android:layout_toEndOf="@id/textTime"
             android:layout_toRightOf="@id/textTime"
             android:text="@string/today"
             android:textSize="16sp"/>
-    </RelativeLayout>
 
-    <Button
-        android:id="@+id/btnSave"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/blockReminderOptions"
-        android:text="@string/btn_save_reminder"/>
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:text="@string/btn_save_reminder"/>
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/textHaveReminder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btnSave"
-        android:layout_marginLeft="12dp"
-        android:layout_marginStart="12dp"
+        android:layout_below="@id/blockReminderOptions"
+        android:layout_marginLeft="@dimen/block_margin_small"
+        android:layout_marginStart="@dimen/block_margin_small"
+        android:layout_marginTop="@dimen/block_margin_small"
         android:text="@string/have_reminder"
         android:textColor="@android:color/holo_green_dark"
         android:textSize="16sp"/>
