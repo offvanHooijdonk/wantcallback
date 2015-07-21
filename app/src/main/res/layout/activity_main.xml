@@ -24,8 +24,8 @@
         android:layout_margin="16dp"
         android:src="@drawable/ic_alarm_add_white"
         fab:fab_colorNormal="@color/app_accent"
-        fab:fab_colorPressed="@color/app_accent"
-        fab:fab_colorRipple="@color/action_button_ripple"
+        fab:fab_colorPressed="@color/fab_pressed"
+        fab:fab_colorRipple="@color/fab_ripple"
         fab:fab_type="normal"
         />
 
