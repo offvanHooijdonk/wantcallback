@@ -12,7 +12,6 @@ import android.provider.ContactsContract.PhoneLookup;
 
 import com.wantcallback.model.ContactInfo;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -34,7 +33,7 @@ public class ContactsUtil {
 			Cursor cur = cr.query(uri, null, null, null, null);
 
 			if (cur.moveToFirst()) {
-				info = toSingleContact(cur);
+				info = toSingleContact(cur, true);
 			}
 			cur.close();
 		}
@@ -48,7 +47,7 @@ public class ContactsUtil {
 				.query(uri, null, null, null, null);
 
 		if (cursor.moveToFirst()) {
-			contact = toSingleContact(cursor);
+			contact = toSingleContact(cursor, false);
 		}
 
 		cursor.close();
@@ -73,11 +72,11 @@ public class ContactsUtil {
         return photo;
 	}
 
-	private ContactInfo toSingleContact(Cursor cur) {
+	private ContactInfo toSingleContact(Cursor cur, boolean isPhoneLookup) {
 		ContactInfo info = new ContactInfo();
 		String id = cur.getString(cur.getColumnIndex(ContactsContract.PhoneLookup._ID));
 		String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-		String defaultPhone = cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+		String defaultPhone = cur.getString(cur.getColumnIndex(isPhoneLookup ? PhoneLookup.NUMBER : ContactsContract.CommonDataKinds.Phone.NUMBER));
 
 		String photoString = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.PHOTO_URI));
 		if (photoString != null && !"".equals(photoString)) {

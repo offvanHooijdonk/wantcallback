@@ -11,4 +11,5 @@
     <style name="AppBaseTheme.ActionBar" parent="android:Widget.Material.Light.ActionBar">
         <item name="android:background">@color/app_primary</item>
     </style>
+
 </resources>

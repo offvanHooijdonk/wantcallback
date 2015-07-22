@@ -1,8 +1,10 @@
 package com.wantcallback.ui.actionbar;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.ActionProvider;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.Switch;
 
 import com.wantcallback.helper.AppHelper;
@@ -26,17 +28,15 @@ public class AppEnableActionProvider extends ActionProvider {
 
     @Override
     public View onCreateActionView() {
-        Switch switchView = new Switch(ctx);
-
         boolean isAppEnabled = AppHelper.isApplicationEnabled(ctx);
-
-        if (isAppEnabled) {
-            switchView.setChecked(true);
+        View componentView;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            componentView = createCheckbox(isAppEnabled);
         } else {
-            switchView.setChecked(false);
+            componentView = createSwitch(isAppEnabled);
         }
 
-        switchView.setOnClickListener(new View.OnClickListener() {
+        componentView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean isChecked = ((Switch) v).isChecked();
@@ -46,7 +46,7 @@ public class AppEnableActionProvider extends ActionProvider {
             }
         });
 
-        return switchView;
+        return componentView;
     }
 
     public void addToggleListener(ToggleListener l) {
@@ -55,5 +55,29 @@ public class AppEnableActionProvider extends ActionProvider {
 
     public interface ToggleListener {
         void onStateChanged(boolean isChecked);
+    }
+
+    private CheckBox createCheckbox(boolean isChecked) {
+        CheckBox checkBox = new CheckBox(ctx);
+
+        if (isChecked) {
+            checkBox.setChecked(true);
+        } else {
+            checkBox.setChecked(false);
+        }
+
+        return checkBox;
+    }
+
+    private Switch createSwitch(boolean isChecked) {
+        Switch switchView = new Switch(ctx);
+
+        if (isChecked) {
+            switchView.setChecked(true);
+        } else {
+            switchView.setChecked(false);
+        }
+
+        return switchView;
     }
 }

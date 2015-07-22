@@ -30,6 +30,7 @@ public class ReminderDao {
         if (found == null) {
             insert(info);
         } else {
+            info.setId(found.getId());
             update(info);
         }
     }
@@ -39,7 +40,8 @@ public class ReminderDao {
 
         ContentValues cv = beanToCV(info);
 
-        db.insert(TABLE, null, cv);
+        long newId = db.insert(TABLE, null, cv);
+        info.setId(newId);
     }
 
     protected void update(ReminderInfo info) {
@@ -48,6 +50,13 @@ public class ReminderDao {
         ContentValues cv = beanToCV(info);
 
         db.update(TABLE, cv, ReminderInfo.ID + " = ? ", new String[]{String.valueOf(info.getId())});
+    }
+
+    public int deleteById(long id) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        int count = db.delete(TABLE, ReminderInfo.ID + " = ? ", new String[]{String.valueOf(id)});
+        return count;
     }
 
     public int deleteByPhone(String phoneNumber) {
@@ -69,7 +78,7 @@ public class ReminderDao {
         return info;
     }
 
-    public ReminderInfo getById(int id) {
+    public ReminderInfo getById(long id) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         ReminderInfo info = null;
 
@@ -114,7 +123,7 @@ public class ReminderDao {
 
     private ContentValues beanToCV(ReminderInfo info) {
         ContentValues cv = new ContentValues();
-        if (info.isNew()) {
+        if (!info.isNew()) {
             cv.put(ReminderInfo.ID, info.getId());
         }
         cv.put(ReminderInfo.PHONE, info.getPhone());

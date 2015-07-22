@@ -1,6 +1,7 @@
 package com.wantcallback.observer.listener.impl;
 
 import android.content.Context;
+import android.content.Intent;
 
 import com.wantcallback.dao.impl.ReminderDao;
 import com.wantcallback.model.ReminderInfo;
@@ -9,6 +10,7 @@ import com.wantcallback.notifications.NotificationsUtil;
 import com.wantcallback.observer.listener.OnCallMissRejectListener;
 import com.wantcallback.model.CallInfo;
 import com.wantcallback.reminder.ReminderUtil;
+import com.wantcallback.ui.MainActivity;
 
 public class StandardMissRejectListener implements OnCallMissRejectListener {
 	
@@ -31,7 +33,8 @@ public class StandardMissRejectListener implements OnCallMissRejectListener {
 				reminderInfo = AppHelper.convertCallToReminder(info);
 
 				ReminderUtil.createNewDefaultReminder(ctx, reminderInfo);
-				notifyUtil.showMissedCallNotification(info);
+				sendBroadCastToActivity(ctx);
+				notifyUtil.showMissedCallNotification(reminderInfo);
 			}
 		} else {
 			// TODO handle hidden number
@@ -47,9 +50,14 @@ public class StandardMissRejectListener implements OnCallMissRejectListener {
 			} else {
 				notifyUtil.showRejectedCallNotification(reminderInfo);
 			}
+			sendBroadCastToActivity(ctx);
 		} else {
 			// TODO handle hidden number
 		}
+	}
+
+	private void sendBroadCastToActivity(Context ctx) {
+		ctx.sendBroadcast(new Intent(MainActivity.RemindersBroadcastReceiver.ACTION_ANY));
 	}
 
 }

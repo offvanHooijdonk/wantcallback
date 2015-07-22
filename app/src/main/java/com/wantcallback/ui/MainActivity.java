@@ -66,6 +66,7 @@ public class MainActivity extends Activity implements AppEnableActionProvider.To
                 ReminderInfo info = remindersList.get(position);
                 Intent intent = new Intent(that, EditReminderActivity.class);
                 intent.putExtra(EditReminderActivity.EXTRA_REMINDER_ID, info.getId());
+                intent.putExtra(EditReminderActivity.EXTRA_MODE, EditReminderActivity.MODE.EDIT.toString());
                 startActivity(intent);
             }
         });
@@ -74,6 +75,7 @@ public class MainActivity extends Activity implements AppEnableActionProvider.To
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, EditReminderActivity.class);
+                intent.putExtra(EditReminderActivity.EXTRA_MODE, EditReminderActivity.MODE.BLANK.toString());
                 startActivity(intent);
             }
         });

@@ -3,7 +3,7 @@ package com.wantcallback.model;
 public class ReminderInfo {
 	public static final String TABLE = "reminders";
 
-	private static final int BLANK_ID = -1;
+	private static final long BLANK_ID = -1;
 
 	public static final String ID = "_id";
 	public static final String PHONE = "phone";
@@ -12,7 +12,7 @@ public class ReminderInfo {
 	public static final String CALL_DATE = "call_date";
 	public static final String CALL_TYPE = "call_type";
 
-	private int id = BLANK_ID;
+	private long id = BLANK_ID;
 	private String phone;
 	private long date;
 	private CallInfo callInfo;
@@ -21,11 +21,11 @@ public class ReminderInfo {
 		return getId() == BLANK_ID;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

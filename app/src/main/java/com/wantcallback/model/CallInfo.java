@@ -1,11 +1,36 @@
 package com.wantcallback.model;
 
-public class CallInfo {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class CallInfo implements Parcelable {
 	public static final long INVALID_DATE = -1L;
 
-	public static enum TYPE {
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(logId);
+		dest.writeString(phone);
+		dest.writeLong(date);
+		dest.writeString(type.toString());
+	}
+
+	public enum TYPE {
 		MISSED, REJECTED, CREATED
 	};
+
+	public CallInfo() {}
+
+	public CallInfo(Parcel in) {
+		setLogId(in.readInt());
+		setPhone(in.readString());
+		setDate(in.readLong());
+		setType(TYPE.valueOf(in.readString()));
+	}
 
 	private int logId;
 	private String phone;
@@ -51,4 +76,13 @@ public class CallInfo {
 		this.type = type;
 	}
 
+	public static final Parcelable.Creator<CallInfo> CREATOR = new Parcelable.Creator<CallInfo>() {
+		public CallInfo createFromParcel(Parcel in) {
+			return new CallInfo(in);
+		}
+
+		public CallInfo[] newArray(int size) {
+			return new CallInfo[size];
+		}
+	};
 }

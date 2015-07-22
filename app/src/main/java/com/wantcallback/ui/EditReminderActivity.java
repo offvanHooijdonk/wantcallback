@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -21,24 +20,21 @@ import android.widget.Toast;
 
 import com.wantcallback.R;
 import com.wantcallback.dao.impl.ReminderDao;
-import com.wantcallback.model.CallInfo;
-import com.wantcallback.model.ReminderInfo;
-import com.wantcallback.phone.ContactsUtil;
 import com.wantcallback.helper.AppHelper;
-import com.wantcallback.notifications.NotificationsUtil;
+import com.wantcallback.model.CallInfo;
 import com.wantcallback.model.ContactInfo;
+import com.wantcallback.model.ReminderInfo;
+import com.wantcallback.notifications.NotificationsUtil;
+import com.wantcallback.phone.ContactsUtil;
 import com.wantcallback.reminder.ReminderUtil;
 
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
 public class EditReminderActivity extends FragmentActivity implements TimePickerDialog.OnTimeSetListener {
-    public static final String EXTRA_PHONE = "extra_phone";
+    public static final String EXTRA_CALL_INFO = "extra_call_info";
+    public static final String EXTRA_MODE = "extra_mode";
     public static final String EXTRA_REMINDER_ID = "extra_reminder_id";
-    public static final String EXTRA_CALL_ID = "extra_call_id";
-    public static final String EXTRA_CALL_TYPE = "extra_call_type";
-    public static final String EXTRA_CALL_DATE = "extra_call_date";
     public static final String EXTRA_NOTIF_TAG = "extra_notif_tag";
     public static final String EXTRA_NOTIF_ID = "extra_notif_id";
 
@@ -46,8 +42,8 @@ public class EditReminderActivity extends FragmentActivity implements TimePicker
 
     private EditReminderActivity that;
 
-    private enum MODE {
-        EDIT, NEW_PHONE, FROM_SCRATCH
+    public enum MODE {
+        EDIT, CREATE, BLANK
     }
 
     private MODE mode;
@@ -61,14 +57,11 @@ public class EditReminderActivity extends FragmentActivity implements TimePicker
     private TextView textHaveReminder;
     private Button btnSave;
 
-    private int reminderId;
+    private long reminderId;
     private Date remindDate = null;
     private boolean isToday = true;
-    private String phoneNumber;
-    private int callId;
-    private CallInfo.TYPE callType;
-    private long callDate;
     private ReminderDao reminderDao;
+    private CallInfo callInfo = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +83,7 @@ public class EditReminderActivity extends FragmentActivity implements TimePicker
         textHaveReminder = (TextView) findViewById(R.id.textHaveReminder);
         btnSave = (Button) findViewById(R.id.btnSave);
 
-        // TODO implement picking a contact
+        // TODO change icon to rounded and colored
         imageContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,9 +127,9 @@ public class EditReminderActivity extends FragmentActivity implements TimePicker
                     if (mode == MODE.EDIT) {
                         info.setId(reminderId);
                     }
-                    info.setPhone(phoneNumber);
+                    info.setPhone(inputPhone.getText().toString());
                     info.setDate(remindDate.getTime());
-                    info.setCallInfo(new CallInfo(callId, phoneNumber, callDate, callType));
+                    info.setCallInfo(callInfo);
                     // TODO move to task
                     ReminderUtil.createNewReminder(EditReminderActivity.this, info);
 
@@ -157,10 +150,20 @@ public class EditReminderActivity extends FragmentActivity implements TimePicker
                 ContactsUtil util = new ContactsUtil(that);
                 ContactInfo contact = util.getContactFromUri(uri);
 
-                mode = MODE.NEW_PHONE;
+                mode = MODE.CREATE;
                 inputPhone.setText(contact.getPhoneNumber());
                 setReminderTime(ReminderUtil.calcDefaultRemindDate(new Date().getTime()));
                 // check if
+                if (contact != null) {
+                    ReminderInfo reminderInfo = reminderDao.findByPhone(contact.getPhoneNumber());
+                    if (reminderInfo != null) {
+                        setReminderTime(reminderInfo.getDate());
+                        textHaveReminder.setVisibility(View.VISIBLE);
+                    } else { // if not reminders yet - set default time to the picker
+                        setReminderTime(ReminderUtil.calcDefaultRemindDate(new Date().getTime()));
+                        textHaveReminder.setVisibility(View.GONE);
+                    }
+                }
                 fillContactInfo(contact);
             }
         }
@@ -179,14 +182,6 @@ public class EditReminderActivity extends FragmentActivity implements TimePicker
             ivPhoto.setVisibility(View.VISIBLE);
 
             // Check if there is already a reminder for the number and reflect it on the activity screen
-            ReminderInfo reminderInfo = reminderDao.findByPhone(contact.getPhoneNumber());
-            if (reminderInfo != null) {
-                setReminderTime(reminderInfo.getDate());
-                textHaveReminder.setVisibility(View.VISIBLE);
-            } else { // if not reminders yet - set default time to the picker
-                setReminderTime(ReminderUtil.calcDefaultRemindDate(new Date().getTime()));
-                textHaveReminder.setVisibility(View.GONE);
-            }
         } else {
             inputPhone.setText(null);
 
@@ -198,27 +193,29 @@ public class EditReminderActivity extends FragmentActivity implements TimePicker
         }
     }
 
-    private void displayReminder(ReminderInfo info) {
-        if (mode == MODE.EDIT || mode == MODE.NEW_PHONE) {
+    private void displayReminder(ReminderInfo reminder) {
+        if (mode == MODE.EDIT || mode == MODE.CREATE) {
             if (mode == MODE.EDIT) {
-                textHaveReminder.setVisibility(View.VISIBLE);
-                setReminderTime(info.getDate());
-            } else if (mode == MODE.NEW_PHONE) {
+                textHaveReminder.setVisibility(View.GONE);
+                setReminderTime(reminder.getDate());
+            } else if (mode == MODE.CREATE) {
                 textHaveReminder.setVisibility(View.GONE);
                 setReminderTime(ReminderUtil.calcDefaultRemindDate(Calendar.getInstance().getTime().getTime()));
             }
-            inputPhone.setText(info.getPhone());
+            inputPhone.setText(reminder.getPhone());
             imageContacts.setVisibility(View.GONE);
-            inputPhone.setEnabled(false);
+            inputPhone.setFocusable(false);
 
             ContactsUtil util = new ContactsUtil(that);
-            ContactInfo contact = util.findContactByPhone(info.getPhone());
+            ContactInfo contact = util.findContactByPhone(reminder.getPhone());
 
             fillContactInfo(contact);
-        } else if (mode == MODE.FROM_SCRATCH) {
+        } else if (mode == MODE.BLANK) {
             textHaveReminder.setVisibility(View.GONE);
-            inputPhone.setEnabled(true);
+            inputPhone.setFocusable(true);
             imageContacts.setVisibility(View.VISIBLE);
+
+            setReminderTime(ReminderUtil.calcDefaultRemindDate(Calendar.getInstance().getTime().getTime()));
         }
 
     }
@@ -228,41 +225,40 @@ public class EditReminderActivity extends FragmentActivity implements TimePicker
 
         Intent intent = getIntent();
         ReminderInfo reminderInfo = null;
+        String notifTag = null;
+        int notifId = -1;
         if (intent.getExtras() != null) {
-            if (intent.getExtras().containsKey(EXTRA_REMINDER_ID)) { // we are editing reminder
-                mode = MODE.EDIT;
-                reminderId = intent.getExtras().getInt(EXTRA_REMINDER_ID);
+            mode = MODE.valueOf(intent.getExtras().getString(EXTRA_MODE));
+
+            if (mode == MODE.EDIT) {
+                notifTag = intent.getExtras().getString(EXTRA_NOTIF_TAG, null);
+                notifId = intent.getExtras().getInt(EXTRA_NOTIF_ID);
+
+                reminderId = intent.getExtras().getLong(EXTRA_REMINDER_ID);
                 reminderInfo = reminderDao.getById(reminderId);
-            } else { // some data must come
-                callId = intent.getExtras().getInt(EXTRA_CALL_ID, 0);
-                callType = CallInfo.TYPE.valueOf(intent.getExtras().getString(EXTRA_CALL_TYPE, CallInfo.TYPE.CREATED.toString()));
-                callDate = intent.getExtras().getLong(EXTRA_CALL_DATE, new Date().getTime());
-                phoneNumber = intent.getExtras().getString(EXTRA_PHONE, null);
-                String tag = intent.getExtras().getString(EXTRA_NOTIF_TAG, null);
-                int id = intent.getExtras().getInt(EXTRA_NOTIF_ID);
 
-                if (tag != null) {
-                    NotificationsUtil notificationsUtil = new NotificationsUtil(this);
-                    notificationsUtil.dismissNotification(tag, id);
-                }
-
-                if (phoneNumber != null) {
-                    // check if there is already a reminder for that number
-                    reminderInfo = reminderDao.findByPhone(phoneNumber);
-                    if (reminderInfo == null) { // no reminder so far, we just display info on phone/contact
-                        mode = MODE.NEW_PHONE;
-                        reminderInfo = new ReminderInfo();
-                        reminderInfo.setCallInfo(new CallInfo(callId, phoneNumber, callDate, callType));
-                    } else {
-                        mode = MODE.EDIT;
-                    }
-                    reminderId = reminderInfo.getId();
+                if (reminderInfo != null) {
+                    callInfo = reminderInfo.getCallInfo();
                 } else {
-                    mode = MODE.FROM_SCRATCH;
+                    mode = MODE.BLANK;
                 }
+            } else if (mode == MODE.CREATE) {
+                callInfo = intent.getExtras().getParcelable(EXTRA_CALL_INFO);
+
+                notifTag = intent.getExtras().getString(EXTRA_NOTIF_TAG, null);
+                notifId = intent.getExtras().getInt(EXTRA_NOTIF_ID);
+
+                reminderInfo = new ReminderInfo();
+                reminderInfo.setCallInfo(callInfo);
+            } else if (mode == MODE.BLANK) {
+                callInfo = new CallInfo();
+                callInfo.setType(CallInfo.TYPE.CREATED);
             }
-        } else {
-            mode = MODE.FROM_SCRATCH;
+        }
+
+        if (notifTag != null) {
+            NotificationsUtil notificationsUtil = new NotificationsUtil(this);
+            notificationsUtil.dismissNotification(notifTag, notifId);
         }
 
         displayReminder(reminderInfo);

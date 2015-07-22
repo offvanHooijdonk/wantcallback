@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.wantcallback.dao.impl.ReminderDao;
-import com.wantcallback.helper.AppHelper;
 import com.wantcallback.model.CallInfo;
 import com.wantcallback.model.ReminderInfo;
 import com.wantcallback.reminder.ReminderUtil;
@@ -14,13 +13,12 @@ import com.wantcallback.ui.MainActivity;
 public class NotificationActionBroadcastReceiver extends BroadcastReceiver {
     public static final String ACTION_FORGET = "action_forget";
     public static final String ACTION_CREATE_DEFAULT_REMINDER = "action_create_default_reminder";
-    public static final String ACTION_REMIND = "action_reminde";
+    public static final String ACTION_REMIND = "action_remind";
 
-    public static final String EXTRA_PHONE = "extra_phone";
+    public static final String EXTRA_CALL_INFO = "extra_call_info";
     public static final String EXTRA_NOTIF_TAG = "extra_notif_tag";
     public static final String EXTRA_NOTIF_ID = "extra_notif_id";
-    public static final String EXTRA_CALL_ID = "extra_notif_id";
-    public static final String EXTRA_CALL_DATE_LONG = "extra_call_date_long";
+    public static final String EXTRA_REMINDER_ID = "extra_reminder_id";
 
     public NotificationActionBroadcastReceiver() {
     }
@@ -35,58 +33,52 @@ public class NotificationActionBroadcastReceiver extends BroadcastReceiver {
         String action = intent.getAction();
 
         if (ACTION_FORGET.equals(action)) {
-            String phoneNumber = intent.getExtras().getString(EXTRA_PHONE);
+            long reminderId = intent.getExtras().getLong(EXTRA_REMINDER_ID);
             int notifId = intent.getExtras().getInt(EXTRA_NOTIF_ID);
-
-            if (phoneNumber != null) {
-                String tag = intent.getExtras().getString(EXTRA_NOTIF_TAG);
-
-                NotificationsUtil notificationsUtil = new NotificationsUtil(ctx);
-                notificationsUtil.dismissNotification(tag, notifId);
-
-                ReminderUtil.cancelReminder(ctx, phoneNumber);
-
-                sendBroadCastToActivity(ctx);
-            } else {
-                //TODO what to do if phoneNumber is null
-            }
-        } else if (ACTION_CREATE_DEFAULT_REMINDER.equals(action)) {
-            String phoneNumber = intent.getExtras().getString(EXTRA_PHONE);
-            int notifId = intent.getExtras().getInt(EXTRA_NOTIF_ID);
-            long callDateLong = intent.getExtras().getLong(EXTRA_CALL_DATE_LONG);
-            int callId = intent.getExtras().getInt(EXTRA_CALL_ID);
-
-            if (phoneNumber != null) {
-                String tag = intent.getExtras().getString(EXTRA_NOTIF_TAG);
-
-                NotificationsUtil notificationsUtil = new NotificationsUtil(ctx);
-                notificationsUtil.dismissNotification(tag, notifId);
-
-                ReminderInfo info = new ReminderInfo();
-                info.setDate(callDateLong);
-                info.setPhone(phoneNumber);
-
-                ReminderUtil.createNewDefaultReminder(ctx, info);
-
-                sendBroadCastToActivity(ctx);
-            } else {
-                //TODO what to do if phoneNumber is null
-            }
-        } else if (ACTION_REMIND.equals(action)) {
-            String phone = intent.getExtras().getString(EXTRA_PHONE);
-            int callId = intent.getExtras().getInt(EXTRA_CALL_ID);
 
             ReminderDao dao = new ReminderDao(ctx);
-            ReminderInfo reminderInfo = dao.findByPhone(phone);
+            ReminderInfo reminder = dao.getById(reminderId);
+
+            String tag = intent.getExtras().getString(EXTRA_NOTIF_TAG);
+
+            NotificationsUtil notificationsUtil = new NotificationsUtil(ctx);
+            notificationsUtil.dismissNotification(tag, notifId);
+
+            ReminderUtil.cancelReminder(ctx, reminder);
+
+            sendBroadCastToActivity(ctx);
+
+        } else if (ACTION_CREATE_DEFAULT_REMINDER.equals(action)) {
+            CallInfo call = intent.getExtras().getParcelable(EXTRA_CALL_INFO);
+            int notifId = intent.getExtras().getInt(EXTRA_NOTIF_ID);
+            String tag = intent.getExtras().getString(EXTRA_NOTIF_TAG);
+
+            NotificationsUtil notificationsUtil = new NotificationsUtil(ctx);
+            notificationsUtil.dismissNotification(tag, notifId);
+
+            ReminderInfo reminder = new ReminderInfo();
+            reminder.setDate(call.getDate());
+            reminder.setPhone(call.getPhone());
+
+            ReminderUtil.createNewDefaultReminder(ctx, reminder);
+
+            sendBroadCastToActivity(ctx);
+
+        } else if (ACTION_REMIND.equals(action)) {
+            long reminderId = intent.getExtras().getLong(EXTRA_REMINDER_ID);
+
+            ReminderDao dao = new ReminderDao(ctx);
+            ReminderInfo reminderInfo = dao.getById(reminderId);
 
             if (reminderInfo != null) {
                 NotificationsUtil notificationsUtil = new NotificationsUtil(ctx);
 
-                CallInfo callInfo = reminderInfo.getCallInfo();
-                notificationsUtil.showReminderNotification(callInfo, reminderInfo);
+                notificationsUtil.showReminderNotification(reminderInfo);
 
-                dao.deleteByPhone(phone);
+                dao.deleteById(reminderId);
             }
+
+            sendBroadCastToActivity(ctx);
         }
 
     }

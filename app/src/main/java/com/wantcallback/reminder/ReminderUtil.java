@@ -1,23 +1,23 @@
 package com.wantcallback.reminder;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import android.content.Context;
+import android.widget.Toast;
 
 import com.wantcallback.dao.impl.ReminderDao;
 import com.wantcallback.model.ReminderInfo;
 
-import android.content.Context;
-import android.widget.Toast;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class ReminderUtil {
 	private static final int DEFAULT_TIME_ADD = 10; // FIXME move to options
 	
-	public static void createNewReminder(Context ctx, ReminderInfo info) {
-		AlarmUtil.createNewReminderAlarm(ctx, info.getId(), info.getPhone(), new Date(info.getDate()));
+	public static void createNewReminder(Context ctx, ReminderInfo reminder) {
+		AlarmUtil.createNewReminderAlarm(ctx, reminder.getCallInfo().getLogId(), reminder.getPhone(), new Date(reminder.getDate()));
 		
 		ReminderDao reminderDao = new ReminderDao(ctx);
-		reminderDao.save(info);
+		reminderDao.save(reminder);
 	}
 	
 	public static void createNewDefaultReminder(Context ctx, ReminderInfo info) {
@@ -26,16 +26,14 @@ public class ReminderUtil {
 		createNewReminder(ctx, info);
 	}
 	
-	public static void cancelReminder(Context ctx, String phoneNumber) {
-		ReminderDao dao = new ReminderDao(ctx);
-		ReminderInfo info = dao.findByPhone(phoneNumber);
-		if (info != null) {
-			AlarmUtil.cancelAlarm(ctx, info.getId(), info.getPhone());
+	public static void cancelReminder(Context ctx, ReminderInfo reminder) {
+		if (reminder != null) {
+			AlarmUtil.cancelAlarm(ctx, reminder.getId(), reminder.getPhone());
 			ReminderDao reminderDao = new ReminderDao(ctx);
-			reminderDao.deleteByPhone(info.getPhone());
-			Toast.makeText(ctx, "Forgot " + phoneNumber, Toast.LENGTH_LONG).show();
+			reminderDao.deleteByPhone(reminder.getPhone());
+			Toast.makeText(ctx, "Forgot " + reminder.getPhone(), Toast.LENGTH_LONG).show();
 		} else {
-			Toast.makeText(ctx, "Did not find reminder for " + phoneNumber + " !", Toast.LENGTH_LONG).show();
+			Toast.makeText(ctx, "Did not find reminder for " + reminder.getPhone() + " !", Toast.LENGTH_LONG).show();
 		}
 
 	}

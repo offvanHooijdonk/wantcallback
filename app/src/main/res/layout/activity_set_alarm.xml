@@ -8,6 +8,18 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
+    <TextView
+        android:id="@+id/textHaveReminder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/block_margin_small"
+        android:layout_marginStart="@dimen/block_margin_small"
+        android:layout_marginTop="@dimen/block_margin_small"
+        android:layout_marginBottom="@dimen/block_margin_small"
+        android:text="@string/have_reminder"
+        android:textColor="@android:color/holo_green_dark"
+        android:textSize="16sp"/>
+
     <AutoCompleteTextView
         android:id="@+id/inputPhone"
         android:layout_width="match_parent"
@@ -16,6 +28,7 @@
         android:layout_marginRight="@dimen/block_margin_small"
         android:layout_toLeftOf="@+id/imageContacts"
         android:layout_toStartOf="@+id/imageContacts"
+        android:layout_below="@id/textHaveReminder"
         android:completionThreshold="3"
         android:lines="1"
         android:maxLength="18"
@@ -81,7 +94,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/textTime"
-            android:layout_marginBottom="2dp"
+            android:layout_marginBottom="4dp"
             android:layout_marginLeft="@dimen/block_margin_med"
             android:layout_marginStart="@dimen/block_margin_med"
             android:layout_toEndOf="@id/textTime"
@@ -95,20 +108,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:text="@string/btn_save_reminder"/>
+            android:layout_marginRight="@dimen/block_margin_small"
+            android:layout_marginEnd="@dimen/block_margin_small"
+            android:text="@string/btn_save_reminder"
+            android:textColor="@color/app_accent"
+            android:textSize="20sp"
+            style="?android:attr/borderlessButtonStyle"/>
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/textHaveReminder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/blockReminderOptions"
-        android:layout_marginLeft="@dimen/block_margin_small"
-        android:layout_marginStart="@dimen/block_margin_small"
-        android:layout_marginTop="@dimen/block_margin_small"
-        android:text="@string/have_reminder"
-        android:textColor="@android:color/holo_green_dark"
-        android:textSize="16sp"/>
-
 
 </RelativeLayout>

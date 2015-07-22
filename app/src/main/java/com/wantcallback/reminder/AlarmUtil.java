@@ -1,7 +1,5 @@
 package com.wantcallback.reminder;
 
-import java.util.Date;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -9,16 +7,18 @@ import android.content.Intent;
 
 import com.wantcallback.notifications.NotificationActionBroadcastReceiver;
 
+import java.util.Date;
+
 public class AlarmUtil {
 	private static AlarmManager alarmManager;
 
-	public static void createNewReminderAlarm(Context ctx, int callId, String phoneNumber, Date date) {
+	public static void createNewReminderAlarm(Context ctx, long remId, String phoneNumber, Date date) {
 		// TODO make reboot-proof
-		getAlarmManager(ctx).set(AlarmManager.RTC_WAKEUP, date.getTime(), preparePendingIntent(ctx, callId, phoneNumber));
+		getAlarmManager(ctx).set(AlarmManager.RTC_WAKEUP, date.getTime(), preparePendingIntent(ctx, remId, phoneNumber));
 	}
 	
-	public static void cancelAlarm(Context ctx, int callId, String phoneNumber) {
-		getAlarmManager(ctx).cancel(preparePendingIntent(ctx, callId, phoneNumber));
+	public static void cancelAlarm(Context ctx, long reminderId, String phoneNumber) {
+		getAlarmManager(ctx).cancel(preparePendingIntent(ctx, reminderId, phoneNumber));
 	}
 	
 	private static AlarmManager getAlarmManager(Context ctx) {
@@ -29,12 +29,10 @@ public class AlarmUtil {
 		return alarmManager;
 	}
 	
-	private static PendingIntent preparePendingIntent(Context ctx, int callId, String phoneNumber) {
+	private static PendingIntent preparePendingIntent(Context ctx, long reminderId, String phoneNumber) {
 		Intent intent = new Intent(NotificationActionBroadcastReceiver.ACTION_REMIND);
+		intent.putExtra(NotificationActionBroadcastReceiver.EXTRA_REMINDER_ID, reminderId);
 		
-		intent.putExtra(NotificationActionBroadcastReceiver.EXTRA_PHONE, phoneNumber);
-		intent.putExtra(NotificationActionBroadcastReceiver.EXTRA_CALL_ID, phoneNumber);
-		
-		return PendingIntent.getBroadcast(ctx, callId, intent, 0);
+		return PendingIntent.getBroadcast(ctx, (int) reminderId, intent, 0);
 	}
 }
