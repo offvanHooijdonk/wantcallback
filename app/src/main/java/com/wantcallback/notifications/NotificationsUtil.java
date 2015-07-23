@@ -54,7 +54,7 @@ public class NotificationsUtil {
         String tag = info.getPhone();
         int id = NOTIFICATION_REJECTED_CALL;
         String callerLabel = getCallerLabel(info);
-        int defaultMin = ReminderUtil.getDefaultRemindMinutes();
+        int defaultMin = ReminderUtil.getDefaultRemindMinutes(ctx);
         NotificationCompat.Builder builder = getCommonCallNBuilder(info).setContentTitle("Rejected Call")
                 .setTicker("Rejected Call from " + callerLabel)
                 .setContentIntent(createNewReminderIntent(info, tag, id)) // open activity to set custom info
@@ -69,7 +69,7 @@ public class NotificationsUtil {
         String callerLabel = getCallerLabel(reminder.getCallInfo());
 
         NotificationCompat.Builder builder = getCommonCallNBuilder(reminder.getCallInfo()).setContentTitle("Rejected Call")
-                .setContentText("You already have a reminder at " + AppHelper.sdfTime.format(new Date(reminder.getDate())))
+                .setContentText("You already have a reminder at " + AppHelper.getTimeFormat(ctx).format(new Date(reminder.getDate())))
                 .setTicker("Rejected Call from " + callerLabel)
                 .setContentIntent(createEditReminderIntent(reminder, tag, id)) // open activity to set custom info
                 .addAction(R.drawable.ic_call, "Call now", createDialerIntent(reminder.getCallInfo())) // Dial missed call
@@ -83,7 +83,7 @@ public class NotificationsUtil {
         int id = NOTIFICATION_REMINDER;
 // TODO make a custom layout
         NotificationCompat.Builder builder = getCommonCallNBuilder(reminder.getCallInfo()).setContentTitle("Time to call back to" + reminder.getPhone())
-                .setContentText("Call to " + reminder.getPhone() + " that called you at " + AppHelper.sdfTime.format(new Date(reminder.getCallInfo().getDate())))
+                .setContentText("Call to " + reminder.getPhone() + " that called you at " + AppHelper.getTimeFormat(ctx).format(new Date(reminder.getCallInfo().getDate())))
                 .setTicker("Call back to " + reminder.getPhone())
                 //.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setLights(ctx.getResources().getColor(R.color.led_blue), 500, 500) // TODO make configurable

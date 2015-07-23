@@ -60,21 +60,21 @@ public class ReminderMainAdapter extends BaseAdapter {
         textPhone.setText(info.getPhone());
 
         TextView textTime = (TextView) convertView.findViewById(R.id.textTime);
-        textTime.setText(AppHelper.sdfTime.format(new Date(info.getDate())));
+        textTime.setText(AppHelper.getTimeFormat(ctx).format(new Date(info.getDate())));
 
         TextView textTypeAndWhen = (TextView) convertView.findViewById(R.id.textTypeAndWhen);
         String callInfoString;
         switch (info.getCallInfo().getType()) {
             case MISSED: {
-                callInfoString = ctx.getString(R.string.missed_at_time, AppHelper.sdfTime.format(new Date(info.getCallInfo().getDate())));
+                callInfoString = ctx.getString(R.string.missed_at_time, AppHelper.getTimeFormat(ctx).format(new Date(info.getCallInfo().getDate())));
             }
             break;
             case REJECTED: {
-                callInfoString = ctx.getString(R.string.rejected_at_time, AppHelper.sdfTime.format(new Date(info.getCallInfo().getDate())));
+                callInfoString = ctx.getString(R.string.rejected_at_time, AppHelper.getTimeFormat(ctx).format(new Date(info.getCallInfo().getDate())));
             }
             break;
             default: {
-                callInfoString = AppHelper.sdfTime.format(new Date(info.getCallInfo().getDate()));
+                callInfoString = AppHelper.getTimeFormat(ctx).format(new Date(info.getCallInfo().getDate()));
             }
         }
         textTypeAndWhen.setText(callInfoString);

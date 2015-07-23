@@ -38,7 +38,7 @@ public class InitializerIntentService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (intent.getExtras()!= null && intent.getExtras().containsKey(EXTRA_START_SHUT)) { // if it does not - we wanted something else
+		if (intent != null && intent.getExtras()!= null && intent.getExtras().containsKey(EXTRA_START_SHUT)) { // if it does not - we wanted something else
 			boolean isStart = intent.getBooleanExtra(EXTRA_START_SHUT, false);
 
 			if (isStart) {
@@ -47,6 +47,15 @@ public class InitializerIntentService extends Service {
 				registerAll();
 			} else {
 				AppHelper.persistAppEnabledState(this, false);
+				unregisterAll();
+
+				this.stopSelf();
+			}
+		} else {
+			if (AppHelper.isApplicationEnabled(this)) {
+				enableForeground();
+				registerAll();
+			} else {
 				unregisterAll();
 
 				this.stopSelf();

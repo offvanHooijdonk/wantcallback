@@ -133,7 +133,7 @@ public class EditReminderActivity extends FragmentActivity implements TimePicker
                     // TODO move to task
                     ReminderUtil.createNewReminder(EditReminderActivity.this, info);
 
-                    Toast.makeText(EditReminderActivity.this, "Will remind at " + AppHelper.sdfDateTime.format(remindDate), Toast.LENGTH_LONG).show();
+                    Toast.makeText(EditReminderActivity.this, "Will remind at " + AppHelper.getDateFormat(that).format(remindDate), Toast.LENGTH_LONG).show();
                     finish();
                 }
             }
@@ -152,15 +152,14 @@ public class EditReminderActivity extends FragmentActivity implements TimePicker
 
                 mode = MODE.CREATE;
                 inputPhone.setText(contact.getPhoneNumber());
-                setReminderTime(ReminderUtil.calcDefaultRemindDate(new Date().getTime()));
+                setReminderTime(ReminderUtil.calcDefaultRemindDate(that, Calendar.getInstance().getTimeInMillis()));
                 // check if
                 if (contact != null) {
                     ReminderInfo reminderInfo = reminderDao.findByPhone(contact.getPhoneNumber());
                     if (reminderInfo != null) {
                         setReminderTime(reminderInfo.getDate());
                         textHaveReminder.setVisibility(View.VISIBLE);
-                    } else { // if not reminders yet - set default time to the picker
-                        setReminderTime(ReminderUtil.calcDefaultRemindDate(new Date().getTime()));
+                    } else {
                         textHaveReminder.setVisibility(View.GONE);
                     }
                 }
@@ -180,8 +179,7 @@ public class EditReminderActivity extends FragmentActivity implements TimePicker
                 ivPhoto.setImageResource(R.drawable.ic_contact_picture);
             }
             ivPhoto.setVisibility(View.VISIBLE);
-
-            // Check if there is already a reminder for the number and reflect it on the activity screen
+            // TODO make this a link to the contact
         } else {
             inputPhone.setText(null);
 
@@ -197,10 +195,11 @@ public class EditReminderActivity extends FragmentActivity implements TimePicker
         if (mode == MODE.EDIT || mode == MODE.CREATE) {
             if (mode == MODE.EDIT) {
                 textHaveReminder.setVisibility(View.GONE);
+                // FIXME somehow in this case time always appears Tomorrow
                 setReminderTime(reminder.getDate());
             } else if (mode == MODE.CREATE) {
                 textHaveReminder.setVisibility(View.GONE);
-                setReminderTime(ReminderUtil.calcDefaultRemindDate(Calendar.getInstance().getTime().getTime()));
+                setReminderTime(ReminderUtil.calcDefaultRemindDate(that, Calendar.getInstance().getTimeInMillis()));
             }
             inputPhone.setText(reminder.getPhone());
             imageContacts.setVisibility(View.GONE);
@@ -215,7 +214,7 @@ public class EditReminderActivity extends FragmentActivity implements TimePicker
             inputPhone.setFocusable(true);
             imageContacts.setVisibility(View.VISIBLE);
 
-            setReminderTime(ReminderUtil.calcDefaultRemindDate(Calendar.getInstance().getTime().getTime()));
+            setReminderTime(ReminderUtil.calcDefaultRemindDate(that, Calendar.getInstance().getTimeInMillis()));
         }
 
     }
@@ -276,7 +275,7 @@ public class EditReminderActivity extends FragmentActivity implements TimePicker
         }
         remindDate = calendarRem.getTime();
 
-        String timeString = AppHelper.sdfTime.format(remindDate);
+        String timeString = AppHelper.getTimeFormat(that).format(remindDate);
         textTime.setText(timeString);
         setTodayText(isToday);
     }

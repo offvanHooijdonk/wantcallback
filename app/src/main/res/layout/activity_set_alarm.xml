@@ -15,7 +15,6 @@
         android:layout_marginLeft="@dimen/block_margin_small"
         android:layout_marginStart="@dimen/block_margin_small"
         android:layout_marginTop="@dimen/block_margin_small"
-        android:layout_marginBottom="@dimen/block_margin_small"
         android:text="@string/have_reminder"
         android:textColor="@android:color/holo_green_dark"
         android:textSize="16sp"/>
@@ -24,6 +23,7 @@
         android:id="@+id/inputPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/block_margin_small"
         android:layout_marginEnd="@dimen/block_margin_small"
         android:layout_marginRight="@dimen/block_margin_small"
         android:layout_toLeftOf="@+id/imageContacts"
@@ -101,19 +101,18 @@
             android:layout_toRightOf="@id/textTime"
             android:text="@string/today"
             android:textSize="16sp"/>
-
-        <Button
-            android:id="@+id/btnSave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/block_margin_small"
-            android:layout_marginEnd="@dimen/block_margin_small"
-            android:text="@string/btn_save_reminder"
-            android:textColor="@color/app_accent"
-            android:textSize="20sp"
-            style="?android:attr/borderlessButtonStyle"/>
     </RelativeLayout>
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/blockReminderOptions"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/block_margin_small"
+        android:layout_marginEnd="@dimen/block_margin_small"
+        android:text="@string/btn_save_reminder"
+        android:textSize="18sp" />
 
 </RelativeLayout>

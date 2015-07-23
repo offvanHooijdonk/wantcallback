@@ -6,10 +6,17 @@
         <item name="android:colorPrimary">@color/app_primary</item>
         <item name="android:colorPrimaryDark">@color/app_primary_dark</item>
         <item name="android:colorAccent">@color/app_accent</item>
+
+        <item name="android:colorButtonNormal">@color/app_accent</item>
+        <item name="android:buttonStyle">@style/AppBaseTheme.RaisedButton</item>
     </style>
 
     <style name="AppBaseTheme.ActionBar" parent="android:Widget.Material.Light.ActionBar">
         <item name="android:background">@color/app_primary</item>
+    </style>
+
+    <style name="AppBaseTheme.RaisedButton" parent="android:Widget.Material.Light.Button">
+        <item name="android:textColor">@color/button_raised_text</item>
     </style>
 
 </resources>

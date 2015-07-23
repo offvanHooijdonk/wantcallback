@@ -1,8 +1,10 @@
 package com.wantcallback.reminder;
 
 import android.content.Context;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 
+import com.wantcallback.R;
 import com.wantcallback.dao.impl.ReminderDao;
 import com.wantcallback.model.ReminderInfo;
 
@@ -11,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 public class ReminderUtil {
-	private static final int DEFAULT_TIME_ADD = 10; // FIXME move to options
+	private static final String DEFAULT_TIME_ADD = "10";
 	
 	public static void createNewReminder(Context ctx, ReminderInfo reminder) {
 		AlarmUtil.createNewReminderAlarm(ctx, reminder.getCallInfo().getLogId(), reminder.getPhone(), new Date(reminder.getDate()));
@@ -21,7 +23,7 @@ public class ReminderUtil {
 	}
 	
 	public static void createNewDefaultReminder(Context ctx, ReminderInfo info) {
-		info.setDate(ReminderUtil.calcDefaultRemindDate(info.getDate()));
+		info.setDate(ReminderUtil.calcDefaultRemindDate(ctx, info.getDate()));
 		
 		createNewReminder(ctx, info);
 	}
@@ -38,12 +40,12 @@ public class ReminderUtil {
 
 	}
 	
-	public static long calcDefaultRemindDate(long timeMillis) {
+	public static long calcDefaultRemindDate(Context ctx, long timeMillis) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(timeMillis);
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
-		calendar.add(Calendar.MINUTE, DEFAULT_TIME_ADD);
+		calendar.add(Calendar.MINUTE, getDefaultRemindMinutes(ctx));
 		return calendar.getTimeInMillis();
 	}
 
@@ -81,7 +83,7 @@ public class ReminderUtil {
 		dao.deleteAllBeforeDate(now.getTime());
 	}
 	
-	public static int getDefaultRemindMinutes() {
-		return DEFAULT_TIME_ADD;
+	public static int getDefaultRemindMinutes(Context ctx) {
+		return Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ctx).getString(ctx.getString(R.string.default_reminder_time_key), DEFAULT_TIME_ADD));
 	}
 }

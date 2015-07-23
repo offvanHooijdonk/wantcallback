@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ReminderDao {
     public static final String TABLE = ReminderInfo.TABLE;
-    public static final int DATE_MULT = 60 * 1000;
+    public static final long DATE_MULT = 60 * 1000l;
 
     private Context ctx;
     private DBHelperUtil dbHelper;
@@ -95,7 +95,7 @@ public class ReminderDao {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE, null, null, null, null, null, ReminderInfo.DATE + " desc");
-        if (cursor.moveToFirst()) { // assume phone is a unique field
+        while (cursor.moveToNext()) { // assume phone is a unique field
             reminders.add(cursorToBean(cursor));
         }
         cursor.close();
@@ -129,7 +129,7 @@ public class ReminderDao {
         cv.put(ReminderInfo.PHONE, info.getPhone());
         cv.put(ReminderInfo.DATE, (int) (info.getDate() / DATE_MULT));
         cv.put(ReminderInfo.CALL_ID, info.getCallInfo().getLogId());
-        cv.put(ReminderInfo.CALL_DATE, info.getPhone());
+        cv.put(ReminderInfo.CALL_DATE, info.getDate() / DATE_MULT);
         cv.put(ReminderInfo.CALL_TYPE, info.getCallInfo().getType().toString());
 
         return cv;

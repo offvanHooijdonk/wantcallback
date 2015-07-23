@@ -1,5 +1,6 @@
 package com.wantcallback.helper;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 
@@ -12,8 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 public class AppHelper {
-	public static DateFormat sdfTime = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT, Locale.getDefault());
-	public static DateFormat sdfDateTime = SimpleDateFormat.getTimeInstance(SimpleDateFormat.MEDIUM, Locale.getDefault());
 
 	private static final String FILE_PREF_LOCAL = "local.xml";
 	private static final String PREF_APP_ENABLED = "app_enabled";
@@ -23,7 +22,7 @@ public class AppHelper {
 		reminderInfo.setDate(callInfo.getDate());
 		reminderInfo.setPhone(callInfo.getPhone());
 		reminderInfo.setCallInfo(callInfo);
-		
+
 		return reminderInfo;
 	}
 
@@ -40,5 +39,18 @@ public class AppHelper {
 		intent.putExtra(InitializerIntentService.EXTRA_START_SHUT, startupExtraValue);
 
 		return intent;
+	}
+
+	@SuppressLint("SimpleDateFormat")
+	public static DateFormat getTimeFormat(Context ctx) {
+		return new SimpleDateFormat(android.text.format.DateFormat.is24HourFormat(ctx) ? "HH:mm" : "hh:mm a");
+	}
+
+	public static DateFormat getDateFormat(Context ctx) {
+		return SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT, getDefaultLocale(ctx));
+	}
+
+	public static Locale getDefaultLocale(Context ctx) {
+		return ctx.getResources().getConfiguration().locale;
 	}
 }

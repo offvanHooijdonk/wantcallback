@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.wantcallback.helper.AppHelper;
 import com.wantcallback.model.ReminderInfo;
 import com.wantcallback.reminder.ReminderUtil;
 import com.wantcallback.ui.actionbar.AppEnableActionProvider;
+import com.wantcallback.ui.preferences.PreferenceActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +48,7 @@ public class MainActivity extends Activity implements AppEnableActionProvider.To
         setContentView(R.layout.activity_main);
 
         that = this;
+        PreferenceManager.setDefaultValues(that, R.xml.pref, false);
 
         btnAddAlarm = (FloatingActionButton) findViewById(R.id.btnAddAlarm);
         reminderDao = new ReminderDao(that);
@@ -114,6 +117,9 @@ public class MainActivity extends Activity implements AppEnableActionProvider.To
         int id = item.getItemId();
         if (id == R.id.action_reload) {
             reloadRemindersList();
+        } else if (id == R.id.action_settings) {
+            Intent intent = new Intent(that, PreferenceActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

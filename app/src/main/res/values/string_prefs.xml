@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_reminder_time_title">Default Reminder Time</string>
+    <string name="default_reminder_time_summ">Time to remind in when you create a default reminder</string>
+    <string name="default_reminder_time_key">defaultReminderTime</string>
+
+    <string-array name="default_reminder_time_values">
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>30</item>
+        <item>45</item>
+        <item>60</item>
+    </string-array>
+
+    <string-array name="default_reminder_time">
+        <item>2 m</item>
+        <item>5 m</item>
+        <item>10 m</item>
+        <item>15 m</item>
+        <item>20 m</item>
+        <item>30 m</item>
+        <item>45 m</item>
+        <item>1 h</item>
+    </string-array>
+
+    <string name="default_postpone_time_title">Default Postpone Time</string>
+    <string name="default_postpone_time_summ">Time to postpone reminder if you want it later</string>
+    <string name="default_postpone_time_key">defaultPostponeTime</string>
+
+    <string-array name="default_postpone_time_values">
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>30</item>
+        <item>45</item>
+        <item>60</item>
+    </string-array>
+
+    <string-array name="default_postpone_time">
+        <item>2 m</item>
+        <item>5 m</item>
+        <item>10 m</item>
+        <item>15 m</item>
+        <item>20 m</item>
+        <item>30 m</item>
+        <item>45 m</item>
+        <item>1 h</item>
+    </string-array>
+</resources>

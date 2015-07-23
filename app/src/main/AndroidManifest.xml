@@ -38,6 +38,12 @@
             android:parentActivityName=".ui.MainActivity">
         </activity>
 
+        <activity
+            android:name=".ui.preferences.PreferenceActivity"
+            android:label="@string/action_settings"
+            android:parentActivityName=".ui.MainActivity">
+        </activity>
+
         <activity android:name="com.wantcallback.ui.RemindActivity">
         </activity>
 

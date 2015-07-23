@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <ListPreference
+        android:key="@string/default_reminder_time_key"
+        android:title="@string/default_reminder_time_title"
+        android:summary="@string/default_reminder_time_summ"
+        android:entries="@array/default_reminder_time"
+        android:entryValues="@array/default_reminder_time_values"
+        android:defaultValue="10"/>
+
+    <ListPreference
+        android:key="@string/default_postpone_time_key"
+        android:title="@string/default_postpone_time_title"
+        android:summary="@string/default_postpone_time_summ"
+        android:entries="@array/default_postpone_time"
+        android:entryValues="@array/default_postpone_time_values"
+        android:defaultValue="10"/>
 </PreferenceScreen>
