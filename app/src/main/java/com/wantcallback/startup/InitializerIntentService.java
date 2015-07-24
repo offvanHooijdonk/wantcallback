@@ -38,7 +38,7 @@ public class InitializerIntentService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (intent != null && intent.getExtras()!= null && intent.getExtras().containsKey(EXTRA_START_SHUT)) { // if it does not - we wanted something else
+		if (intent != null && intent.getExtras()!= null && intent.getExtras().containsKey(EXTRA_START_SHUT)) {
 			boolean isStart = intent.getBooleanExtra(EXTRA_START_SHUT, false);
 
 			if (isStart) {
@@ -51,7 +51,7 @@ public class InitializerIntentService extends Service {
 
 				this.stopSelf();
 			}
-		} else {
+		} else { //  than may be it was killed anf then restarted by the system ?
 			if (AppHelper.isApplicationEnabled(this)) {
 				enableForeground();
 				registerAll();

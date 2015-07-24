@@ -1,6 +1,5 @@
 package com.wantcallback.ui;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +7,8 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +27,7 @@ import com.wantcallback.ui.preferences.PreferenceActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends Activity implements AppEnableActionProvider.ToggleListener, ReminderMainAdapter
+public class MainActivity extends AppCompatActivity implements AppEnableActionProvider.ToggleListener, ReminderMainAdapter
         .ReminderInteractionListener {
 
     private static final String TASK_MUTE_REMINDERS = "task_mute_reminders";
@@ -106,7 +107,7 @@ public class MainActivity extends Activity implements AppEnableActionProvider.To
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
 
-        AppEnableActionProvider provider = (AppEnableActionProvider) menu.findItem(R.id.action_app_enable).getActionProvider();
+        AppEnableActionProvider provider = (AppEnableActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_app_enable));
         provider.addToggleListener(that);
 
         return true;

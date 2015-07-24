@@ -1,11 +1,10 @@
 package com.wantcallback.ui.actionbar;
 
 import android.content.Context;
-import android.os.Build;
-import android.view.ActionProvider;
+import android.support.v4.view.ActionProvider;
+import android.support.v7.widget.SwitchCompat;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.Switch;
+import android.widget.CompoundButton;
 
 import com.wantcallback.helper.AppHelper;
 
@@ -29,17 +28,12 @@ public class AppEnableActionProvider extends ActionProvider {
     @Override
     public View onCreateActionView() {
         boolean isAppEnabled = AppHelper.isApplicationEnabled(ctx);
-        View componentView;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            componentView = createCheckbox(isAppEnabled);
-        } else {
-            componentView = createSwitch(isAppEnabled);
-        }
+        CompoundButton componentView = createSwitchCompat(isAppEnabled);
 
-        componentView.setOnClickListener(new View.OnClickListener() {
+        componentView.setOnClickListener(new CompoundButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean isChecked = ((Switch) v).isChecked();
+                boolean isChecked = ((CompoundButton) v).isChecked();
                 for (ToggleListener l : listeners) {
                     l.onStateChanged(isChecked);
                 }
@@ -57,20 +51,8 @@ public class AppEnableActionProvider extends ActionProvider {
         void onStateChanged(boolean isChecked);
     }
 
-    private CheckBox createCheckbox(boolean isChecked) {
-        CheckBox checkBox = new CheckBox(ctx);
-
-        if (isChecked) {
-            checkBox.setChecked(true);
-        } else {
-            checkBox.setChecked(false);
-        }
-
-        return checkBox;
-    }
-
-    private Switch createSwitch(boolean isChecked) {
-        Switch switchView = new Switch(ctx);
+    private SwitchCompat createSwitchCompat(boolean isChecked) {
+        SwitchCompat switchView = new SwitchCompat(ctx);
 
         if (isChecked) {
             switchView.setChecked(true);

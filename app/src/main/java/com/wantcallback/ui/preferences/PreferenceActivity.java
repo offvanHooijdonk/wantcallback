@@ -1,21 +1,21 @@
 package com.wantcallback.ui.preferences;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.support.v7.app.AppCompatActivity;
 
 import com.wantcallback.R;
 
 /**
  * Created by Yahor_Fralou on 7/23/2015.
  */
-public class PreferenceActivity extends Activity {
+public class PreferenceActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new SettingsFragment())

@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
@@ -31,7 +31,7 @@ import com.wantcallback.reminder.ReminderUtil;
 import java.util.Calendar;
 import java.util.Date;
 
-public class EditReminderActivity extends FragmentActivity implements TimePickerDialog.OnTimeSetListener {
+public class EditReminderActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
     public static final String EXTRA_CALL_INFO = "extra_call_info";
     public static final String EXTRA_MODE = "extra_mode";
     public static final String EXTRA_REMINDER_ID = "extra_reminder_id";
@@ -70,7 +70,7 @@ public class EditReminderActivity extends FragmentActivity implements TimePicker
 
         this.that = this;
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         reminderDao = new ReminderDao(this);
 

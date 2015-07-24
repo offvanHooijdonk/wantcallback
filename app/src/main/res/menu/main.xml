@@ -1,23 +1,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.wantcallback.MainActivity" >
 
     <item
         android:id="@+id/action_app_enable"
         android:title=""
-        android:actionProviderClass="com.wantcallback.ui.actionbar.AppEnableActionProvider"
-        android:showAsAction="always"/>
+        app:actionProviderClass="com.wantcallback.ui.actionbar.AppEnableActionProvider"
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/action_reload"
         android:icon="@drawable/ic_refresh_white"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/action_refresh"/>
 
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/action_settings"/>
 
 </menu>
