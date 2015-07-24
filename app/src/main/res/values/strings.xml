@@ -16,6 +16,7 @@
 
     <string name="missed_at_time">Missed at %s</string>
     <string name="rejected_at_time">Rejected at %s</string>
+    <string name="created_at_time">Created at %s</string>
     <string name="forget">Forget</string>
 
     <string name="foreground_title">Want Call Back</string>

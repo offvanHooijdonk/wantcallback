@@ -151,7 +151,6 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                 ContactInfo contact = util.getContactFromUri(uri);
 
                 mode = MODE.CREATE;
-                inputPhone.setText(contact.getPhoneNumber());
                 setReminderTime(ReminderUtil.calcDefaultRemindDate(that, Calendar.getInstance().getTimeInMillis()));
                 // check if
                 if (contact != null) {
@@ -159,7 +158,9 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                     if (reminderInfo != null) {
                         setReminderTime(reminderInfo.getDate());
                         textHaveReminder.setVisibility(View.VISIBLE);
+                        inputPhone.setText(contact.getPhoneNumber());
                     } else {
+                        inputPhone.setText(null);
                         textHaveReminder.setVisibility(View.GONE);
                     }
                 }
@@ -181,8 +182,6 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
             ivPhoto.setVisibility(View.VISIBLE);
             // TODO make this a link to the contact
         } else {
-            inputPhone.setText(null);
-
             textContactName.setVisibility(View.GONE);
             textContactName.setText(null);
 
@@ -195,13 +194,15 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         if (mode == MODE.EDIT || mode == MODE.CREATE) {
             if (mode == MODE.EDIT) {
                 textHaveReminder.setVisibility(View.GONE);
+                inputPhone.setText(reminder.getPhone());
                 // FIXME somehow in this case time always appears Tomorrow
                 setReminderTime(reminder.getDate());
             } else if (mode == MODE.CREATE) {
                 textHaveReminder.setVisibility(View.GONE);
+                inputPhone.setText(reminder.getCallInfo().getPhone());
                 setReminderTime(ReminderUtil.calcDefaultRemindDate(that, Calendar.getInstance().getTimeInMillis()));
             }
-            inputPhone.setText(reminder.getPhone());
+
             imageContacts.setVisibility(View.GONE);
             inputPhone.setFocusable(false);
 

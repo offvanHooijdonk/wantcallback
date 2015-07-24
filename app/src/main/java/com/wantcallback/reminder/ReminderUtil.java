@@ -30,7 +30,7 @@ public class ReminderUtil {
 	
 	public static void cancelReminder(Context ctx, ReminderInfo reminder) {
 		if (reminder != null) {
-			AlarmUtil.cancelAlarm(ctx, reminder.getId(), reminder.getPhone());
+			AlarmUtil.cancelAlarm(ctx, reminder.getId());
 			ReminderDao reminderDao = new ReminderDao(ctx);
 			reminderDao.deleteByPhone(reminder.getPhone());
 			Toast.makeText(ctx, "Forgot " + reminder.getPhone(), Toast.LENGTH_LONG).show();
@@ -55,7 +55,7 @@ public class ReminderUtil {
 		List<ReminderInfo> reminders = dao.getAll();
 
 		for (ReminderInfo r : reminders) {
-			AlarmUtil.cancelAlarm(ctx, r.getId(), r.getPhone());
+			AlarmUtil.cancelAlarm(ctx, r.getId());
 		}
 	}
 

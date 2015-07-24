@@ -73,6 +73,10 @@ public class ReminderMainAdapter extends BaseAdapter {
                 callInfoString = ctx.getString(R.string.rejected_at_time, AppHelper.getTimeFormat(ctx).format(new Date(info.getCallInfo().getDate())));
             }
             break;
+            case CREATED: {
+                callInfoString = ctx.getString(R.string.created_at_time, AppHelper.getTimeFormat(ctx).format(new Date(info.getCallInfo().getDate())));
+            }
+            break;
             default: {
                 callInfoString = AppHelper.getTimeFormat(ctx).format(new Date(info.getCallInfo().getDate()));
             }

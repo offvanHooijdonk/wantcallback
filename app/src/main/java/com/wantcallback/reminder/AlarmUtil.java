@@ -14,11 +14,11 @@ public class AlarmUtil {
 
 	public static void createNewReminderAlarm(Context ctx, long remId, String phoneNumber, Date date) {
 		// TODO make reboot-proof
-		getAlarmManager(ctx).set(AlarmManager.RTC_WAKEUP, date.getTime(), preparePendingIntent(ctx, remId, phoneNumber));
+		getAlarmManager(ctx).set(AlarmManager.RTC_WAKEUP, date.getTime(), preparePendingIntent(ctx, remId));
 	}
 	
-	public static void cancelAlarm(Context ctx, long reminderId, String phoneNumber) {
-		getAlarmManager(ctx).cancel(preparePendingIntent(ctx, reminderId, phoneNumber));
+	public static void cancelAlarm(Context ctx, long reminderId) {
+		getAlarmManager(ctx).cancel(preparePendingIntent(ctx, reminderId));
 	}
 	
 	private static AlarmManager getAlarmManager(Context ctx) {
@@ -29,7 +29,7 @@ public class AlarmUtil {
 		return alarmManager;
 	}
 	
-	private static PendingIntent preparePendingIntent(Context ctx, long reminderId, String phoneNumber) {
+	private static PendingIntent preparePendingIntent(Context ctx, long reminderId) {
 		Intent intent = new Intent(NotificationActionBroadcastReceiver.ACTION_REMIND);
 		intent.putExtra(NotificationActionBroadcastReceiver.EXTRA_REMINDER_ID, reminderId);
 		

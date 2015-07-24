@@ -59,6 +59,7 @@ public class NotificationActionBroadcastReceiver extends BroadcastReceiver {
             ReminderInfo reminder = new ReminderInfo();
             reminder.setDate(call.getDate());
             reminder.setPhone(call.getPhone());
+            reminder.setCallInfo(call);
 
             ReminderUtil.createNewDefaultReminder(ctx, reminder);
 

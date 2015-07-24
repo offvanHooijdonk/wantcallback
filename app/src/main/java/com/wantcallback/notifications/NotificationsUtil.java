@@ -26,7 +26,7 @@ public class NotificationsUtil {
     private static final int NOTIFICATION_MISSED_CALL = 0;
     private static final int NOTIFICATION_REJECTED_CALL = 1;
     private static final int NOTIFICATION_REMINDER = 2;
-    public static final int NOTIFICATION_FOREGROUND_SERVICE = 2;
+    public static final int NOTIFICATION_FOREGROUND_SERVICE = 100;
 
     private Context ctx;
     private static NotificationManager mNotificationManager;
@@ -41,7 +41,7 @@ public class NotificationsUtil {
         String tag = reminder.getPhone();
         int id = NOTIFICATION_MISSED_CALL;
         String callerLabel = getCallerLabel(reminder.getCallInfo());
-        NotificationCompat.Builder builder = getCommonCallNBuilder(reminder.getCallInfo()).setContentTitle("Missed Call")
+        NotificationCompat.Builder builder = getCommonCallBuilder(reminder.getCallInfo()).setContentTitle("Missed Call")
                 .setTicker("Missed Call from " + callerLabel) // TODO Show message 'Reminder created on 23:15'
                 .setContentIntent(createEditReminderIntent(reminder, tag, id)) // Open reminder settings
                 .addAction(R.drawable.ic_call, "Call now", createDialerIntent(reminder.getCallInfo())) // Dial missed call
@@ -55,7 +55,7 @@ public class NotificationsUtil {
         int id = NOTIFICATION_REJECTED_CALL;
         String callerLabel = getCallerLabel(info);
         int defaultMin = ReminderUtil.getDefaultRemindMinutes(ctx);
-        NotificationCompat.Builder builder = getCommonCallNBuilder(info).setContentTitle("Rejected Call")
+        NotificationCompat.Builder builder = getCommonCallBuilder(info).setContentTitle("Rejected Call")
                 .setTicker("Rejected Call from " + callerLabel)
                 .setContentIntent(createNewReminderIntent(info, tag, id)) // open activity to set custom info
                 .addAction(R.drawable.ic_alarm_add, "Remind in " + defaultMin + "m", createDefaultReminderIntent(info, tag, id)); // create default reminder silently
@@ -68,7 +68,7 @@ public class NotificationsUtil {
         int id = NOTIFICATION_REJECTED_CALL;
         String callerLabel = getCallerLabel(reminder.getCallInfo());
 
-        NotificationCompat.Builder builder = getCommonCallNBuilder(reminder.getCallInfo()).setContentTitle("Rejected Call")
+        NotificationCompat.Builder builder = getCommonCallBuilder(reminder.getCallInfo()).setContentTitle("Rejected Call")
                 .setContentText("You already have a reminder at " + AppHelper.getTimeFormat(ctx).format(new Date(reminder.getDate())))
                 .setTicker("Rejected Call from " + callerLabel)
                 .setContentIntent(createEditReminderIntent(reminder, tag, id)) // open activity to set custom info
@@ -82,7 +82,7 @@ public class NotificationsUtil {
         String tag = reminder.getPhone();
         int id = NOTIFICATION_REMINDER;
 // TODO make a custom layout
-        NotificationCompat.Builder builder = getCommonCallNBuilder(reminder.getCallInfo()).setContentTitle("Time to call back to" + reminder.getPhone())
+        NotificationCompat.Builder builder = getCommonCallBuilder(reminder.getCallInfo()).setContentTitle("Time to call back to" + reminder.getPhone())
                 .setContentText("Call to " + reminder.getPhone() + " that called you at " + AppHelper.getTimeFormat(ctx).format(new Date(reminder.getCallInfo().getDate())))
                 .setTicker("Call back to " + reminder.getPhone())
                 //.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
@@ -102,7 +102,8 @@ public class NotificationsUtil {
                 .setContentTitle(ctx.getString(R.string.foreground_title))
                 .setContentText(ctx.getString(R.string.foreground_message))
                 .setContentIntent(createMainActivityPedingIntent())
-                .setPriority(Notification.PRIORITY_MIN);
+                .setPriority(Notification.PRIORITY_MIN)
+                .setShowWhen(false);
 
         return builder.build();
     }
@@ -113,8 +114,9 @@ public class NotificationsUtil {
      * @param info
      * @return
      */
-    private NotificationCompat.Builder getCommonCallNBuilder(CallInfo info) {
+    private NotificationCompat.Builder getCommonCallBuilder(CallInfo info) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx).setLargeIcon(getLargeIconBitmap(R.drawable.ic_launcher))
+                .setSmallIcon(R.drawable.ic_notify_call)
                 .setContentText(info.getPhone()).setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory("call").setAutoCancel(true);
 
