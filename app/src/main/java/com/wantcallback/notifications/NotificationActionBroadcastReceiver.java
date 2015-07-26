@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.wantcallback.dao.impl.ReminderDao;
+import com.wantcallback.helper.AppHelper;
 import com.wantcallback.model.CallInfo;
 import com.wantcallback.model.ReminderInfo;
 import com.wantcallback.reminder.ReminderUtil;
@@ -12,6 +13,7 @@ import com.wantcallback.ui.MainActivity;
 
 public class NotificationActionBroadcastReceiver extends BroadcastReceiver {
     public static final String ACTION_FORGET = "action_forget";
+    public static final String ACTION_POSTPONE = "action_postpone";
     public static final String ACTION_CREATE_DEFAULT_REMINDER = "action_create_default_reminder";
     public static final String ACTION_REMIND = "action_remind";
 
@@ -24,7 +26,7 @@ public class NotificationActionBroadcastReceiver extends BroadcastReceiver {
     }
 
     public static String[] getAllActions() {
-        return new String[]{ACTION_CREATE_DEFAULT_REMINDER, ACTION_FORGET, ACTION_REMIND};
+        return new String[]{ACTION_CREATE_DEFAULT_REMINDER, ACTION_FORGET, ACTION_REMIND, ACTION_POSTPONE};
     }
 
     @Override
@@ -46,15 +48,12 @@ public class NotificationActionBroadcastReceiver extends BroadcastReceiver {
 
             ReminderUtil.cancelReminder(ctx, reminder);
 
-            sendBroadCastToActivity(ctx);
+            sendBroadcastToActivity(ctx);
 
         } else if (ACTION_CREATE_DEFAULT_REMINDER.equals(action)) {
             CallInfo call = intent.getExtras().getParcelable(EXTRA_CALL_INFO);
             int notifId = intent.getExtras().getInt(EXTRA_NOTIF_ID);
             String tag = intent.getExtras().getString(EXTRA_NOTIF_TAG);
-
-            NotificationsUtil notificationsUtil = new NotificationsUtil(ctx);
-            notificationsUtil.dismissNotification(tag, notifId);
 
             ReminderInfo reminder = new ReminderInfo();
             reminder.setDate(call.getDate());
@@ -63,8 +62,25 @@ public class NotificationActionBroadcastReceiver extends BroadcastReceiver {
 
             ReminderUtil.createNewDefaultReminder(ctx, reminder);
 
-            sendBroadCastToActivity(ctx);
+            NotificationsUtil notificationsUtil = new NotificationsUtil(ctx);
+            notificationsUtil.dismissNotification(tag, notifId);
 
+            sendBroadcastToActivity(ctx);
+
+        } else if(ACTION_POSTPONE.equals(action)) {
+            long reminderId = intent.getExtras().getLong(EXTRA_REMINDER_ID);
+            int notifId = intent.getExtras().getInt(EXTRA_NOTIF_ID);
+            String tag = intent.getExtras().getString(EXTRA_NOTIF_TAG);
+
+            ReminderDao dao = new ReminderDao(ctx);
+            ReminderInfo reminderInfo = dao.getById(reminderId);
+            if (reminderInfo != null) {
+                ReminderUtil.postponeReminder(ctx, reminderInfo, AppHelper.Pref.getDefaultPostponeMins(ctx));
+            }
+            NotificationsUtil notificationsUtil = new NotificationsUtil(ctx);
+            notificationsUtil.dismissNotification(tag, notifId);
+
+            sendBroadcastToActivity(ctx);
         } else if (ACTION_REMIND.equals(action)) {
             long reminderId = intent.getExtras().getLong(EXTRA_REMINDER_ID);
 
@@ -75,16 +91,14 @@ public class NotificationActionBroadcastReceiver extends BroadcastReceiver {
                 NotificationsUtil notificationsUtil = new NotificationsUtil(ctx);
 
                 notificationsUtil.showReminderNotification(reminderInfo);
-
-                dao.deleteById(reminderId);
             }
 
-            sendBroadCastToActivity(ctx);
+            sendBroadcastToActivity(ctx);
         }
 
     }
 
-    private void sendBroadCastToActivity(Context ctx) {
+    private void sendBroadcastToActivity(Context ctx) {
         ctx.sendBroadcast(new Intent(MainActivity.RemindersBroadcastReceiver.ACTION_ANY));
     }
 }

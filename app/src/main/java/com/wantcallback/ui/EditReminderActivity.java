@@ -6,9 +6,11 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.PhoneNumberUtils;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
@@ -151,18 +153,26 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                 ContactInfo contact = util.getContactFromUri(uri);
 
                 mode = MODE.CREATE;
-                setReminderTime(ReminderUtil.calcDefaultRemindDate(that, Calendar.getInstance().getTimeInMillis()));
+                setReminderTime(ReminderUtil.calcDefaultRemindDate(that, Calendar.getInstance().getTimeInMillis()), true);
                 // check if
                 if (contact != null) {
                     ReminderInfo reminderInfo = reminderDao.findByPhone(contact.getPhoneNumber());
                     if (reminderInfo != null) {
-                        setReminderTime(reminderInfo.getDate());
+                        setReminderTime(reminderInfo.getDate(), false);
                         textHaveReminder.setVisibility(View.VISIBLE);
-                        inputPhone.setText(contact.getPhoneNumber());
                     } else {
-                        inputPhone.setText(null);
                         textHaveReminder.setVisibility(View.GONE);
                     }
+                    // TODO move phone conversion to a separate class
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        inputPhone.setText(PhoneNumberUtils.formatNumber(contact.getPhoneNumber(), that.getResources().getConfiguration()
+                                .locale.getISO3Country()));
+                    } else {
+                        inputPhone.setText(PhoneNumberUtils.formatNumber(contact.getPhoneNumber()));
+                    }
+                } else {
+                    Toast.makeText(that, "Could not get contact :(", Toast.LENGTH_LONG).show();
+                    inputPhone.setText(null);
                 }
                 fillContactInfo(contact);
             }
@@ -196,11 +206,11 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                 textHaveReminder.setVisibility(View.GONE);
                 inputPhone.setText(reminder.getPhone());
                 // FIXME somehow in this case time always appears Tomorrow
-                setReminderTime(reminder.getDate());
+                setReminderTime(reminder.getDate(), false);
             } else if (mode == MODE.CREATE) {
                 textHaveReminder.setVisibility(View.GONE);
                 inputPhone.setText(reminder.getCallInfo().getPhone());
-                setReminderTime(ReminderUtil.calcDefaultRemindDate(that, Calendar.getInstance().getTimeInMillis()));
+                setReminderTime(ReminderUtil.calcDefaultRemindDate(that, Calendar.getInstance().getTimeInMillis()), true);
             }
 
             imageContacts.setVisibility(View.GONE);
@@ -215,7 +225,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
             inputPhone.setFocusable(true);
             imageContacts.setVisibility(View.VISIBLE);
 
-            setReminderTime(ReminderUtil.calcDefaultRemindDate(that, Calendar.getInstance().getTimeInMillis()));
+            setReminderTime(ReminderUtil.calcDefaultRemindDate(that, Calendar.getInstance().getTimeInMillis()), true);
         }
 
     }
@@ -264,15 +274,17 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         displayReminder(reminderInfo);
     }
 
-    private void setReminderTime(long time) {
+    private void setReminderTime(long time, boolean calculate) {
         Calendar calendarRem = Calendar.getInstance();
         calendarRem.setTimeInMillis(time);
 
-        if (isTodayTime(Calendar.getInstance(), calendarRem)) {
+        if (isFutureTime(Calendar.getInstance(), calendarRem)) {
             isToday = true;
-        } else {
+        } else if (calculate) {
             calendarRem.add(Calendar.DAY_OF_MONTH, 1);
             isToday = false;
+        } else {
+            isToday = true;
         }
         remindDate = calendarRem.getTime();
 
@@ -281,7 +293,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         setTodayText(isToday);
     }
 
-    private boolean isTodayTime(Calendar now, Calendar picked) {
+    private boolean isFutureTime(Calendar now, Calendar picked) {
         return picked.after(now);
     }
 
@@ -302,6 +314,6 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         calendarPicked.set(Calendar.SECOND, 0);
         calendarPicked.set(Calendar.MILLISECOND, 0);
 
-        setReminderTime(calendarPicked.getTimeInMillis());
+        setReminderTime(calendarPicked.getTimeInMillis(), true);
     }
 }

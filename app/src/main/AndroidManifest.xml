@@ -44,9 +44,6 @@
             android:parentActivityName=".ui.MainActivity">
         </activity>
 
-        <activity android:name="com.wantcallback.ui.RemindActivity">
-        </activity>
-
         <receiver android:name=".startup.BootBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

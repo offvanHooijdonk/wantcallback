@@ -28,4 +28,6 @@
     <string name="contact_photo">Contact photo</string>
     <string name="add_from_contacts">Add from contacts</string>
 
+    <string name="confirm_delete_title">Are you sure?</string>
+    <string name="confirm_delete_text">Are you sure you want to delete reminder for {0}</string>
 </resources>

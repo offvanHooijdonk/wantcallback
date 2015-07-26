@@ -16,7 +16,6 @@ import com.wantcallback.model.CallInfo;
 import com.wantcallback.model.ContactInfo;
 import com.wantcallback.model.ReminderInfo;
 import com.wantcallback.phone.ContactsUtil;
-import com.wantcallback.reminder.ReminderUtil;
 import com.wantcallback.ui.EditReminderActivity;
 import com.wantcallback.ui.MainActivity;
 
@@ -44,7 +43,7 @@ public class NotificationsUtil {
         NotificationCompat.Builder builder = getCommonCallBuilder(reminder.getCallInfo()).setContentTitle("Missed Call")
                 .setTicker("Missed Call from " + callerLabel) // TODO Show message 'Reminder created on 23:15'
                 .setContentIntent(createEditReminderIntent(reminder, tag, id)) // Open reminder settings
-                .addAction(R.drawable.ic_call, "Call now", createDialerIntent(reminder.getCallInfo())) // Dial missed call
+                .addAction(R.drawable.ic_call_black_24dp, "Call now", createDialerIntent(reminder.getCallInfo())) // Dial missed call
                 .addAction(R.drawable.ic_forget, "Forget", createForgetIntent(reminder, tag, id)); // remove reminder created
 
         getNotificationManager().notify(tag, id, builder.build());
@@ -54,7 +53,7 @@ public class NotificationsUtil {
         String tag = info.getPhone();
         int id = NOTIFICATION_REJECTED_CALL;
         String callerLabel = getCallerLabel(info);
-        int defaultMin = ReminderUtil.getDefaultRemindMinutes(ctx);
+        int defaultMin = AppHelper.Pref.getDefaultReminderMins(ctx);
         NotificationCompat.Builder builder = getCommonCallBuilder(info).setContentTitle("Rejected Call")
                 .setTicker("Rejected Call from " + callerLabel)
                 .setContentIntent(createNewReminderIntent(info, tag, id)) // open activity to set custom info
@@ -72,7 +71,7 @@ public class NotificationsUtil {
                 .setContentText("You already have a reminder at " + AppHelper.getTimeFormat(ctx).format(new Date(reminder.getDate())))
                 .setTicker("Rejected Call from " + callerLabel)
                 .setContentIntent(createEditReminderIntent(reminder, tag, id)) // open activity to set custom info
-                .addAction(R.drawable.ic_call, "Call now", createDialerIntent(reminder.getCallInfo())) // Dial missed call
+                .addAction(R.drawable.ic_call_black_24dp, "Call now", createDialerIntent(reminder.getCallInfo())) // Dial missed call
                 .addAction(R.drawable.ic_forget, "Forget", createForgetIntent(reminder, tag, id)); // remove reminder created
 
         getNotificationManager().notify(tag, id, builder.build());
@@ -81,17 +80,17 @@ public class NotificationsUtil {
     public void showReminderNotification(ReminderInfo reminder) {
         String tag = reminder.getPhone();
         int id = NOTIFICATION_REMINDER;
-// TODO make a custom layout
-        NotificationCompat.Builder builder = getCommonCallBuilder(reminder.getCallInfo()).setContentTitle("Time to call back to" + reminder.getPhone())
+        // TODO make BigText
+        NotificationCompat.Builder builder = getCommonCallBuilder(reminder.getCallInfo()).setContentTitle("Remind you to call back")
+                // TODO fix the text
                 .setContentText("Call to " + reminder.getPhone() + " that called you at " + AppHelper.getTimeFormat(ctx).format(new Date(reminder.getCallInfo().getDate())))
                 .setTicker("Call back to " + reminder.getPhone())
-                //.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setLights(ctx.getResources().getColor(R.color.led_blue), 500, 500) // TODO make configurable
+                .setLights(ctx.getResources().getColor(R.color.led_blue), 1200, 800) // TODO make configurable
                 .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
-                .setContentIntent(createDialerIntent(reminder.getCallInfo()))
-                .addAction(R.drawable.ic_edit, "Change", createEditReminderIntent(reminder, tag, id))
-                .addAction(R.drawable.ic_forget, "Forget", createForgetIntent(reminder, tag, id));
-        // TODO add Postpone action?
+                .setContentIntent(createEditReminderIntent(reminder, tag, id))
+                .setDeleteIntent(createForgetIntent(reminder, tag, id))
+                .addAction(R.drawable.ic_call_black_24dp, "Call now", createDialerIntent(reminder.getCallInfo()))
+                .addAction(R.drawable.ic_alarm_black_24dp, "Postpone", createPostponeIntent(reminder, tag, id));
 
         getNotificationManager().notify(tag, id, builder.build());
     }
@@ -157,6 +156,15 @@ public class NotificationsUtil {
 
     private PendingIntent createForgetIntent(ReminderInfo reminder, String notifTag, int notifId) {
         Intent intent = new Intent(NotificationActionBroadcastReceiver.ACTION_FORGET);
+        intent.putExtra(NotificationActionBroadcastReceiver.EXTRA_REMINDER_ID, reminder.getId());
+        intent.putExtra(NotificationActionBroadcastReceiver.EXTRA_NOTIF_TAG, notifTag);
+        intent.putExtra(NotificationActionBroadcastReceiver.EXTRA_NOTIF_ID, notifId);
+
+        return PendingIntent.getBroadcast(ctx, (int) reminder.getId(), intent, 0);
+    }
+
+    private PendingIntent createPostponeIntent(ReminderInfo reminder, String notifTag, int notifId) {
+        Intent intent = new Intent(NotificationActionBroadcastReceiver.ACTION_POSTPONE);
         intent.putExtra(NotificationActionBroadcastReceiver.EXTRA_REMINDER_ID, reminder.getId());
         intent.putExtra(NotificationActionBroadcastReceiver.EXTRA_NOTIF_TAG, notifTag);
         intent.putExtra(NotificationActionBroadcastReceiver.EXTRA_NOTIF_ID, notifId);

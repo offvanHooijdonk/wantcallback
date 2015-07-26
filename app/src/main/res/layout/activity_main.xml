@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.wantcallback.ui.MainActivity">
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/listReminders"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,15 +26,14 @@
         fab:fab_colorNormal="@color/app_accent"
         fab:fab_colorPressed="@color/fab_pressed"
         fab:fab_colorRipple="@color/fab_ripple"
-        fab:fab_type="normal"
-        />
+        fab:fab_type="normal"/>
 
-    <TextView
+    <!--<TextView
         android:id="@+id/emptyReminderList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="@string/empty_reminders_main"
-        android:textSize="18sp"
-        android:textColor="@color/text_comment"/>
+        android:textColor="@color/text_comment"
+        android:textSize="18sp"/>-->
 </FrameLayout>

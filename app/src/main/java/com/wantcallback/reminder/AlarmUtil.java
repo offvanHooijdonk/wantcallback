@@ -6,14 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.wantcallback.notifications.NotificationActionBroadcastReceiver;
+import com.wantcallback.startup.InitializerIntentService;
 
 import java.util.Date;
 
 public class AlarmUtil {
 	private static AlarmManager alarmManager;
 
-	public static void createNewReminderAlarm(Context ctx, long remId, String phoneNumber, Date date) {
-		// TODO make reboot-proof
+	public static void createNewReminderAlarm(Context ctx, long remId, Date date) {
 		getAlarmManager(ctx).set(AlarmManager.RTC_WAKEUP, date.getTime(), preparePendingIntent(ctx, remId));
 	}
 	
@@ -34,5 +34,10 @@ public class AlarmUtil {
 		intent.putExtra(NotificationActionBroadcastReceiver.EXTRA_REMINDER_ID, reminderId);
 		
 		return PendingIntent.getBroadcast(ctx, (int) reminderId, intent, 0);
+
+		/*Intent intent = new Intent(ctx, InitializerIntentService.class);
+		intent.putExtra("t","t");
+
+		return PendingIntent.getService(ctx, (int)reminderId,intent, 0);*/
 	}
 }

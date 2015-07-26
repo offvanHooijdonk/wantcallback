@@ -1,11 +1,10 @@
 package com.wantcallback.reminder;
 
 import android.content.Context;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
 
-import com.wantcallback.R;
 import com.wantcallback.dao.impl.ReminderDao;
+import com.wantcallback.helper.AppHelper;
 import com.wantcallback.model.ReminderInfo;
 
 import java.util.Calendar;
@@ -13,13 +12,12 @@ import java.util.Date;
 import java.util.List;
 
 public class ReminderUtil {
-	private static final String DEFAULT_TIME_ADD = "10";
 	
 	public static void createNewReminder(Context ctx, ReminderInfo reminder) {
-		AlarmUtil.createNewReminderAlarm(ctx, reminder.getCallInfo().getLogId(), reminder.getPhone(), new Date(reminder.getDate()));
-		
 		ReminderDao reminderDao = new ReminderDao(ctx);
 		reminderDao.save(reminder);
+
+		AlarmUtil.createNewReminderAlarm(ctx, reminder.getId(), new Date(reminder.getDate()));
 	}
 	
 	public static void createNewDefaultReminder(Context ctx, ReminderInfo info) {
@@ -39,13 +37,27 @@ public class ReminderUtil {
 		}
 
 	}
+
+	public static void postponeReminder(Context ctx, ReminderInfo reminder, int minutes) {
+		Calendar remindTime = Calendar.getInstance();
+		remindTime.set(Calendar.SECOND, 0);
+		remindTime.set(Calendar.MILLISECOND, 0);
+		remindTime.add(Calendar.MINUTE, minutes);
+
+		AlarmUtil.cancelAlarm(ctx, reminder.getId());
+		AlarmUtil.createNewReminderAlarm(ctx, reminder.getId(), remindTime.getTime());
+
+		reminder.setDate(remindTime.getTimeInMillis());
+		ReminderDao dao = new ReminderDao(ctx);
+		dao.save(reminder);
+	}
 	
 	public static long calcDefaultRemindDate(Context ctx, long timeMillis) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(timeMillis);
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
-		calendar.add(Calendar.MINUTE, getDefaultRemindMinutes(ctx));
+		calendar.add(Calendar.MINUTE, AppHelper.Pref.getDefaultReminderMins(ctx));
 		return calendar.getTimeInMillis();
 	}
 
@@ -70,20 +82,15 @@ public class ReminderUtil {
 		ReminderDao dao = new ReminderDao(ctx);
 
 		Calendar now = Calendar.getInstance();
-		now.set(Calendar.SECOND, 0);
-		now.set(Calendar.MILLISECOND, 0);
 
 		List<ReminderInfo> reminders = dao.getAllSince(now.getTime());
 
 		for (ReminderInfo r : reminders) {
-			AlarmUtil.createNewReminderAlarm(ctx, r.getId(), r.getPhone(), new Date(r.getDate()));
+			AlarmUtil.createNewReminderAlarm(ctx, r.getId(), new Date(r.getDate()));
 		}
 
 		// remove all, because they are not actual
 		dao.deleteAllBeforeDate(now.getTime());
 	}
-	
-	public static int getDefaultRemindMinutes(Context ctx) {
-		return Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ctx).getString(ctx.getString(R.string.default_reminder_time_key), DEFAULT_TIME_ADD));
-	}
+
 }

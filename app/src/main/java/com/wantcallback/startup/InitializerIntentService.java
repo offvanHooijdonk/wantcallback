@@ -6,6 +6,7 @@ import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.wantcallback.Constants;
 import com.wantcallback.helper.AppHelper;
@@ -17,8 +18,6 @@ import com.wantcallback.observer.listener.impl.StandardMissRejectListener;
 
 public class InitializerIntentService extends Service {
 	public static final String EXTRA_START_SHUT = "extra_start_shut";
-
-	private static final String DEBUG_SERVICE_NAME = "InitializerIntentService";
 
 	private static CallLogObserver callLogObserver = null;
 	private static NotificationActionBroadcastReceiver receiver = null;
@@ -38,18 +37,20 @@ public class InitializerIntentService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (intent != null && intent.getExtras()!= null && intent.getExtras().containsKey(EXTRA_START_SHUT)) {
-			boolean isStart = intent.getBooleanExtra(EXTRA_START_SHUT, false);
+		if (intent != null && intent.getExtras()!= null) {
+			if (intent.getExtras().containsKey(EXTRA_START_SHUT)){
+				boolean isStart = intent.getBooleanExtra(EXTRA_START_SHUT, false);
 
-			if (isStart) {
-				AppHelper.persistAppEnabledState(this, true);
-				enableForeground();
-				registerAll();
-			} else {
-				AppHelper.persistAppEnabledState(this, false);
-				unregisterAll();
+				if (isStart) {
+					AppHelper.persistAppEnabledState(this, true);
+					enableForeground();
+					registerAll();
+				} else {
+					AppHelper.persistAppEnabledState(this, false);
+					unregisterAll();
 
-				this.stopSelf();
+					this.stopSelf();
+				}
 			}
 		} else { //  than may be it was killed anf then restarted by the system ?
 			if (AppHelper.isApplicationEnabled(this)) {

@@ -9,11 +9,12 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.wantcallback.R;
@@ -23,24 +24,28 @@ import com.wantcallback.model.ReminderInfo;
 import com.wantcallback.reminder.ReminderUtil;
 import com.wantcallback.ui.actionbar.AppEnableActionProvider;
 import com.wantcallback.ui.preferences.PreferenceActivity;
+import com.wantcallback.ui.recycler.ItemTouchCallback;
+import com.wantcallback.ui.recycler.ReminderRecycleAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements AppEnableActionProvider.ToggleListener, ReminderMainAdapter
-        .ReminderInteractionListener {
+public class MainActivity extends AppCompatActivity
+        implements AppEnableActionProvider.ToggleListener,
+                    ReminderRecycleAdapter.OnItemActionListener {
 
     private static final String TASK_MUTE_REMINDERS = "task_mute_reminders";
     private static final String TASK_RECREATE_ACTUAL_REMINDERS = "task_recreate_actual_reminders";
 
     private MainActivity that;
     private FloatingActionButton btnAddAlarm;
-    private ListView listReminders;
-    private ReminderMainAdapter reminderAdapter;
+    private RecyclerView listReminders;
+    private ReminderRecycleAdapter recycleAdapter;
 
     private ReminderDao reminderDao;
     private List<ReminderInfo> remindersList = new ArrayList<>();
     private RemindersBroadcastReceiver remindersBroadcastReceiver;
+    private ItemTouchHelper mItemTouchHelper;
     /*private int i = 0;*/
 
     @Override
@@ -60,20 +65,20 @@ public class MainActivity extends AppCompatActivity implements AppEnableActionPr
             displayMainLayout(false);
         }
 
-        listReminders = (ListView) findViewById(R.id.listReminders);
-        listReminders.setEmptyView(findViewById(R.id.emptyReminderList));
-        reminderAdapter = new ReminderMainAdapter(that, remindersList, that);
-        listReminders.setAdapter(reminderAdapter);
-        listReminders.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ReminderInfo info = remindersList.get(position);
-                Intent intent = new Intent(that, EditReminderActivity.class);
-                intent.putExtra(EditReminderActivity.EXTRA_REMINDER_ID, info.getId());
-                intent.putExtra(EditReminderActivity.EXTRA_MODE, EditReminderActivity.MODE.EDIT.toString());
-                startActivity(intent);
-            }
-        });
+        listReminders = (RecyclerView) findViewById(R.id.listReminders);
+
+        //TODO add empty view
+
+        listReminders.setHasFixedSize(true);
+
+        listReminders.setLayoutManager(new LinearLayoutManager(that));
+
+        recycleAdapter = new ReminderRecycleAdapter(that, remindersList, that);
+        listReminders.setAdapter(recycleAdapter);
+
+        ItemTouchHelper.Callback callback = new ItemTouchCallback(recycleAdapter);
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(listReminders);
 
         btnAddAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements AppEnableActionPr
                 startActivity(intent);
             }
         });
-        btnAddAlarm.attachToListView(listReminders);
+        btnAddAlarm.attachToRecyclerView(listReminders);
 
         // place this after Reminders List view is created and filled
         remindersBroadcastReceiver = new RemindersBroadcastReceiver();
@@ -155,17 +160,53 @@ public class MainActivity extends AppCompatActivity implements AppEnableActionPr
         }
     }
 
-    @Override
-    public void onDeleteReminder(ReminderInfo info) {
+    /*@Override
+    public void onDeleteReminder(final ReminderInfo info) {
         // TODO make this cancelable
-        reminderDao.deleteByPhone(info.getPhone());
-        reloadRemindersList();
-    }
+        AlertDialog.Builder dialog = new AlertDialog.Builder(that).
+                setTitle(R.string.confirm_delete_title).
+                setMessage(MessageFormat.format(that.getString(R.string.confirm_delete_title), info.getPhone())).
+                setCancelable(true).
+                setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        reminderDao.deleteByPhone(info.getPhone());
+                        reloadRemindersList();
+                        dialog.dismiss();
+                    }
+                }).
+                setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        dialog.show();
+    }*/
 
     private void reloadRemindersList() {
         RefreshRemindersListTask task = new RefreshRemindersListTask();
 
         task.execute();
+    }
+
+    @Override
+    public void onItemClicked(View v) {
+        int position = listReminders.indexOfChild(v);
+        ReminderInfo reminder = remindersList.get(position);
+
+        Intent intent = new Intent(that, EditReminderActivity.class);
+        intent.putExtra(EditReminderActivity.EXTRA_REMINDER_ID, reminder.getId());
+        intent.putExtra(EditReminderActivity.EXTRA_MODE, EditReminderActivity.MODE.EDIT.toString());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onItemDismissed(int position) {
+        ReminderInfo info = remindersList.get(position);
+        reminderDao.deleteByPhone(info.getPhone());
+        reloadRemindersList();
     }
 
     public class RemindersBroadcastReceiver extends BroadcastReceiver {
@@ -208,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements AppEnableActionPr
                     remindersList.add(info);
                 }
                 i++;*/
-                reminderAdapter.notifyDataSetChanged();
+                recycleAdapter.notifyDataSetChanged();
             }
         }
     }
