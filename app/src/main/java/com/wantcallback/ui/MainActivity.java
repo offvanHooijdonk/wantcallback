@@ -27,6 +27,7 @@ import com.wantcallback.ui.actionbar.AppEnableActionProvider;
 import com.wantcallback.ui.preferences.PreferenceActivity;
 import com.wantcallback.ui.recycler.ItemTouchCallback;
 import com.wantcallback.ui.recycler.ReminderRecycleAdapter;
+import com.wantcallback.ui.recycler.SimpleDividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,12 +64,6 @@ public class MainActivity extends AppCompatActivity
         btnAddAlarm = (FloatingActionButton) findViewById(R.id.btnAddAlarm);
         reminderDao = new ReminderDao(that);
 
-        if (AppHelper.isApplicationEnabled(that)) {
-            displayMainLayout(true);
-        } else {
-            displayMainLayout(false);
-        }
-
         listReminders = (RecyclerView) findViewById(R.id.listReminders);
 
         //TODO add empty view
@@ -94,6 +89,7 @@ public class MainActivity extends AppCompatActivity
                 checkListEmpty();
             }
         });
+        listReminders.addItemDecoration(new SimpleDividerItemDecoration(that, R.drawable.list_divider));
 
         ItemTouchHelper.Callback callback = new ItemTouchCallback(recycleAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
@@ -121,6 +117,12 @@ public class MainActivity extends AppCompatActivity
         // place this after Reminders List view is created and filled
         remindersBroadcastReceiver = new RemindersBroadcastReceiver();
         registerReceiver(remindersBroadcastReceiver, new IntentFilter(RemindersBroadcastReceiver.ACTION_ANY));
+
+        if (AppHelper.isApplicationEnabled(that)) {
+            displayMainLayout(true);
+        } else {
+            displayMainLayout(false);
+        }
     }
 
     @Override
@@ -182,8 +184,10 @@ public class MainActivity extends AppCompatActivity
     private void displayMainLayout(boolean display) {
         if (display) {
             btnAddAlarm.setEnabled(true);
+            listReminders.setEnabled(true);
         } else {
             btnAddAlarm.setEnabled(false);
+            listReminders.setEnabled(false);
         }
     }
 
