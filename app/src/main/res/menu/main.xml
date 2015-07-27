@@ -10,12 +10,6 @@
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/action_reload"
-        android:icon="@drawable/ic_refresh_white"
-        app:showAsAction="ifRoom"
-        android:title="@string/action_refresh"/>
-
-    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         app:showAsAction="never"

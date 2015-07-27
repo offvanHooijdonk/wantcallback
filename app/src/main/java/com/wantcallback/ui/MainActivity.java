@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,11 +42,14 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionButton btnAddAlarm;
     private RecyclerView listReminders;
     private ReminderRecycleAdapter recycleAdapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private View emptyView;
 
     private ReminderDao reminderDao;
     private List<ReminderInfo> remindersList = new ArrayList<>();
     private RemindersBroadcastReceiver remindersBroadcastReceiver;
     private ItemTouchHelper mItemTouchHelper;
+
     /*private int i = 0;*/
 
     @Override
@@ -75,6 +79,21 @@ public class MainActivity extends AppCompatActivity
 
         recycleAdapter = new ReminderRecycleAdapter(that, remindersList, that);
         listReminders.setAdapter(recycleAdapter);
+        emptyView = findViewById(R.id.emptyReminderList);
+        recycleAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                checkListEmpty();
+            }
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                checkListEmpty();
+            }
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                checkListEmpty();
+            }
+        });
 
         ItemTouchHelper.Callback callback = new ItemTouchCallback(recycleAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
@@ -89,6 +108,15 @@ public class MainActivity extends AppCompatActivity
             }
         });
         btnAddAlarm.attachToRecyclerView(listReminders);
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.refresh_one, R.color.refresh_two, R.color.refresh_three);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                reloadRemindersList();
+            }
+        });
 
         // place this after Reminders List view is created and filled
         remindersBroadcastReceiver = new RemindersBroadcastReceiver();
@@ -121,9 +149,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_reload) {
-            reloadRemindersList();
-        } else if (id == R.id.action_settings) {
+
+        if (id == R.id.action_settings) {
             Intent intent = new Intent(that, PreferenceActivity.class);
             startActivity(intent);
         }
@@ -160,30 +187,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    /*@Override
-    public void onDeleteReminder(final ReminderInfo info) {
-        // TODO make this cancelable
-        AlertDialog.Builder dialog = new AlertDialog.Builder(that).
-                setTitle(R.string.confirm_delete_title).
-                setMessage(MessageFormat.format(that.getString(R.string.confirm_delete_title), info.getPhone())).
-                setCancelable(true).
-                setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        reminderDao.deleteByPhone(info.getPhone());
-                        reloadRemindersList();
-                        dialog.dismiss();
-                    }
-                }).
-                setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-        dialog.show();
-    }*/
+    private void checkListEmpty() {
+        emptyView.setVisibility(recycleAdapter.getItemCount() > 0 ? View.GONE : View.VISIBLE);
+    }
 
     private void reloadRemindersList() {
         RefreshRemindersListTask task = new RefreshRemindersListTask();
@@ -192,7 +198,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemClicked(View v) {
+    public void onListItemClicked(View v) {
         int position = listReminders.indexOfChild(v);
         ReminderInfo reminder = remindersList.get(position);
 
@@ -203,7 +209,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemDismissed(int position) {
+    public void onListItemDismissed(int position) {
         ReminderInfo info = remindersList.get(position);
         reminderDao.deleteByPhone(info.getPhone());
         reloadRemindersList();
@@ -250,6 +256,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 i++;*/
                 recycleAdapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
             }
         }
     }

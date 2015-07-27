@@ -100,14 +100,14 @@ public class ReminderRecycleAdapter extends RecyclerView.Adapter<ReminderRecycle
     @Override
     public void onClick(View v) {
         if (listener != null) {
-            listener.onItemClicked(v);
+            listener.onListItemClicked(v);
         }
     }
 
     @Override
     public void onItemSwiped(int position) {
         if (listener != null) {
-            listener.onItemDismissed(position);
+            listener.onListItemDismissed(position);
         }
     }
 
@@ -129,7 +129,7 @@ public class ReminderRecycleAdapter extends RecyclerView.Adapter<ReminderRecycle
     }
 
     public interface OnItemActionListener {
-        void onItemClicked(View v);
-        void onItemDismissed(int position);
+        void onListItemClicked(View v);
+        void onListItemDismissed(int position);
     }
 }

@@ -1,4 +1,5 @@
-<FrameLayout
+<android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/swipeRefreshLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,30 +11,37 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.wantcallback.ui.MainActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/listReminders"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@color/app_accent"/>
+        android:layout_height="match_parent">
 
-    <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/btnAddAlarm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_alarm_add_white"
-        fab:fab_colorNormal="@color/app_accent"
-        fab:fab_colorPressed="@color/fab_pressed"
-        fab:fab_colorRipple="@color/fab_ripple"
-        fab:fab_type="normal"/>
+        <TextView
+            android:id="@+id/emptyReminderList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/empty_reminders_main"
+            android:textColor="@color/text_comment"
+            android:textSize="18sp"
+            android:visibility="gone"/>
 
-    <!--<TextView
-        android:id="@+id/emptyReminderList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/empty_reminders_main"
-        android:textColor="@color/text_comment"
-        android:textSize="18sp"/>-->
-</FrameLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/listReminders"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/app_accent"/>
+
+        <com.melnykov.fab.FloatingActionButton
+            android:id="@+id/btnAddAlarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_alarm_add_white"
+            fab:fab_colorNormal="@color/app_accent"
+            fab:fab_colorPressed="@color/fab_pressed"
+            fab:fab_colorRipple="@color/fab_ripple"
+            fab:fab_type="normal"/>
+
+    </FrameLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
