@@ -80,11 +80,15 @@ public class NotificationsUtil {
     public void showReminderNotification(ReminderInfo reminder) {
         String tag = reminder.getPhone();
         int id = NOTIFICATION_REMINDER;
-        // TODO make BigText
+
+        NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle().bigText("Call to " + reminder.getPhone() +
+                " that called you at " + AppHelper.getTimeFormat(ctx).format(new Date(reminder.getCallInfo().getDate())));
+
         NotificationCompat.Builder builder = getCommonCallBuilder(reminder.getCallInfo()).setContentTitle("Remind you to call back")
                 // TODO fix the text
                 .setContentText("Call to " + reminder.getPhone() + " that called you at " + AppHelper.getTimeFormat(ctx).format(new Date(reminder.getCallInfo().getDate())))
                 .setTicker("Call back to " + reminder.getPhone())
+                .setStyle(bigText)
                 .setLights(ctx.getResources().getColor(R.color.led_blue), 1200, 800) // TODO make configurable
                 .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
                 .setContentIntent(createEditReminderIntent(reminder, tag, id))

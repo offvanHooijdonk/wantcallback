@@ -7,10 +7,12 @@
     <dimen name="item_horizontal_margin">8dp</dimen>
     <dimen name="item_vertical_margin">8dp</dimen>
     <dimen name="item_vertical_margin_bigger">12dp</dimen>
+    <dimen name="item_divider_margin">10dp</dimen>
 
     <dimen name="icon_divider_margin">4dp</dimen>
     <dimen name="icon_button_padding">4dp</dimen>
     <dimen name="block_margin_small">12dp</dimen>
     <dimen name="block_margin_med">18dp</dimen>
     <dimen name="block_margin_bigger">24dp</dimen>
+
 </resources>

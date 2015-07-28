@@ -16,6 +16,7 @@ public class ReminderInfo {
 	private String phone;
 	private long date;
 	private CallInfo callInfo;
+	private boolean aboutToDelete;
 
 	public boolean isNew() {
 		return getId() == BLANK_ID;
@@ -51,5 +52,13 @@ public class ReminderInfo {
 
 	public void setCallInfo(CallInfo callInfo) {
 		this.callInfo = callInfo;
+	}
+
+	public boolean isAboutToDelete() {
+		return aboutToDelete;
+	}
+
+	public void setAboutToDelete(boolean aboutToDelete) {
+		this.aboutToDelete = aboutToDelete;
 	}
 }

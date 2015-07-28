@@ -8,7 +8,8 @@
     <string name="tomorrow">Tomorrow</string>
     <string name="date_expired_title">Date warning</string>
     <string name="date_expired">Sorry, the time has already expired, please select a new one</string>
-    <string name="date_experid_button">OK</string>
+    <string name="phone_empty_title">Phone warning</string>
+    <string name="phone_empty">Please, enter not blank phone number</string>
     <string name="have_reminder">You already have a reminder for this number.</string>
     <string name="edit_reminder_title">Reminder</string>
 
@@ -30,4 +31,5 @@
 
     <string name="confirm_delete_title">Are you sure?</string>
     <string name="confirm_delete_text">Are you sure you want to delete reminder for {0}</string>
+    <string name="undo">UNDO</string>
 </resources>

@@ -27,7 +27,6 @@ import com.wantcallback.ui.actionbar.AppEnableActionProvider;
 import com.wantcallback.ui.preferences.PreferenceActivity;
 import com.wantcallback.ui.recycler.ItemTouchCallback;
 import com.wantcallback.ui.recycler.ReminderRecycleAdapter;
-import com.wantcallback.ui.recycler.SimpleDividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +88,6 @@ public class MainActivity extends AppCompatActivity
                 checkListEmpty();
             }
         });
-        listReminders.addItemDecoration(new SimpleDividerItemDecoration(that, R.drawable.list_divider));
 
         ItemTouchHelper.Callback callback = new ItemTouchCallback(recycleAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
@@ -213,10 +211,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListItemDismissed(int position) {
-        ReminderInfo info = remindersList.get(position);
+    public void onListItemDismissed(long id) {
+        ReminderInfo info = reminderDao.getById(id);
         reminderDao.deleteByPhone(info.getPhone());
-        reloadRemindersList();
+        int position = recycleAdapter.getPositionById(id);
+        remindersList.remove(position);
+        recycleAdapter.notifyItemRemoved(position);
+        /*reloadRemindersList();*/
     }
 
     public class RemindersBroadcastReceiver extends BroadcastReceiver {

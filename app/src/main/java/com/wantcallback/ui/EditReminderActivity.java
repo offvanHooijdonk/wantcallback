@@ -110,21 +110,8 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar now = Calendar.getInstance();
-                Calendar picked = Calendar.getInstance();
-                picked.setTime(remindDate);
-                if (picked.before(now)) {
-                    // Alert that time already expired and need new time
-                    AlertDialog.Builder builder = new AlertDialog.Builder(EditReminderActivity.this);
-                    builder.setTitle(R.string.date_expired_title).setMessage(R.string.date_expired)
-                            .setPositiveButton(R.string.date_experid_button, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    builder.show();
-                } else {
+
+                if (validateForm()) {
                     ReminderInfo info = new ReminderInfo();
                     if (mode == MODE.EDIT) {
                         info.setId(reminderId);
@@ -142,6 +129,41 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         });
 
         initForm();
+    }
+
+    private boolean validateForm() {
+        boolean isValid = true;
+
+        Calendar now = Calendar.getInstance();
+        Calendar picked = Calendar.getInstance();
+        picked.setTime(remindDate);
+
+        if (inputPhone.getText().toString().trim().equals("")) {
+            isValid = false;
+            AlertDialog.Builder builder = new AlertDialog.Builder(EditReminderActivity.this);
+            builder.setTitle(R.string.phone_empty_title).setMessage(R.string.phone_empty)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            builder.show();
+        } else if (picked.before(now)) {
+            isValid = false;
+            // Alert that time already expired and need new time
+            AlertDialog.Builder builder = new AlertDialog.Builder(EditReminderActivity.this);
+            builder.setTitle(R.string.date_expired_title).setMessage(R.string.date_expired)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            builder.show();
+        }
+
+        return isValid;
     }
 
     @Override

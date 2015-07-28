@@ -1,63 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?android:selectableItemBackground"
-    android:paddingBottom="@dimen/item_vertical_margin_bigger"
-    android:paddingLeft="@dimen/item_horizontal_margin"
-    android:paddingRight="@dimen/item_horizontal_margin"
-    android:paddingTop="@dimen/item_vertical_margin"
-    android:clickable="true">
+    android:layout_height="72dp"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textPhoneNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/textTime"
-        android:layout_toStartOf="@+id/textTime"
-        android:layout_marginTop="8dp"
-        android:ellipsize="end"
-        android:lines="1"
-        android:text="+375447897897 56 123 7 46 8 36 2 6"
-        android:textSize="18sp"/>
-
-    <TextView
-        android:id="@+id/textTypeAndWhen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textPhoneNumber"
-        android:layout_marginLeft="@dimen/block_margin_small"
-        android:layout_marginStart="@dimen/block_margin_small"
-        android:text="Missed at 00:00"
-        android:textColor="@color/text_comment"
-        android:textSize="12sp"/>
-
-    <TextView
-        android:id="@+id/textTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/imageCall"
-        android:layout_toStartOf="@+id/imageCall"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="6dp"
-        android:text="00:00"
-        android:textSize="24sp"/>
-
-    <ImageView
-        android:id="@+id/imageCall"
-        android:layout_width="wrap_content"
-        android:layout_height="42dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
+    <RelativeLayout
+        android:id="@+id/blockReminder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="?android:selectableItemBackground"
-        android:contentDescription="@string/call_from_list"
-        android:padding="4dp"
-        android:src="@drawable/ic_call_start_blue"/>
+        android:clickable="true"
+        android:paddingBottom="@dimen/item_vertical_margin_bigger"
+        android:paddingLeft="@dimen/item_horizontal_margin"
+        android:paddingRight="@dimen/item_horizontal_margin"
+        android:paddingTop="@dimen/item_vertical_margin">
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/textPhoneNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="8dp"
+            android:layout_toLeftOf="@+id/textTime"
+            android:layout_toStartOf="@+id/textTime"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="+375447897897 56 123 7 46 8 36 2 6"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/textTypeAndWhen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textPhoneNumber"
+            android:layout_marginLeft="@dimen/block_margin_small"
+            android:layout_marginStart="@dimen/block_margin_small"
+            android:text="Missed at 00:00"
+            android:textColor="@color/text_comment"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/textTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="6dp"
+            android:layout_toLeftOf="@+id/imageCall"
+            android:layout_toStartOf="@+id/imageCall"
+            android:text="00:00"
+            android:textSize="24sp"/>
+
+        <ImageView
+            android:id="@+id/imageCall"
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="?android:selectableItemBackground"
+            android:contentDescription="@string/call_from_list"
+            android:padding="4dp"
+            android:src="@drawable/ic_call_start_blue"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/blockUndo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/text_comment">
+
+        <LinearLayout
+            android:id="@+id/buttonUndo"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="@dimen/block_margin_small"
+            android:layout_marginRight="@dimen/block_margin_small"
+            android:background="?android:selectableItemBackground"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/block_margin_bigger"
+                android:layout_marginLeft="@dimen/block_margin_med"
+                android:layout_marginRight="@dimen/block_margin_bigger"
+                android:layout_marginStart="@dimen/block_margin_med"
+                android:text="@string/undo"
+                android:textColor="@color/white"
+                android:textSize="22sp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/block_margin_med"
+                android:layout_marginRight="@dimen/block_margin_med"
+                android:padding="@dimen/icon_button_padding"
+                android:src="@drawable/ic_undo_white_36dp"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>
