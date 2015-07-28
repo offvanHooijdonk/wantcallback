@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -24,9 +23,11 @@ import java.util.Map;
 /**
  * Created by off on 26.07.2015.
  */
-public class ReminderRecycleAdapter extends RecyclerView.Adapter<ReminderRecycleAdapter.ViewHolder> implements View.OnClickListener, OnItemSwipedListener {
+public class ReminderRecycleAdapter extends RecyclerView.Adapter<ReminderRecycleAdapter.ViewHolder> implements OnItemSwipedListener {
 
     private static final int UNDO_TIME_SEC = 3;
+
+    public static final int ITEM_TYPE_TO_DELETE = 12;
 
     private Context ctx;
     private List<ReminderInfo> reminders;
@@ -46,14 +47,6 @@ public class ReminderRecycleAdapter extends RecyclerView.Adapter<ReminderRecycle
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(ctx).inflate(R.layout.item_reminder_main, parent, false);
 
-        v.setOnClickListener(this);
-        v.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-            }
-        });
-
         return new ViewHolder(v);
     }
 
@@ -63,6 +56,13 @@ public class ReminderRecycleAdapter extends RecyclerView.Adapter<ReminderRecycle
 
         if (!info.isAboutToDelete()) {
             vh.blockReminder.setVisibility(View.VISIBLE);
+            vh.blockReminder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClick(info.getId());
+                }
+            });
+
             vh.blockUndo.setVisibility(View.GONE);
 
             vh.textPhone.setText(info.getPhone());
@@ -113,6 +113,11 @@ public class ReminderRecycleAdapter extends RecyclerView.Adapter<ReminderRecycle
         return reminders.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return reminders.get(position).isAboutToDelete() ? ITEM_TYPE_TO_DELETE : super.getItemViewType(position);
+    }
+
     private void onUndoDeleteItem(long reminderId) {
         int position = getPositionById(reminderId);
         if (position != -1) {
@@ -146,10 +151,9 @@ public class ReminderRecycleAdapter extends RecyclerView.Adapter<ReminderRecycle
         return intent;
     }
 
-    @Override
-    public void onClick(View v) {
+    public void onItemClick(long reminderId) {
         if (listener != null) {
-            listener.onListItemClicked(v);
+            listener.onListItemClicked(reminderId);
         }
     }
 
@@ -191,6 +195,7 @@ public class ReminderRecycleAdapter extends RecyclerView.Adapter<ReminderRecycle
             blockUndo = (ViewGroup) v.findViewById(R.id.blockUndo);
             buttonUndo = v.findViewById(R.id.buttonUndo);
         }
+
     }
 
     private class UndoWaitTask extends AsyncTask<Long, Void, Void> {
@@ -217,7 +222,7 @@ public class ReminderRecycleAdapter extends RecyclerView.Adapter<ReminderRecycle
     }
 
     public interface OnItemActionListener {
-        void onListItemClicked(View v);
+        void onListItemClicked(long id);
         void onListItemDismissed(long id);
     }
 }

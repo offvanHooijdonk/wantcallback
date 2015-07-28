@@ -16,8 +16,14 @@ public class ItemTouchCallback extends ItemTouchHelper.Callback {
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-        return makeMovementFlags(0, swipeFlags);
+        int swipeFlagsH;
+        if (viewHolder.getItemViewType() == ReminderRecycleAdapter.ITEM_TYPE_TO_DELETE) {
+            swipeFlagsH = 0;
+        } else {
+            swipeFlagsH = ItemTouchHelper.START | ItemTouchHelper.END;
+        }
+
+        return makeMovementFlags(0, swipeFlagsH);
     }
 
     @Override

@@ -200,12 +200,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListItemClicked(View v) {
-        int position = listReminders.indexOfChild(v);
-        ReminderInfo reminder = remindersList.get(position);
-
+    public void onListItemClicked(long reminderId) {
         Intent intent = new Intent(that, EditReminderActivity.class);
-        intent.putExtra(EditReminderActivity.EXTRA_REMINDER_ID, reminder.getId());
+        intent.putExtra(EditReminderActivity.EXTRA_REMINDER_ID, reminderId);
         intent.putExtra(EditReminderActivity.EXTRA_MODE, EditReminderActivity.MODE.EDIT.toString());
         startActivity(intent);
     }

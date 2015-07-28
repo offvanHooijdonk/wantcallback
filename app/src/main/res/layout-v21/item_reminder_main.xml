@@ -15,16 +15,14 @@
         android:paddingBottom="@dimen/item_vertical_margin_bigger"
         android:paddingLeft="@dimen/item_horizontal_margin"
         android:paddingRight="@dimen/item_horizontal_margin"
-        android:paddingTop="@dimen/item_vertical_margin">
+        android:paddingTop="@dimen/item_vertical_margin" android:visibility="gone">
 
         <TextView
             android:id="@+id/textPhoneNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_marginTop="8dp"
-            android:layout_toLeftOf="@+id/textTime"
             android:layout_toStartOf="@+id/textTime"
             android:ellipsize="end"
             android:lines="1"
@@ -36,7 +34,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/textPhoneNumber"
-            android:layout_marginLeft="@dimen/block_margin_small"
             android:layout_marginStart="@dimen/block_margin_small"
             android:text="Missed at 00:00"
             android:textColor="@color/text_comment"
@@ -51,7 +48,6 @@
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginTop="6dp"
-            android:layout_toLeftOf="@+id/imageCall"
             android:layout_toStartOf="@+id/imageCall"
             android:text="00:00"
             android:textSize="24sp"/>
@@ -61,7 +57,6 @@
             android:layout_width="wrap_content"
             android:layout_height="42dp"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:background="?android:selectableItemBackground"
             android:contentDescription="@string/call_from_list"
             android:padding="4dp"
@@ -79,10 +74,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_marginEnd="@dimen/item_horizontal_margin"
-            android:layout_marginRight="@dimen/item_horizontal_margin"
-            android:background="?android:selectableItemBackground"
+            android:background="@drawable/undo_selectable_background"
             android:orientation="horizontal">
 
             <TextView
@@ -90,8 +83,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="@dimen/item_vertical_margin_bigger"
-                android:layout_marginLeft="@dimen/block_margin_bigger"
-                android:layout_marginRight="@dimen/item_vertical_margin_bigger"
                 android:layout_marginStart="@dimen/block_margin_bigger"
                 android:text="@string/undo"
                 android:textColor="@color/undo_ripple"
@@ -102,7 +93,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="@dimen/block_margin_bigger"
-                android:layout_marginRight="@dimen/block_margin_bigger"
                 android:padding="@dimen/icon_button_padding"
                 android:src="@drawable/ic_undo_white_36dp"/>
 
