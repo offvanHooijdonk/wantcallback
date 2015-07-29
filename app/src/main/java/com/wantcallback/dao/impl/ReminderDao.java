@@ -94,7 +94,7 @@ public class ReminderDao {
         List<ReminderInfo> reminders = new ArrayList<ReminderInfo>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        Cursor cursor = db.query(TABLE, null, null, null, null, null, ReminderInfo.DATE + " desc");
+        Cursor cursor = db.query(TABLE, null, null, null, null, null, ReminderInfo.DATE + " asc");
         while (cursor.moveToNext()) { // assume phone is a unique field
             reminders.add(cursorToBean(cursor));
         }
@@ -129,7 +129,7 @@ public class ReminderDao {
         cv.put(ReminderInfo.PHONE, info.getPhone());
         cv.put(ReminderInfo.DATE, (int) (info.getDate() / DATE_MULT));
         cv.put(ReminderInfo.CALL_ID, info.getCallInfo().getLogId());
-        cv.put(ReminderInfo.CALL_DATE, info.getDate() / DATE_MULT);
+        cv.put(ReminderInfo.CALL_DATE, info.getCallInfo().getDate() / DATE_MULT);
         cv.put(ReminderInfo.CALL_TYPE, info.getCallInfo().getType().toString());
 
         return cv;

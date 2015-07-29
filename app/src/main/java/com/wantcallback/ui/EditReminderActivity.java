@@ -115,6 +115,8 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                     ReminderInfo info = new ReminderInfo();
                     if (mode == MODE.EDIT) {
                         info.setId(reminderId);
+                    } else if (mode == MODE.BLANK) {
+                        callInfo.setDate(Calendar.getInstance().getTimeInMillis());
                     }
                     info.setPhone(inputPhone.getText().toString());
                     info.setDate(remindDate.getTime());
@@ -174,7 +176,6 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                 ContactsUtil util = new ContactsUtil(that);
                 ContactInfo contact = util.getContactFromUri(uri);
 
-                mode = MODE.CREATE;
                 setReminderTime(ReminderUtil.calcDefaultRemindDate(that, Calendar.getInstance().getTimeInMillis()), true);
                 // check if
                 if (contact != null) {
@@ -272,6 +273,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                 if (reminderInfo != null) {
                     callInfo = reminderInfo.getCallInfo();
                 } else {
+                    // TODO handle this case
                     mode = MODE.BLANK;
                 }
             } else if (mode == MODE.CREATE) {

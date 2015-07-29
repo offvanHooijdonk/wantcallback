@@ -23,16 +23,16 @@
         android:id="@+id/inputPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/block_margin_small"
+        android:layout_below="@id/textHaveReminder"
         android:layout_marginEnd="@dimen/block_margin_small"
         android:layout_marginRight="@dimen/block_margin_small"
+        android:layout_marginTop="@dimen/block_margin_small"
         android:layout_toLeftOf="@+id/imageContacts"
         android:layout_toStartOf="@+id/imageContacts"
-        android:layout_below="@id/textHaveReminder"
         android:completionThreshold="3"
+        android:hint="@string/text_phone_number"
         android:lines="1"
-        android:maxLength="18"
-        android:hint="@string/text_phone_number"/>
+        android:maxLength="18"/>
 
     <ImageView
         android:id="@+id/imageContacts"
@@ -107,12 +107,12 @@
         android:id="@+id/btnSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/blockReminderOptions"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/block_margin_small"
+        android:layout_below="@id/blockReminderOptions"
         android:layout_marginEnd="@dimen/block_margin_small"
+        android:layout_marginRight="@dimen/block_margin_small"
         android:text="@string/btn_save_reminder"
-        android:textSize="18sp" />
+        android:textSize="18sp"/>
 
 </RelativeLayout>

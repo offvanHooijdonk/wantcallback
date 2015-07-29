@@ -31,9 +31,6 @@ public class ReminderUtil {
 			AlarmUtil.cancelAlarm(ctx, reminder.getId());
 			ReminderDao reminderDao = new ReminderDao(ctx);
 			reminderDao.deleteByPhone(reminder.getPhone());
-			Toast.makeText(ctx, "Forgot " + reminder.getPhone(), Toast.LENGTH_LONG).show();
-		} else {
-			Toast.makeText(ctx, "Did not find reminder for " + reminder.getPhone() + " !", Toast.LENGTH_LONG).show();
 		}
 
 	}

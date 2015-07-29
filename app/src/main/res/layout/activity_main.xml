@@ -1,6 +1,6 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,28 +20,30 @@
         android:textSize="18sp"
         android:visibility="gone"/>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/listReminders"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@color/app_accent"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
+            android:layout_height="match_parent">
 
-    <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/btnAddAlarm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_alarm_add_white"
-        fab:fab_colorNormal="@color/app_accent"
-        fab:fab_colorPressed="@color/fab_pressed"
-        fab:fab_colorRipple="@color/fab_ripple"
-        fab:fab_type="normal"/>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/listReminders"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@color/app_accent"/>
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btnAddAlarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_alarm_add_white"/>
+    </android.support.design.widget.CoordinatorLayout>
 
 </FrameLayout>

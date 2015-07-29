@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.melnykov.fab.FloatingActionButton;
 import com.wantcallback.R;
 import com.wantcallback.dao.impl.ReminderDao;
 import com.wantcallback.helper.AppHelper;
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity
     private static final String TASK_RECREATE_ACTUAL_REMINDERS = "task_recreate_actual_reminders";
 
     private MainActivity that;
-    private FloatingActionButton btnAddAlarm;
+    private android.support.design.widget.FloatingActionButton btnAddAlarm;
     private RecyclerView listReminders;
     private ReminderRecycleAdapter recycleAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity
         that = this;
         PreferenceManager.setDefaultValues(that, R.xml.pref, false);
 
-        btnAddAlarm = (FloatingActionButton) findViewById(R.id.btnAddAlarm);
+        btnAddAlarm = (android.support.design.widget.FloatingActionButton) findViewById(R.id.btnAddAlarm);
         reminderDao = new ReminderDao(that);
 
         listReminders = (RecyclerView) findViewById(R.id.listReminders);
@@ -101,7 +101,8 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
-        btnAddAlarm.attachToRecyclerView(listReminders);
+
+        //btnAddAlarm.attachToRecyclerView(listReminders);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorSchemeResources(R.color.refresh_one, R.color.refresh_two, R.color.refresh_three);
@@ -209,12 +210,22 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListItemDismissed(long id) {
-        ReminderInfo info = reminderDao.getById(id);
-        reminderDao.deleteByPhone(info.getPhone());
+        final ReminderInfo info = reminderDao.getById(id);
+        ReminderUtil.cancelReminder(that, info);
+
         int position = recycleAdapter.getPositionById(id);
         remindersList.remove(position);
         recycleAdapter.notifyItemRemoved(position);
-        /*reloadRemindersList();*/
+
+        Snackbar.make(listReminders, R.string.snack_title, Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ReminderUtil.createNewReminder(that, info.copyToNew());
+                        reloadRemindersList();
+                    }
+                })
+                .show();
     }
 
     public class RemindersBroadcastReceiver extends BroadcastReceiver {
