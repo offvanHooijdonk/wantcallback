@@ -30,6 +30,7 @@ public class StandardMissRejectListener implements OnCallMissRejectListener {
 		if (info.getPhone() != null && !"".equals(info.getPhone())) {
 			ReminderInfo reminderInfo = reminderDao.findByPhone(info.getPhone());
 			if (reminderInfo == null) { // no reminders yet
+				// TODO make this logic configurable
 				reminderInfo = AppHelper.convertCallToReminder(info);
 
 				ReminderUtil.createNewDefaultReminder(ctx, reminderInfo);
@@ -45,6 +46,7 @@ public class StandardMissRejectListener implements OnCallMissRejectListener {
 	public void onCallRejected(CallInfo info) {
 		if (info.getPhone() != null && !"".equals(info.getPhone())) {
 			ReminderInfo reminderInfo = reminderDao.findByPhone(info.getPhone());
+			// TODO make this logic configurable
 			if (reminderInfo == null) { // no reminders yet
 				notifyUtil.showRejectedCallNotification(info);
 			} else {
