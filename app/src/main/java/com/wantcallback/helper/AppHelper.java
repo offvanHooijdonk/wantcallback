@@ -12,6 +12,7 @@ import com.wantcallback.startup.InitializerIntentService;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 
 public class AppHelper {
@@ -54,6 +55,17 @@ public class AppHelper {
 
     public static Locale getDefaultLocale(Context ctx) {
         return ctx.getResources().getConfiguration().locale;
+    }
+
+    public static boolean isSameDay(Calendar c1, Calendar c2) {
+        return c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR) && c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR);
+    }
+
+    public static boolean isTomorrow(Calendar now, Calendar calendar) {
+        Calendar tomorrow = Calendar.getInstance();
+        tomorrow.setTimeInMillis(now.getTimeInMillis());
+        tomorrow.add(Calendar.DAY_OF_MONTH, 1);
+        return isSameDay(tomorrow, calendar);
     }
 
     public static class Pref {

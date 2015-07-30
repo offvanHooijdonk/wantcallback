@@ -61,7 +61,6 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
 
     private long reminderId;
     private Date remindDate = null;
-    private boolean isToday = true;
     private ReminderDao reminderDao;
     private CallInfo callInfo = null;
 
@@ -73,6 +72,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         this.that = this;
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
 
         reminderDao = new ReminderDao(this);
 
@@ -301,33 +301,39 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
     private void setReminderTime(long time, boolean calculate) {
         Calendar calendarRem = Calendar.getInstance();
         calendarRem.setTimeInMillis(time);
+        Calendar now = Calendar.getInstance();
 
-        if (isFutureTime(Calendar.getInstance(), calendarRem)) {
-            isToday = true;
-        } else if (calculate) {
+        if (! isFutureTime(now, calendarRem) && calculate) {
             calendarRem.add(Calendar.DAY_OF_MONTH, 1);
-            isToday = false;
-        } else {
-            isToday = true;
         }
         remindDate = calendarRem.getTime();
 
         String timeString = AppHelper.getTimeFormat(that).format(remindDate);
         textTime.setText(timeString);
-        setTodayText(isToday);
+        setDateText(now, calendarRem);
     }
 
     private boolean isFutureTime(Calendar now, Calendar picked) {
         return picked.after(now);
     }
 
-    private void setTodayText(boolean today) {
-        if (today) {
+    private void setDateText(Calendar now, Calendar calendar) {
+        if (AppHelper.isSameDay(now, calendar)) {
             textToday.setText(this.getResources().getString(R.string.today));
-        } else {
+        } else if (AppHelper.isTomorrow(now, calendar)) {
             textToday.setText(this.getResources().getString(R.string.tomorrow));
+        } else {
+            textToday.setText(AppHelper.getDateFormat(that).format(calendar));
+        }
+
+        if (calendar.before(now)) {
+            textToday.setTextColor(that.getResources().getColor(R.color.text_warn));
+        } else {
+            textToday.setTextColor(that.getResources().getColor(android.R.color.primary_text_light));
         }
     }
+
+
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {

@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity
     private static final String TASK_RECREATE_ACTUAL_REMINDERS = "task_recreate_actual_reminders";
 
     private MainActivity that;
-    private android.support.design.widget.FloatingActionButton btnAddAlarm;
+    private FloatingActionButton btnAddAlarm;
     private RecyclerView listReminders;
     private ReminderRecycleAdapter recycleAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -101,8 +102,6 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
-
-        //btnAddAlarm.attachToRecyclerView(listReminders);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorSchemeResources(R.color.refresh_one, R.color.refresh_two, R.color.refresh_three);
@@ -182,10 +181,10 @@ public class MainActivity extends AppCompatActivity
 
     private void displayMainLayout(boolean display) {
         if (display) {
-            btnAddAlarm.setEnabled(true);
+            btnAddAlarm.show();//setEnabled(true);
             listReminders.setEnabled(true);
         } else {
-            btnAddAlarm.setEnabled(false);
+            btnAddAlarm.hide();//setEnabled(false);
             listReminders.setEnabled(false);
         }
     }
