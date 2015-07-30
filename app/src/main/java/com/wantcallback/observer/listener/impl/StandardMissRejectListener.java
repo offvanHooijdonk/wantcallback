@@ -13,6 +13,13 @@ import com.wantcallback.reminder.ReminderUtil;
 import com.wantcallback.ui.MainActivity;
 
 public class StandardMissRejectListener implements OnCallMissRejectListener {
+	public static final int ACTION_REJECTED_CREATE = 0;
+	public static final int ACTION_REJECTED_DECIDE = 1;
+	public static final int ACTION_REJECTED_NONE = 2;
+
+	public static final int ACTION_MISSED_CREATE = 10;
+	public static final int ACTION_MISSED_DECIDE = 11;
+	public static final int ACTION_MISSED_NONE = 12;
 	
 	private Context ctx;
 	private NotificationsUtil notifyUtil;

@@ -29,6 +29,10 @@
     <string name="default_postpone_time_title">Default Postpone Time</string>
     <string name="default_postpone_time_summ">Time to postpone reminder if you want it later</string>
     <string name="default_postpone_time_key">defaultPostponeTime</string>
+    <string name="action_on_rejected_key">actionOnRejected</string>
+    <string name="action_on_rejected_title">On Reject Call</string>
+    <string name="action_on_missed_key">actionOnMissed</string>
+    <string name="action_on_missed_title">On Missed Call</string>
 
     <string-array name="default_postpone_time_values">
         <item>2</item>
@@ -50,5 +54,29 @@
         <item>30 m</item>
         <item>45 m</item>
         <item>1 h</item>
+    </string-array>
+
+    <string-array name="action_on_rejected_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="action_on_rejected">
+        <item>Create a reminder</item>
+        <item>Let me decide</item>
+        <item>Do nothing</item>
+    </string-array>
+
+    <string-array name="action_on_missed_values">
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+    </string-array>
+
+    <string-array name="action_on_missed">
+        <item>Create a reminder</item>
+        <item>Let me decide</item>
+        <item>Do nothing</item>
     </string-array>
 </resources>

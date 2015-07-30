@@ -14,5 +14,7 @@
     <dimen name="block_margin_small">12dp</dimen>
     <dimen name="block_margin_med">18dp</dimen>
     <dimen name="block_margin_bigger">24dp</dimen>
+    <dimen name="fab_margin_min">16dp</dimen>
+    <dimen name="fab_margin_mini_min">24dp</dimen>
 
 </resources>

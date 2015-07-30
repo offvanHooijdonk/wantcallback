@@ -16,4 +16,18 @@
         android:entries="@array/default_postpone_time"
         android:entryValues="@array/default_postpone_time_values"
         android:defaultValue="10"/>
+
+    <ListPreference
+        android:key="@string/action_on_rejected_key"
+        android:title="@string/action_on_rejected_title"
+        android:entries="@array/action_on_rejected"
+        android:entryValues="@array/action_on_rejected_values"
+        android:defaultValue="0"/>
+
+    <ListPreference
+        android:key="@string/action_on_missed_key"
+        android:title="@string/action_on_missed_title"
+        android:entries="@array/action_on_missed"
+        android:entryValues="@array/action_on_missed_values"
+        android:defaultValue="11"/>
 </PreferenceScreen>

@@ -68,5 +68,15 @@ public class AppHelper {
                             .default_postpone_time_key),
                     DEFAULT_TIME_ADD));
         }
+
+        public static int getActionOnRejected(Context ctx) {
+            return Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ctx).getString(ctx.getString(R.string
+                            .action_on_rejected_key), "0"));
+        }
+
+        public static int getActionOnMissed(Context ctx) {
+            return Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ctx).getString(ctx.getString(R.string
+                    .action_on_missed_key), "1"));
+        }
     }
 }

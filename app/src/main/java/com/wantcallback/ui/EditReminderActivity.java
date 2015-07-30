@@ -9,12 +9,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneNumberUtils;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -52,12 +52,12 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
 
     private TextView textContactName;
     private ImageView ivPhoto;
-    private ImageView imageContacts;
     private AutoCompleteTextView inputPhone;
     private TextView textTime;
     private TextView textToday;
     private TextView textHaveReminder;
-    private Button btnSave;
+    private FloatingActionButton btnSave;
+    private FloatingActionButton buttonPickContact;
 
     private long reminderId;
     private Date remindDate = null;
@@ -79,14 +79,14 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         inputPhone = (AutoCompleteTextView) findViewById(R.id.inputPhone);
         textContactName = (TextView) findViewById(R.id.textContactName);
         ivPhoto = (ImageView) findViewById(R.id.photo);
-        imageContacts = (ImageView) findViewById(R.id.imageContacts);
+        buttonPickContact = (FloatingActionButton) findViewById(R.id.buttonPickUser);
         textTime = (TextView) findViewById(R.id.textTime);
         textToday = (TextView) findViewById(R.id.textToday);
         textHaveReminder = (TextView) findViewById(R.id.textHaveReminder);
-        btnSave = (Button) findViewById(R.id.btnSave);
+        btnSave = (FloatingActionButton) findViewById(R.id.btnSave);
 
         // TODO change icon to rounded and colored
-        imageContacts.setOnClickListener(new View.OnClickListener() {
+        buttonPickContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent pickContactIntent = new Intent(Intent.ACTION_PICK, Uri.parse("content://contacts"));
@@ -236,7 +236,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                 setReminderTime(ReminderUtil.calcDefaultRemindDate(that, Calendar.getInstance().getTimeInMillis()), true);
             }
 
-            imageContacts.setVisibility(View.GONE);
+            buttonPickContact.setVisibility(View.GONE);
             inputPhone.setFocusable(false);
 
             ContactsUtil util = new ContactsUtil(that);
@@ -246,7 +246,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         } else if (mode == MODE.BLANK) {
             textHaveReminder.setVisibility(View.GONE);
             inputPhone.setFocusable(true);
-            imageContacts.setVisibility(View.VISIBLE);
+            buttonPickContact.setVisibility(View.VISIBLE);
 
             setReminderTime(ReminderUtil.calcDefaultRemindDate(that, Calendar.getInstance().getTimeInMillis()), true);
         }
