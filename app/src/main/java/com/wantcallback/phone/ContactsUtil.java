@@ -1,19 +1,13 @@
 package com.wantcallback.phone;
 
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.PhoneLookup;
 
 import com.wantcallback.model.ContactInfo;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 public class ContactsUtil {
 
@@ -55,7 +49,7 @@ public class ContactsUtil {
 		return contact;
 	}
 	
-	public Bitmap getContactPhoto(ContactInfo info) throws IOException {
+	/*public Bitmap getContactPhoto(ContactInfo info) throws IOException {
 		Bitmap photo;
 		ContentResolver cr = ctx.getContentResolver();
 		
@@ -70,7 +64,7 @@ public class ContactsUtil {
         }
 
         return photo;
-	}
+	}*/
 
 	private ContactInfo toSingleContact(Cursor cur, boolean isPhoneLookup) {
 		ContactInfo info = new ContactInfo();

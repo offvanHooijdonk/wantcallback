@@ -16,6 +16,7 @@
     <color name="refresh_one">#00C853</color>
     <color name="refresh_two">#F50057</color>
     <color name="refresh_three">#FFC400</color>
-    <color name="white">#ffffff</color>
+    <color name="contact_name_overlap">#ffffff</color>
+    <color name="contact_name_default_background">#ffffff</color>
 
 </resources>

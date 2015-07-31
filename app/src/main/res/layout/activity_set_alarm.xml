@@ -34,22 +34,8 @@
             android:layout_marginTop="@dimen/block_margin_small"
             android:completionThreshold="3"
             android:hint="@string/text_phone_number"
-            android:lines="1"
+            android:maxLines="1"
             android:maxLength="18"/>
-
-        <!--<ImageView
-            android:id="@+id/imageContacts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/inputPhone"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@id/inputPhone"
-            android:background="?android:selectableItemBackground"
-            android:contentDescription="@string/add_from_contacts"
-            android:padding="@dimen/icon_button_padding"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_find_contact"/>-->
 
         <RelativeLayout
             android:id="@+id/blockContactInfo"
@@ -60,19 +46,29 @@
 
             <ImageView
                 android:id="@+id/photo"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
                 android:contentDescription="@string/contact_photo"
-                android:src="@drawable/ic_contact_picture"/>
+                android:scaleType="centerCrop"
+                android:src="@drawable/contact_picture"
+                android:background="?android:selectableItemBackground"/>
 
             <TextView
                 android:id="@+id/textContactName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/block_margin_small"
-                android:layout_marginStart="@dimen/block_margin_small"
-                android:layout_toEndOf="@id/photo"
-                android:layout_toRightOf="@id/photo"/>
+                android:layout_alignBottom="@id/photo"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:paddingTop="@dimen/contact_name_padding_v"
+                android:paddingBottom="@dimen/contact_name_padding_v"
+                android:paddingLeft="@dimen/contact_name_padding_h"
+                android:paddingRight="@dimen/contact_name_padding_h"
+                android:paddingEnd="@dimen/contact_name_padding_h"
+                android:text="Emmanuelino Gonzalez Perreira Maximo el Morales"
+                android:textColor="@color/contact_name_overlap"
+                android:background="?android:selectableItemBackground"
+                android:textSize="24sp"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -80,28 +76,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/blockContactInfo"
-            android:layout_marginTop="@dimen/block_margin_bigger">
+            android:layout_marginTop="32dp">
 
             <TextView
                 android:id="@+id/textTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
                 android:background="?android:selectableItemBackground"
                 android:padding="@dimen/icon_button_padding"
                 android:text="00:00"
-                android:textSize="24sp"/>
+                android:textSize="28sp"/>
 
             <TextView
                 android:id="@+id/textToday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/textTime"
-                android:layout_marginBottom="4dp"
-                android:layout_marginLeft="@dimen/block_margin_med"
-                android:layout_marginStart="@dimen/block_margin_med"
-                android:layout_toEndOf="@id/textTime"
-                android:layout_toRightOf="@id/textTime"
+                android:layout_below="@id/textTime"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/item_vertical_margin"
                 android:text="@string/today"
                 android:textSize="16sp"/>
         </RelativeLayout>

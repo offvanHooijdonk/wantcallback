@@ -3,7 +3,7 @@
     android:id="@+id/blockReminder"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="72dp"
+    android:layout_height="wrap_content"
     android:background="?android:selectableItemBackground"
     android:clickable="true"
     android:gravity="center_vertical"
@@ -12,55 +12,53 @@
     android:paddingRight="@dimen/item_horizontal_margin"
     android:paddingTop="@dimen/item_vertical_margin">
 
+    <com.pkmmte.view.CircularImageView
+        android:id="@+id/imageContact"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="@dimen/item_vertical_margin"
+        android:layout_marginRight="@dimen/item_vertical_margin"
+        android:padding="@dimen/icon_button_padding"
+        android:scaleType="centerCrop"
+        android:src="@drawable/contact_picture"/>
 
     <TextView
         android:id="@+id/textPhoneNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="8dp"
+
+        android:layout_toEndOf="@id/imageContact"
         android:layout_toLeftOf="@+id/textTime"
+        android:layout_toRightOf="@id/imageContact"
         android:layout_toStartOf="@+id/textTime"
         android:ellipsize="end"
-        android:lines="1"
-        android:text="+375447897897 56 123 7 46 8 36 2 6"
-        android:textSize="18sp"/>
+        android:maxLines="1"
+        android:text="+375447897897561237483626"
+        android:textSize="16sp"/>
 
     <TextView
         android:id="@+id/textTypeAndWhen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/textPhoneNumber"
+        android:layout_alignStart="@id/textPhoneNumber"
         android:layout_below="@id/textPhoneNumber"
         android:layout_marginLeft="@dimen/block_margin_small"
         android:layout_marginStart="@dimen/block_margin_small"
         android:text="Missed at 00:00"
         android:textColor="@color/text_comment"
-        android:textSize="12sp"/>
+        android:textSize="14sp"/>
 
     <TextView
         android:id="@+id/textTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="6dp"
-        android:layout_toLeftOf="@+id/imageCall"
-        android:layout_toStartOf="@+id/imageCall"
-        android:text="00:00"
-        android:textSize="24sp"/>
-
-    <ImageView
-        android:id="@+id/imageCall"
-        android:layout_width="wrap_content"
-        android:layout_height="42dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:background="?android:selectableItemBackground"
-        android:contentDescription="@string/call_from_list"
-        android:padding="4dp"
-        android:src="@drawable/ic_call_start_blue"/>
+        android:layout_marginLeft="@dimen/block_margin_small"
+        android:layout_marginStart="@dimen/block_margin_small"
+        android:layout_marginTop="0dp"
+        android:text="00:00"
+        android:textSize="20sp"/>
 
 </RelativeLayout>

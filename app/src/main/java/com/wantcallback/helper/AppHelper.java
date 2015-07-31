@@ -3,13 +3,21 @@ package com.wantcallback.helper;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
+import android.provider.MediaStore;
+import android.support.v7.graphics.Palette;
+import android.telephony.PhoneNumberUtils;
 
 import com.wantcallback.R;
 import com.wantcallback.model.CallInfo;
 import com.wantcallback.model.ReminderInfo;
 import com.wantcallback.startup.InitializerIntentService;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -68,6 +76,39 @@ public class AppHelper {
         return isSameDay(tomorrow, calendar);
     }
 
+    public static String formatPhoneNumber(Context ctx, String phone) {
+        String formatted;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            formatted = PhoneNumberUtils.formatNumber(phone, ctx.getResources().getConfiguration()
+                    .locale.getISO3Country());
+        } else {
+            formatted = PhoneNumberUtils.formatNumber(phone);
+        }
+
+        return formatted;
+    }
+
+    public static Integer getColorizeOnImage(Context ctx, Uri uri) {
+        Integer color = null;
+        if (uri != null) {
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(ctx.getContentResolver(), uri);
+            } catch (IOException e) {
+                color = null;
+            }
+            if (bitmap != null) {
+                Palette palette = new Palette.Builder(bitmap).generate();
+                Palette.Swatch swatch = palette.getVibrantSwatch();
+                if (swatch != null) {
+                    color = swatch.getRgb();
+                }
+            }
+        }
+
+        return color;
+    }
+
     public static class Pref {
         private static final String DEFAULT_TIME_ADD = "10";
 
@@ -83,12 +124,28 @@ public class AppHelper {
 
         public static int getActionOnRejected(Context ctx) {
             return Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ctx).getString(ctx.getString(R.string
-                            .action_on_rejected_key), "0"));
+                    .action_on_rejected_key), "0"));
         }
 
         public static int getActionOnMissed(Context ctx) {
             return Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ctx).getString(ctx.getString(R.string
                     .action_on_missed_key), "1"));
+        }
+    }
+
+    public static class Intents {
+        public static Intent createDialerIntent(String phoneNumber) {
+            Intent intent = new Intent(Intent.ACTION_DIAL);
+            intent.setData(Uri.parse("tel:" + phoneNumber));
+
+            return intent;
+        }
+
+        public static Intent createContactIntent(String contactId) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, contactId));
+
+            return intent;
         }
     }
 }

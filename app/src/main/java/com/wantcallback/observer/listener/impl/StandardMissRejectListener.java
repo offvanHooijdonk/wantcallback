@@ -13,60 +13,75 @@ import com.wantcallback.reminder.ReminderUtil;
 import com.wantcallback.ui.MainActivity;
 
 public class StandardMissRejectListener implements OnCallMissRejectListener {
-	public static final int ACTION_REJECTED_CREATE = 0;
-	public static final int ACTION_REJECTED_DECIDE = 1;
-	public static final int ACTION_REJECTED_NONE = 2;
 
-	public static final int ACTION_MISSED_CREATE = 10;
-	public static final int ACTION_MISSED_DECIDE = 11;
-	public static final int ACTION_MISSED_NONE = 12;
-	
-	private Context ctx;
-	private NotificationsUtil notifyUtil;
-	private ReminderDao reminderDao;
-	
-	public StandardMissRejectListener(Context context) {
-		this.ctx = context;
-		notifyUtil = new NotificationsUtil(ctx);
-		reminderDao = new ReminderDao(ctx);
-	}
+    private Context ctx;
+    private NotificationsUtil notifyUtil;
+    private ReminderDao reminderDao;
 
-	@Override
-	public void onCallMissed(CallInfo info) {
-		// create Reminder and notify if none yet created for previous calls
-		if (info.getPhone() != null && !"".equals(info.getPhone())) {
-			ReminderInfo reminderInfo = reminderDao.findByPhone(info.getPhone());
-			if (reminderInfo == null) { // no reminders yet
-				// TODO make this logic configurable
-				reminderInfo = AppHelper.convertCallToReminder(info);
+    public StandardMissRejectListener(Context context) {
+        this.ctx = context;
+        notifyUtil = new NotificationsUtil(ctx);
+        reminderDao = new ReminderDao(ctx);
+    }
 
-				ReminderUtil.createNewDefaultReminder(ctx, reminderInfo);
-				sendBroadCastToActivity(ctx);
-				notifyUtil.showMissedCallNotification(reminderInfo);
-			}
-		} else {
-			// TODO handle hidden number
-		}
-	}
+    @Override
+    public void onCallMissed(CallInfo call) {
+        int action = AppHelper.Pref.getActionOnMissed(ctx);
 
-	@Override
-	public void onCallRejected(CallInfo info) {
-		if (info.getPhone() != null && !"".equals(info.getPhone())) {
-			ReminderInfo reminderInfo = reminderDao.findByPhone(info.getPhone());
-			// TODO make this logic configurable
-			if (reminderInfo == null) { // no reminders yet
-				notifyUtil.showRejectedCallNotification(info);
-			} else {
-				notifyUtil.showRejectedCallNotification(reminderInfo);
-			}
-			sendBroadCastToActivity(ctx);
-		} else {
-			// TODO handle hidden number
-		}
-	}
+        if (call.getPhone() != null && !"".equals(call.getPhone())) {
+            ReminderInfo reminderInfo = reminderDao.findByPhone(call.getPhone());
+            // TODO make this logic configurable
+            if (reminderInfo == null) { // no reminders yet
+                if (action == ACTION_MISSED_CREATE) {
+                    reminderInfo = AppHelper.convertCallToReminder(call);
 
-	private void sendBroadCastToActivity(Context ctx) {
-		ctx.sendBroadcast(new Intent(MainActivity.RemindersBroadcastReceiver.ACTION_ANY));
-	}
+                    ReminderUtil.createNewDefaultReminder(ctx, reminderInfo);
+                    sendBroadCastToActivity(ctx);
+                    notifyUtil.showMissedCallCreatedNotification(reminderInfo);
+                } else if (action == ACTION_MISSED_DECIDE) {
+                    notifyUtil.showMissedCallDecideNotification(call);
+                } else if (action == ACTION_MISSED_NONE) {
+                    // do nothing
+                }
+            } else {
+                // TODO if reminder exists
+            }
+        } else {
+            // TODO hidden number
+        }
+
+    }
+
+    @Override
+    public void onCallRejected(CallInfo call) {
+        int action = AppHelper.Pref.getActionOnRejected(ctx);
+
+        if (call.getPhone() != null && !"".equals(call.getPhone())) {
+            if (call.getPhone() != null && !"".equals(call.getPhone())) {
+                ReminderInfo reminderInfo = reminderDao.findByPhone(call.getPhone());
+                if (reminderInfo == null) { // no reminders yet
+                    if (action == ACTION_REJECTED_CREATE) {
+                        reminderInfo = AppHelper.convertCallToReminder(call);
+
+                        ReminderUtil.createNewDefaultReminder(ctx, reminderInfo);
+                        sendBroadCastToActivity(ctx);
+                        notifyUtil.showRejectedCallCreatedNotification(reminderInfo);
+                    } else if (action == ACTION_REJECTED_DECIDE) {
+                        notifyUtil.showRejectedCallDecideNotification(call);
+                    } else if (action == ACTION_REJECTED_NONE) {
+                        // do nothing
+                    }
+                }
+            } else {
+                // TODO if reminder exists
+            }
+        } else {
+            // TODO hidden number
+        }
+    }
+
+    private void sendBroadCastToActivity(Context ctx) {
+        ctx.sendBroadcast(new Intent(MainActivity.RemindersBroadcastReceiver.ACTION_ANY));
+    }
 
 }

@@ -36,44 +36,64 @@ public class NotificationsUtil {
         contactsUtil = new ContactsUtil(ctx);
     }
 
-    public void showMissedCallNotification(ReminderInfo reminder) {
+    public void showMissedCallCreatedNotification(ReminderInfo reminder) {
         String tag = reminder.getPhone();
         int id = NOTIFICATION_MISSED_CALL;
         String callerLabel = getCallerLabel(reminder.getCallInfo());
-        String text = "Missed Call from " + callerLabel;
+        String text = "Missed Call from " + callerLabel + ". A reminder has been created on " + AppHelper.getTimeFormat(ctx).format(new Date(reminder.getDate()));
 
-        NotificationCompat.Builder builder = getCommonCallBuilder("Missed Call", text)
+        NotificationCompat.Builder builder = getCommonCallBuilder("Reminder created", text)
                 .setTicker(text)
+                .setSmallIcon(R.drawable.ic_alarm_on_white_24dp)
                 .setContentIntent(createEditReminderIntent(reminder, tag, id)) // Open reminder settings
                 .addAction(R.drawable.ic_call_black_24dp, "Call now", createDialerIntent(reminder.getCallInfo())) // Dial missed call
-                .addAction(R.drawable.ic_forget, "Forget", createForgetIntent(reminder, tag, id)); // remove reminder created
+                .addAction(R.drawable.ic_forget, "Forget it", createForgetIntent(reminder, tag, id)); // remove reminder created
 
         getNotificationManager().notify(tag, id, builder.build());
     }
 
-    public void showRejectedCallNotification(CallInfo info) {
+    public void showMissedCallDecideNotification(CallInfo call) {
+        String tag = call.getPhone();
+        int id = NOTIFICATION_MISSED_CALL;
+        String callerLabel = getCallerLabel(call);
+        int defaultMin = AppHelper.Pref.getDefaultReminderMins(ctx);
+        String text = "Missed Call from " + callerLabel;
+
+        NotificationCompat.Builder builder = getCommonCallBuilder("Want to remind?", text)
+                .setTicker(text)
+                .setSmallIcon(R.drawable.ic_alarm_add_white)
+                .setContentIntent(createNewReminderIntent(call, tag, id)) // Open reminder settings
+                .addAction(R.drawable.ic_call_black_24dp, "Call now", createDialerIntent(call)) // Dial missed call
+                .addAction(R.drawable.ic_alarm_add, "Remind in " + defaultMin + "m", createDefaultReminderIntent(call, tag, id)); // remove reminder created
+
+        getNotificationManager().notify(tag, id, builder.build());
+    }
+
+    public void showRejectedCallDecideNotification(CallInfo info) {
         String tag = info.getPhone();
         int id = NOTIFICATION_REJECTED_CALL;
         String callerLabel = getCallerLabel(info);
         int defaultMin = AppHelper.Pref.getDefaultReminderMins(ctx);
         String text = "Rejected Call from " + callerLabel;
 
-        NotificationCompat.Builder builder = getCommonCallBuilder("Rejected Call", text)
+        NotificationCompat.Builder builder = getCommonCallBuilder("Want to remind?", text)
                 .setTicker(text)
+                .setSmallIcon(R.drawable.ic_alarm_add_white)
                 .setContentIntent(createNewReminderIntent(info, tag, id)) // open activity to set custom info
                 .addAction(R.drawable.ic_alarm_add, "Remind in " + defaultMin + "m", createDefaultReminderIntent(info, tag, id)); // create default reminder silently
 
         getNotificationManager().notify(tag, id, builder.build());
     }
 
-    public void showRejectedCallNotification(ReminderInfo reminder) {
+    public void showRejectedCallCreatedNotification(ReminderInfo reminder) {
         String tag = reminder.getPhone();
         int id = NOTIFICATION_REJECTED_CALL;
         String callerLabel = getCallerLabel(reminder.getCallInfo());
-        String text = "Rejected " + callerLabel + ". You already have a reminder at " + AppHelper.getTimeFormat(ctx).format(new Date(reminder.getDate()));
+        String text = "Rejected " + callerLabel + ". A reminder has been created on " + AppHelper.getTimeFormat(ctx).format(new Date(reminder.getDate()));
 
-        NotificationCompat.Builder builder = getCommonCallBuilder("Rejected Call", text)
+        NotificationCompat.Builder builder = getCommonCallBuilder("Reminder created", text)
                 .setTicker("Rejected Call from " + callerLabel)
+                .setSmallIcon(R.drawable.ic_alarm_on_white_24dp)
                 .setContentIntent(createEditReminderIntent(reminder, tag, id)) // open activity to set custom info
                 .addAction(R.drawable.ic_call_black_24dp, "Call now", createDialerIntent(reminder.getCallInfo())) // Dial missed call
                 .addAction(R.drawable.ic_forget, "Forget", createForgetIntent(reminder, tag, id)); // remove reminder created
