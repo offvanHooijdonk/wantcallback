@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity
 
     private MainActivity that;
     private FloatingActionButton btnAddAlarm;
-    private RecyclerView listReminders;
+    private RecyclerView recyclerList;
     private ReminderRecycleAdapter recycleAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private View emptyView;
@@ -64,16 +64,16 @@ public class MainActivity extends AppCompatActivity
         btnAddAlarm = (android.support.design.widget.FloatingActionButton) findViewById(R.id.btnAddAlarm);
         reminderDao = new ReminderDao(that);
 
-        listReminders = (RecyclerView) findViewById(R.id.listReminders);
+        recyclerList = (RecyclerView) findViewById(R.id.listReminders);
 
         //TODO add empty view
 
-        listReminders.setHasFixedSize(true);
+        recyclerList.setHasFixedSize(true);
 
-        listReminders.setLayoutManager(new LinearLayoutManager(that));
+        recyclerList.setLayoutManager(new LinearLayoutManager(that));
 
         recycleAdapter = new ReminderRecycleAdapter(that, remindersList, that);
-        listReminders.setAdapter(recycleAdapter);
+        recyclerList.setAdapter(recycleAdapter);
         emptyView = findViewById(R.id.emptyReminderList);
         recycleAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity
 
         ItemTouchHelper.Callback callback = new ItemTouchCallback(recycleAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(listReminders);
+        mItemTouchHelper.attachToRecyclerView(recyclerList);
 
         btnAddAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,15 +182,16 @@ public class MainActivity extends AppCompatActivity
     private void displayMainLayout(boolean display) {
         if (display) {
             btnAddAlarm.show();//setEnabled(true);
-            listReminders.setEnabled(true);
+            recyclerList.setEnabled(true);
         } else {
             btnAddAlarm.hide();//setEnabled(false);
-            listReminders.setEnabled(false);
+            recyclerList.setEnabled(false);
         }
     }
 
     private void checkListEmpty() {
-        emptyView.setVisibility(recycleAdapter.getItemCount() > 0 ? View.GONE : View.VISIBLE);
+        boolean isEmpty = recycleAdapter.getItemCount() == 0;
+        emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
     }
 
     private void reloadRemindersList() {
@@ -210,13 +211,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onListItemDismissed(long id) {
         final ReminderInfo info = reminderDao.getById(id);
-        ReminderUtil.cancelReminder(that, info);
+        ReminderUtil.cancelAndRemoveReminder(that, info);
 
         int position = recycleAdapter.getPositionById(id);
         remindersList.remove(position);
         recycleAdapter.notifyItemRemoved(position);
 
-        Snackbar.make(listReminders, R.string.snack_title, Snackbar.LENGTH_LONG)
+        Snackbar.make(recyclerList, R.string.snack_title, Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

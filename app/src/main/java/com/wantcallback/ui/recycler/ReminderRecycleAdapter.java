@@ -1,15 +1,17 @@
 package com.wantcallback.ui.recycler;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.pkmmte.view.CircularImageView;
 import com.wantcallback.R;
 import com.wantcallback.helper.AppHelper;
+import com.wantcallback.helper.ImageHelper;
 import com.wantcallback.model.ContactInfo;
 import com.wantcallback.model.ReminderInfo;
 import com.wantcallback.phone.ContactsUtil;
@@ -50,8 +52,16 @@ public class ReminderRecycleAdapter extends RecyclerView.Adapter<ReminderRecycle
         final ContactInfo contact = contactsUtil.findContactByPhone(reminder.getPhone());
         if (contact != null) {
             vh.textPhone.setText(contact.getDisplayName());
-            vh.imageContact.setImageURI(contact.getPhotoUri());
-            vh.imageContact.setOnClickListener(new View.OnClickListener() {
+            if (contact.getPhotoUri() != null) {
+                vh.imageCircle.setImageURI(contact.getPhotoUri());
+                vh.imageDefaultContact.setVisibility(View.INVISIBLE);
+            } else if (contact.getThumbUri() != null) {
+                vh.imageCircle.setImageURI(contact.getThumbUri());
+                vh.imageDefaultContact.setVisibility(View.INVISIBLE);
+            } else {
+                setColorOverlay(vh, reminder.getPhone());
+            }
+            vh.imageCircle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ctx.startActivity(AppHelper.Intents.createContactIntent(contact.getId()));
@@ -59,7 +69,8 @@ public class ReminderRecycleAdapter extends RecyclerView.Adapter<ReminderRecycle
             });
         } else {
             vh.textPhone.setText(reminder.getPhone());
-            vh.imageContact.setOnClickListener(new View.OnClickListener() {
+            setColorOverlay(vh, reminder.getPhone());
+            vh.imageCircle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ctx.startActivity(AppHelper.Intents.createDialerIntent(reminder.getPhone()));
@@ -123,6 +134,14 @@ public class ReminderRecycleAdapter extends RecyclerView.Adapter<ReminderRecycle
         }
     }
 
+    private void setColorOverlay(ViewHolder vh, String phoneNumber) {
+        Bitmap b = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
+        b.eraseColor(ImageHelper.getMaterialColorForPhone(ctx, phoneNumber));
+        vh.imageCircle.setImageBitmap(b);
+        vh.imageDefaultContact.setVisibility(View.VISIBLE);
+
+    }
+
     @Override
     public void onItemSwiped(int position) {
         long itemId = getItemId(position);
@@ -148,7 +167,8 @@ public class ReminderRecycleAdapter extends RecyclerView.Adapter<ReminderRecycle
         public TextView textPhone;
         public TextView textWhen;
         public TextView textTime;
-        private CircularImageView imageContact;
+        private com.pkmmte.view.CircularImageView imageCircle;
+        private ImageView imageDefaultContact;
         public ViewGroup blockReminder;
 
         public ViewHolder(View v) {
@@ -158,7 +178,8 @@ public class ReminderRecycleAdapter extends RecyclerView.Adapter<ReminderRecycle
             textPhone = (TextView) v.findViewById(R.id.textPhoneNumber);
             textWhen = (TextView) v.findViewById(R.id.textTypeAndWhen);
             textTime = (TextView) v.findViewById(R.id.textTime);
-            imageContact = (CircularImageView) v.findViewById(R.id.imageContact);
+            imageCircle = (com.pkmmte.view.CircularImageView) v.findViewById(R.id.imageCircle);
+            imageDefaultContact = (ImageView) v.findViewById(R.id.imageDefaultContact);
         }
     }
 

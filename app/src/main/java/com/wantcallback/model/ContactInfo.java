@@ -8,6 +8,7 @@ public class ContactInfo {
 	private String displayName;
 	private String phoneNumber;
 	private Uri photoUri;
+	private Uri thumbUri;
 
 	public String getId() {
 		return id;
@@ -39,5 +40,13 @@ public class ContactInfo {
 
 	public void setPhotoUri(Uri photoUri) {
 		this.photoUri = photoUri;
+	}
+
+	public Uri getThumbUri() {
+		return thumbUri;
+	}
+
+	public void setThumbUri(Uri thumbUri) {
+		this.thumbUri = thumbUri;
 	}
 }

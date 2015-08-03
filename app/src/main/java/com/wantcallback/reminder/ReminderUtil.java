@@ -26,7 +26,7 @@ public class ReminderUtil {
 		createNewReminder(ctx, info);
 	}
 	
-	public static void cancelReminder(Context ctx, ReminderInfo reminder) {
+	public static void cancelAndRemoveReminder(Context ctx, ReminderInfo reminder) {
 		if (reminder != null) {
 			AlarmUtil.cancelAlarm(ctx, reminder.getId());
 			ReminderDao reminderDao = new ReminderDao(ctx);

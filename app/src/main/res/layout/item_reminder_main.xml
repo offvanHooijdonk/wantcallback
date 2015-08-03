@@ -13,24 +13,36 @@
     android:paddingTop="@dimen/item_vertical_margin">
 
     <com.pkmmte.view.CircularImageView
-        android:id="@+id/imageContact"
+        android:id="@+id/imageCircle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageDefaultContact"
+        android:layout_alignBottom="@+id/imageDefaultContact"
+        android:layout_alignLeft="@+id/imageDefaultContact"
+        android:layout_alignStart="@+id/imageDefaultContact"
+        android:layout_alignRight="@+id/imageDefaultContact"
+        android:layout_alignEnd="@+id/imageDefaultContact" />
+
+    <ImageView
+        android:id="@+id/imageDefaultContact"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginEnd="@dimen/item_vertical_margin"
-        android:layout_marginRight="@dimen/item_vertical_margin"
-        android:padding="@dimen/icon_button_padding"
-        android:scaleType="centerCrop"
-        android:src="@drawable/contact_picture"/>
+        android:layout_marginEnd="@dimen/item_horizontal_margin"
+        android:layout_marginRight="@dimen/item_horizontal_margin"
+        android:src="@drawable/ic_person_white_24dp"
+        android:scaleType="center"
+        android:contentDescription="@string/contact_photo"/>
 
     <TextView
         android:id="@+id/textPhoneNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:layout_toEndOf="@id/imageContact"
+        android:layout_toEndOf="@id/imageDefaultContact"
         android:layout_toLeftOf="@+id/textTime"
-        android:layout_toRightOf="@id/imageContact"
+        android:layout_toRightOf="@id/imageCircle"
         android:layout_toStartOf="@+id/textTime"
+        android:layout_marginStart="@dimen/item_horizontal_margin"
+        android:layout_marginLeft="@dimen/item_horizontal_margin"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="+375447897897561237483626"

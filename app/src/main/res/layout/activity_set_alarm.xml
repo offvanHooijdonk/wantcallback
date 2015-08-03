@@ -34,6 +34,7 @@
             android:layout_marginTop="@dimen/block_margin_small"
             android:completionThreshold="3"
             android:hint="@string/text_phone_number"
+            android:inputType="phone"
             android:maxLines="1"
             android:maxLength="18"/>
 
@@ -44,14 +45,19 @@
             android:layout_below="@id/inputPhone"
             android:layout_marginTop="@dimen/block_margin_med">
 
+            <View
+                android:id="@+id/viewDefaultPortraitBackground"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/photo"/>
+
             <ImageView
                 android:id="@+id/photo"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:contentDescription="@string/contact_photo"
-                android:scaleType="centerCrop"
-                android:src="@drawable/contact_picture"
-                android:background="?android:selectableItemBackground"/>
+                android:scaleType="center"
+                android:src="@drawable/ic_person_white_180dp"/>
 
             <TextView
                 android:id="@+id/textContactName"
@@ -67,8 +73,16 @@
                 android:paddingEnd="@dimen/contact_name_padding_h"
                 android:text="Emmanuelino Gonzalez Perreira Maximo el Morales"
                 android:textColor="@color/contact_name_overlap"
-                android:background="?android:selectableItemBackground"
                 android:textSize="24sp"/>
+
+            <View
+                android:id="@+id/viewOverlayContact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selectable_white"
+                android:layout_alignBottom="@id/photo"
+                android:clickable="true"
+                />
         </RelativeLayout>
 
         <RelativeLayout
@@ -86,7 +100,7 @@
                 android:background="?android:selectableItemBackground"
                 android:padding="@dimen/icon_button_padding"
                 android:text="00:00"
-                android:textSize="28sp"/>
+                android:textSize="36sp"/>
 
             <TextView
                 android:id="@+id/textToday"
@@ -118,6 +132,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin_min"
-        android:src="@drawable/ic_alarm_on_white_24dp"
+        android:src="@drawable/ic_done_white_24dp"
+        app:backgroundTint="#00C853"
         app:fabSize="normal"/>
 </FrameLayout>

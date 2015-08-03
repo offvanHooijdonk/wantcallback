@@ -11,7 +11,12 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.format.DateFormat;
+import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
@@ -23,6 +28,7 @@ import android.widget.Toast;
 import com.wantcallback.R;
 import com.wantcallback.dao.impl.ReminderDao;
 import com.wantcallback.helper.AppHelper;
+import com.wantcallback.helper.ImageHelper;
 import com.wantcallback.model.CallInfo;
 import com.wantcallback.model.ContactInfo;
 import com.wantcallback.model.ReminderInfo;
@@ -59,6 +65,8 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
     private FloatingActionButton btnSave;
     private FloatingActionButton buttonPickContact;
     private ViewGroup blockContactInfo;
+    private View viewOverlayContact;
+    private View viewDefaultPortraitBackground;
 
     private long reminderId;
     private Date remindDate = null;
@@ -79,16 +87,20 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         reminderDao = new ReminderDao(this);
 
         inputPhone = (AutoCompleteTextView) findViewById(R.id.inputPhone);
+        inputPhone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         textContactName = (TextView) findViewById(R.id.textContactName);
         ivPhoto = (ImageView) findViewById(R.id.photo);
+        setImageRatio(ivPhoto);
         buttonPickContact = (FloatingActionButton) findViewById(R.id.buttonPickUser);
         textTime = (TextView) findViewById(R.id.textTime);
         textToday = (TextView) findViewById(R.id.textToday);
         textHaveReminder = (TextView) findViewById(R.id.textHaveReminder);
         btnSave = (FloatingActionButton) findViewById(R.id.btnSave);
         blockContactInfo = (ViewGroup) findViewById(R.id.blockContactInfo);
+        viewOverlayContact = findViewById(R.id.viewOverlayContact);
+        viewDefaultPortraitBackground = findViewById(R.id.viewDefaultPortraitBackground);
 
-        ivPhoto.setOnClickListener(new View.OnClickListener() {
+        viewOverlayContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (contact != null) {
@@ -153,7 +165,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
 
         if (inputPhone.getText().toString().trim().equals("")) {
             isValid = false;
-            AlertDialog.Builder builder = new AlertDialog.Builder(EditReminderActivity.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(that);
             builder.setTitle(R.string.phone_empty_title).setMessage(R.string.phone_empty)
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
@@ -179,6 +191,8 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         return isValid;
     }
 
+    // TODO when user picked a contact - he should not be able to edit phone. But it need ability to use AutoComplete field to pick
+    // another contact
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == TAG_PICK_CONTACT) {
@@ -216,9 +230,18 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
             // TODO check if photo has been resized
             if (contact.getPhotoUri() != null) {
                 ivPhoto.setImageURI(contact.getPhotoUri());
+                ivPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                ivPhoto.setImageAlpha(255);
+                viewDefaultPortraitBackground.setVisibility(View.INVISIBLE);
                 colorizeContactName(contact.getPhotoUri());
             } else {
-                ivPhoto.setImageResource(R.drawable.contact_picture);
+                int backColor = ImageHelper.getMaterialColorForPhone(that, contact.getPhoneNumber());
+                ivPhoto.setImageResource(R.drawable.ic_person_white_180dp);
+                ivPhoto.setImageAlpha(96);
+                ivPhoto.setScaleType(ImageView.ScaleType.CENTER);
+                viewDefaultPortraitBackground.setVisibility(View.VISIBLE);
+                viewDefaultPortraitBackground.setBackgroundColor(backColor);
+                setContactNameBackColor(backColor);
             }
             blockContactInfo.setVisibility(View.VISIBLE);
             // TODO make this a link to the contact
@@ -244,10 +267,10 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
             }
 
             buttonPickContact.setVisibility(View.GONE);
-            inputPhone.setEnabled(false);
+            inputPhone.setFocusable(false);
 
             ContactsUtil util = new ContactsUtil(that);
-            ContactInfo contact = util.findContactByPhone(reminder.getPhone());
+            contact = util.findContactByPhone(reminder.getPhone());
 
             fillContactInfo(contact);
         } else if (mode == MODE.BLANK) {
@@ -306,6 +329,15 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         displayReminder(reminderInfo);
     }
 
+    private void setImageRatio(ImageView iv) {
+        Display display = getWindowManager().getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics ();
+        display.getMetrics(outMetrics);
+
+        int width = outMetrics.widthPixels;
+        iv.getLayoutParams().height = width * 9 / 16;
+    }
+
     private void setReminderTime(long time, boolean calculate) {
         Calendar calendarRem = Calendar.getInstance();
         calendarRem.setTimeInMillis(time);
@@ -347,6 +379,10 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
             color = that.getResources().getColor(R.color.contact_name_default_background);
         }
 
+        setContactNameBackColor(color);
+    }
+
+    private void setContactNameBackColor(int color) {
         ColorDrawable colorDrawable = new ColorDrawable(color);
         colorDrawable.setAlpha(96);
         textContactName.setBackground(colorDrawable);
@@ -362,5 +398,52 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         calendarPicked.set(Calendar.MILLISECOND, 0);
 
         setReminderTime(calendarPicked.getTimeInMillis(), true);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.edit_form, menu);
+        MenuItem itemCall = menu.findItem(R.id.action_call);
+        MenuItem itemRemove = menu.findItem(R.id.action_remove_reminder);
+        if (mode == MODE.EDIT) {
+            itemCall.setVisible(true);
+            itemRemove.setVisible(true);
+        } else if (mode == MODE.CREATE) {
+            itemCall.setVisible(true);
+            itemRemove.setVisible(false);
+        } else if (mode == MODE.BLANK) {
+            itemCall.setVisible(false);
+            itemRemove.setVisible(false);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_call) {
+            that.startActivity(AppHelper.Intents.createDialerIntent(inputPhone.getText().toString()));
+        } else if (item.getItemId() == R.id.action_remove_reminder) {
+            ReminderInfo reminder = reminderDao.getById(reminderId);
+            if (reminder != null) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(EditReminderActivity.this);
+                builder.setTitle(R.string.contact_remove_confirm_title).setMessage(R.string.contact_remove_confirm_text)
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ReminderUtil.cancelAndRemoveReminder(that, reminderDao.getById(reminderId));
+                                Toast.makeText(that, "Reminder removed!", Toast.LENGTH_LONG).show();
+                                that.finish();
+                            }
+                        })
+                        .show();
+            } else {
+                Toast.makeText(that, "Reminder is not found!", Toast.LENGTH_LONG).show();
+                that.finish();
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

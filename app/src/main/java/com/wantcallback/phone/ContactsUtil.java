@@ -27,7 +27,7 @@ public class ContactsUtil {
 			Cursor cur = cr.query(uri, null, null, null, null);
 
 			if (cur.moveToFirst()) {
-				info = toSingleContact(cur, true);
+				info = fromPhoneCursorToContact(cur);
 			}
 			cur.close();
 		}
@@ -41,7 +41,7 @@ public class ContactsUtil {
 				.query(uri, null, null, null, null);
 
 		if (cursor.moveToFirst()) {
-			contact = toSingleContact(cursor, false);
+			contact = fromContactCursorToContact(cursor);
 		}
 
 		cursor.close();
@@ -66,16 +66,45 @@ public class ContactsUtil {
         return photo;
 	}*/
 
-	private ContactInfo toSingleContact(Cursor cur, boolean isPhoneLookup) {
+	private ContactInfo fromPhoneCursorToContact(Cursor cur) {
 		ContactInfo info = new ContactInfo();
 		String id = cur.getString(cur.getColumnIndex(ContactsContract.PhoneLookup._ID));
 		String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-		String defaultPhone = cur.getString(cur.getColumnIndex(isPhoneLookup ? PhoneLookup.NUMBER : ContactsContract.CommonDataKinds.Phone.NUMBER));
+		String defaultPhone = cur.getString(cur.getColumnIndex(PhoneLookup.NUMBER));
 
 		String photoString = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.PHOTO_URI));
+		String thumbString = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI));
 		if (photoString != null && !"".equals(photoString)) {
 			Uri photoUri = Uri.parse(photoString);
 			info.setPhotoUri(photoUri);
+		}
+		if (thumbString != null && !"".equals(thumbString)) {
+			Uri thumbUri = Uri.parse(thumbString);
+			info.setThumbUri(thumbUri);
+		}
+
+		info.setId(id);
+		info.setDisplayName(name);
+		info.setPhoneNumber(defaultPhone);
+
+		return info;
+	}
+
+	private ContactInfo fromContactCursorToContact(Cursor cur) {
+		ContactInfo info = new ContactInfo();
+		String id = cur.getString(cur.getColumnIndex(ContactsContract.Data.CONTACT_ID));
+		String name = cur.getString(cur.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
+		String defaultPhone = cur.getString(cur.getColumnIndex(ContactsContract.Data.DATA1));
+
+		String photoString = cur.getString(cur.getColumnIndex(ContactsContract.Data.PHOTO_URI));
+		String thumbString = cur.getString(cur.getColumnIndex(ContactsContract.Data.PHOTO_THUMBNAIL_URI));
+		if (photoString != null && !"".equals(photoString)) {
+			Uri photoUri = Uri.parse(photoString);
+			info.setPhotoUri(photoUri);
+		}
+		if (thumbString != null && !"".equals(thumbString)) {
+			Uri thumbUri = Uri.parse(thumbString);
+			info.setThumbUri(thumbUri);
 		}
 
 		info.setId(id);

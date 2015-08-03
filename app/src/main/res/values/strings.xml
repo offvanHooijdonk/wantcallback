@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Want Call Back</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
     <string name="today">Today</string>
@@ -31,4 +30,8 @@
 
     <string name="snack_title">Reminder removed</string>
     <string name="undo">UNDO</string>
+    <string name="action_call">Call</string>
+    <string name="action_remove_reminder">Remove Reminder</string>
+    <string name="contact_remove_confirm_title">You want to remove?</string>
+    <string name="contact_remove_confirm_text">Sure to remove this reminder?</string>
 </resources>

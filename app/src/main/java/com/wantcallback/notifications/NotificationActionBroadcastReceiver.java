@@ -46,7 +46,7 @@ public class NotificationActionBroadcastReceiver extends BroadcastReceiver {
             NotificationsUtil notificationsUtil = new NotificationsUtil(ctx);
             notificationsUtil.dismissNotification(tag, notifId);
 
-            ReminderUtil.cancelReminder(ctx, reminder);
+            ReminderUtil.cancelAndRemoveReminder(ctx, reminder);
 
             sendBroadcastToActivity(ctx);
 
