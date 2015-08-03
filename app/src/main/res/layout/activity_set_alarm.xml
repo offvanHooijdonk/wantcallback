@@ -7,43 +7,46 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/textHaveReminder"
+        <RelativeLayout
+            android:id="@+id/blockPhoneNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/block_margin_small"
-            android:layout_marginStart="@dimen/block_margin_small"
-            android:layout_marginTop="@dimen/block_margin_small"
-            android:text="@string/have_reminder"
-            android:textColor="@android:color/holo_green_dark"
-            android:textSize="16sp"/>
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
 
-        <AutoCompleteTextView
-            android:id="@+id/inputPhone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textHaveReminder"
-            android:layout_marginEnd="@dimen/block_margin_small"
-            android:layout_marginRight="@dimen/block_margin_small"
-            android:layout_marginTop="@dimen/block_margin_small"
-            android:completionThreshold="3"
-            android:hint="@string/text_phone_number"
-            android:inputType="phone"
-            android:maxLines="1"
-            android:maxLength="18"/>
+            <TextView
+                android:id="@+id/textHaveReminder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/block_margin_small"
+                android:layout_marginStart="@dimen/block_margin_small"
+                android:text="@string/have_reminder"
+                android:textColor="@android:color/holo_green_dark"
+                android:textSize="16sp"/>
+
+            <AutoCompleteTextView
+                android:id="@+id/inputPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textHaveReminder"
+                android:layout_marginEnd="@dimen/block_margin_small"
+                android:layout_marginRight="@dimen/block_margin_small"
+                android:completionThreshold="3"
+                android:hint="@string/text_phone_number"
+                android:inputType="phone"
+                android:maxLength="18"
+                android:maxLines="1"/>
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/blockContactInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/inputPhone"
-            android:layout_marginTop="@dimen/block_margin_med">
+            android:layout_below="@id/blockPhoneNumber"
+            android:layout_marginTop="@dimen/block_margin_bigger">
 
             <View
                 android:id="@+id/viewDefaultPortraitBackground"
@@ -66,11 +69,11 @@
                 android:layout_alignBottom="@id/photo"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:paddingTop="@dimen/contact_name_padding_v"
                 android:paddingBottom="@dimen/contact_name_padding_v"
+                android:paddingEnd="@dimen/contact_name_padding_h"
                 android:paddingLeft="@dimen/contact_name_padding_h"
                 android:paddingRight="@dimen/contact_name_padding_h"
-                android:paddingEnd="@dimen/contact_name_padding_h"
+                android:paddingTop="@dimen/contact_name_padding_v"
                 android:text="Emmanuelino Gonzalez Perreira Maximo el Morales"
                 android:textColor="@color/contact_name_overlap"
                 android:textSize="24sp"/>
@@ -79,8 +82,8 @@
                 android:id="@+id/viewOverlayContact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/selectable_white"
                 android:layout_alignBottom="@id/photo"
+                android:background="@drawable/selectable_white"
                 android:clickable="true"
                 />
         </RelativeLayout>
