@@ -241,7 +241,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                 ivPhoto.setScaleType(ImageView.ScaleType.CENTER);
                 viewDefaultPortraitBackground.setVisibility(View.VISIBLE);
                 viewDefaultPortraitBackground.setBackgroundColor(backColor);
-                setContactNameBackColor(backColor);
+                setContactNameBackColor(0x00FFFFFF);
             }
             blockContactInfo.setVisibility(View.VISIBLE);
             // TODO make this a link to the contact
