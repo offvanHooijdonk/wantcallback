@@ -14,15 +14,17 @@
      limitations under the License.
 -->
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
+
     <ImageView
         android:id="@+id/color_picker_swatch"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
+
     <ImageView
         android:id="@+id/color_picker_checkmark"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/ic_check_white_48dp"
         android:scaleType="fitXY"
-        android:visibility="gone" />
+        android:src="@drawable/ic_colorpicker_swatch_selected"
+        android:visibility="gone"/>
 </merge>
