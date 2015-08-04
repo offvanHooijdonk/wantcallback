@@ -59,7 +59,7 @@ public class ReminderRecycleAdapter extends RecyclerView.Adapter<ReminderRecycle
                 vh.imageCircle.setImageURI(contact.getThumbUri());
                 vh.imageDefaultContact.setVisibility(View.INVISIBLE);
             } else {
-                setColorOverlay(vh, reminder.getPhone());
+                setColorOverlay(vh, contact.getDisplayName());
             }
             vh.imageCircle.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -134,9 +134,9 @@ public class ReminderRecycleAdapter extends RecyclerView.Adapter<ReminderRecycle
         }
     }
 
-    private void setColorOverlay(ViewHolder vh, String phoneNumber) {
+    private void setColorOverlay(ViewHolder vh, String phoneOrName) {
         Bitmap b = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
-        b.eraseColor(ImageHelper.getMaterialColorForPhone(ctx, phoneNumber));
+        b.eraseColor(ImageHelper.getMaterialColorForPhoneOrName(ctx, phoneOrName));
         vh.imageCircle.setImageBitmap(b);
         vh.imageDefaultContact.setVisibility(View.VISIBLE);
 

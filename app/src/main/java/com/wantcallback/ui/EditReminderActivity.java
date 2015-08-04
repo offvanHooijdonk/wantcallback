@@ -235,8 +235,8 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                 viewDefaultPortraitBackground.setVisibility(View.INVISIBLE);
                 colorizeContactName(contact.getPhotoUri());
             } else {
-                int backColor = ImageHelper.getMaterialColorForPhone(that, contact.getPhoneNumber());
-                ivPhoto.setImageResource(R.drawable.ic_person_white_180dp);
+                int backColor = ImageHelper.getMaterialColorForPhoneOrName(that, contact.getDisplayName());
+                ivPhoto.setImageResource(R.drawable.ic_person_white_188dp);
                 ivPhoto.setImageAlpha(96);
                 ivPhoto.setScaleType(ImageView.ScaleType.CENTER);
                 viewDefaultPortraitBackground.setVisibility(View.VISIBLE);

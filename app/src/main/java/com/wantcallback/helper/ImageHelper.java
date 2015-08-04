@@ -36,9 +36,16 @@ public class ImageHelper {
         return result;
     }
 
-    public static int getMaterialColorForPhone(Context ctx, String phoneNumber) {
-        int color = phoneNumberToColor(ctx, phoneNumber);
-        return findClosestMaterialColor(ctx, color);
+    // TODO save this color to DB and do not call for each item
+    public static int getMaterialColorForPhoneOrName(Context ctx, String phoneOrName) {
+        int colorMaterial;
+        if (phoneOrName != null) {
+            int colorAssigned = phoneNumberToColor(phoneOrName);
+            colorMaterial = findClosestMaterialColor(ctx, colorAssigned);
+        } else {
+            colorMaterial = getColorsList(ctx).get(DEFAULT_COLOR_INDEX);
+        }
+        return colorMaterial;
     }
 
     private static int findClosestMaterialColor(Context ctx, int phoneColor) {
@@ -64,25 +71,8 @@ public class ImageHelper {
         return closestColor;
     }
 
-    private static int phoneNumberToColor(Context ctx, String phoneNumber) {
-        String digitsString = phoneNumber.replaceAll("\\D+", "");
-        int color;
-
-        if (digitsString.length() > 0) {
-            // magic here;
-            int cutIndex = digitsString.length() > 6 ? digitsString.length() - 6 : 0;
-            digitsString = digitsString.substring(cutIndex);
-            while (digitsString.length() < 8) { // make string length at least 6
-                digitsString += digitsString;
-            }
-            long digits = Long.valueOf(digitsString);
-            color = (int) digits & 0xFFFFFF;
-            //color = (color % 2 == 1 ? -1 : 1) * color;
-        } else {
-            color = getColorsList(ctx).get(DEFAULT_COLOR_INDEX);
-        }
-
-        return color;
+    private static int phoneNumberToColor(String phoneOrName) {
+        return phoneOrName.hashCode() & 0xFFFFFF;
     }
 
     private static List<Integer> getColorsList(Context ctx) {

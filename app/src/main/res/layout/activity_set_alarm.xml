@@ -60,7 +60,7 @@
                 android:layout_height="200dp"
                 android:contentDescription="@string/contact_photo"
                 android:scaleType="center"
-                android:src="@drawable/ic_person_white_180dp"/>
+                android:src="@drawable/ic_person_white_188dp"/>
 
             <TextView
                 android:id="@+id/textContactName"
