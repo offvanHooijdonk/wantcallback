@@ -131,6 +131,11 @@ public class AppHelper {
             return Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ctx).getString(ctx.getString(R.string
                     .action_on_missed_key), "1"));
         }
+
+        public static int getLEDColor(Context ctx) {
+            return PreferenceManager.getDefaultSharedPreferences(ctx).getInt(ctx.getString(R.string
+                    .led_color_key), 0x0000FF);
+        }
     }
 
     public static class Intents {
