@@ -52,11 +52,11 @@ public class ReminderRecycleAdapter extends RecyclerView.Adapter<ReminderRecycle
         final ContactInfo contact = contactsUtil.findContactByPhone(reminder.getPhone());
         if (contact != null) {
             vh.textPhone.setText(contact.getDisplayName());
-            if (contact.getPhotoUri() != null) {
-                vh.imageCircle.setImageURI(contact.getPhotoUri());
-                vh.imageDefaultContact.setVisibility(View.INVISIBLE);
-            } else if (contact.getThumbUri() != null) {
+            if (contact.getThumbUri() != null) {
                 vh.imageCircle.setImageURI(contact.getThumbUri());
+                vh.imageDefaultContact.setVisibility(View.INVISIBLE);
+            } else if (contact.getPhotoUri() != null) {
+                vh.imageCircle.setImageURI(contact.getPhotoUri());
                 vh.imageDefaultContact.setVisibility(View.INVISIBLE);
             } else {
                 setColorOverlay(vh, contact.getDisplayName());
