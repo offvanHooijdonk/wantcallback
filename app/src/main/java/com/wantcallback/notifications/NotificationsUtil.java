@@ -108,7 +108,7 @@ public class NotificationsUtil {
 
         NotificationCompat.Builder builder = getCommonCallBuilder("Remind you to call back", text)
                 .setTicker("Call back to " + reminder.getPhone())
-                .setLights(ctx.getResources().getColor(R.color.led_blue), 1200, 800) // TODO make configurable
+                .setLights(AppHelper.Pref.getLEDColor(ctx), 1200, 800) // TODO make configurable
                 .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
                 .setContentIntent(createEditReminderIntent(reminder, tag, id))
                 .setDeleteIntent(createForgetIntent(reminder, tag, id))

@@ -36,7 +36,6 @@ public class ImageHelper {
         return result;
     }
 
-    // TODO save this color to DB and do not call for each item
     public static int getMaterialColorForPhoneOrName(Context ctx, String phoneOrName) {
         int colorMaterial;
         if (phoneOrName != null) {

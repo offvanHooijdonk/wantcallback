@@ -30,8 +30,15 @@
         android:entries="@array/action_on_missed"
         android:entryValues="@array/action_on_missed_values"
         android:defaultValue="11"/>
+<!--
 
     <Preference
+        android:key="@string/led_color_key"
+        android:title="@string/led_color_title"
+        android:summary="@string/led_color_summ"/>
+-->
+
+    <com.wantcallback.ui.preferences.ColorPreference
         android:key="@string/led_color_key"
         android:title="@string/led_color_title"
         android:summary="@string/led_color_summ"/>
