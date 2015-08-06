@@ -37,9 +37,15 @@
         android:title="@string/led_color_title"
         android:summary="@string/led_color_summ"/>
 -->
+    <SwitchPreference
+        android:key="@string/led_enabled_key"
+        android:title="@string/led_enabled_title"
+        android:summary="@string/led_enabled_summ"
+        android:defaultValue="true"/>
 
     <com.wantcallback.ui.preferences.ColorPreference
         android:key="@string/led_color_key"
         android:title="@string/led_color_title"
-        android:summary="@string/led_color_summ"/>
+        android:summary="@string/led_color_summ"
+        android:dependency="@string/led_enabled_key"/>
 </PreferenceScreen>

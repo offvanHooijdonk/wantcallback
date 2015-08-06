@@ -136,6 +136,11 @@ public class AppHelper {
             return PreferenceManager.getDefaultSharedPreferences(ctx).getInt(ctx.getString(R.string
                     .led_color_key), 0x0000FF);
         }
+
+        public static boolean getLEDEnabled(Context ctx) {
+            return PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(ctx.getString(R.string
+                    .led_enabled_key), true);
+        }
     }
 
     public static class Intents {

@@ -108,12 +108,16 @@ public class NotificationsUtil {
 
         NotificationCompat.Builder builder = getCommonCallBuilder("Remind you to call back", text)
                 .setTicker("Call back to " + reminder.getPhone())
-                .setLights(AppHelper.Pref.getLEDColor(ctx), 1200, 800) // TODO make configurable
                 .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
                 .setContentIntent(createEditReminderIntent(reminder, tag, id))
                 .setDeleteIntent(createForgetIntent(reminder, tag, id))
                 .addAction(R.drawable.ic_call_black_24dp, "Call now", createDialerIntent(reminder.getCallInfo()))
                 .addAction(R.drawable.ic_alarm_black_24dp, "Postpone", createPostponeIntent(reminder, tag, id));
+
+        if (AppHelper.Pref.getLEDEnabled(ctx)) {
+            // TODO hardcoded blink time
+            builder.setLights(AppHelper.Pref.getLEDColor(ctx), 1200, 800);
+        }
 
         getNotificationManager().notify(tag, id, builder.build());
     }

@@ -36,6 +36,9 @@
     <string name="led_color_key">led_color</string>
     <string name="led_color_title">LED color</string>
     <string name="led_color_summ">Reminder LED color</string>
+    <string name="led_enabled_key">led_enabled</string>
+    <string name="led_enabled_title">Enable LED</string>
+    <string name="led_enabled_summ">LED will blink when reminder notifications arrives</string>
 
     <string-array name="default_postpone_time_values">
         <item>2</item>
