@@ -9,13 +9,16 @@ import com.wantcallback.dao.DBHelperUtil;
 import com.wantcallback.model.CallInfo;
 import com.wantcallback.model.ReminderInfo;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class ReminderDao {
     public static final String TABLE = ReminderInfo.TABLE;
-    public static final long DATE_MULT = 60 * 1000l;
+    private static SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    //public static final long DATE_MULT = 60 * 1000l;
 
     private Context ctx;
     private DBHelperUtil dbHelper;
@@ -106,7 +109,7 @@ public class ReminderDao {
         List<ReminderInfo> reminders = new ArrayList<ReminderInfo>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        Cursor cursor = db.query(TABLE, null, ReminderInfo.DATE + " >= ?", new String[]{String.valueOf(sinceDate.getTime() / DATE_MULT)},
+        Cursor cursor = db.query(TABLE, null, ReminderInfo.DATE + " >= ?", new String[]{sdfDate.format(new Date(sinceDate.getTime()))},
                 null, null, ReminderInfo.DATE + "" + " desc");
         if (cursor.moveToFirst()) { // assume phone is a unique field
             reminders.add(cursorToBean(cursor));
@@ -118,7 +121,7 @@ public class ReminderDao {
     public void deleteAllBeforeDate(Date beforeDate) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        db.delete(TABLE, ReminderInfo.DATE + " < ?", new String[]{String.valueOf(beforeDate.getTime() / DATE_MULT)});
+        db.delete(TABLE, ReminderInfo.DATE + " < ?", new String[]{sdfDate.format(new Date(beforeDate.getTime()))});
     }
 
     private ContentValues beanToCV(ReminderInfo info) {
@@ -127,9 +130,9 @@ public class ReminderDao {
             cv.put(ReminderInfo.ID, info.getId());
         }
         cv.put(ReminderInfo.PHONE, info.getPhone());
-        cv.put(ReminderInfo.DATE, (int) (info.getDate() / DATE_MULT));
+        cv.put(ReminderInfo.DATE, sdfDate.format(new Date(info.getDate())));
         cv.put(ReminderInfo.CALL_ID, info.getCallInfo().getLogId());
-        cv.put(ReminderInfo.CALL_DATE, info.getCallInfo().getDate() / DATE_MULT);
+        cv.put(ReminderInfo.CALL_DATE, sdfDate.format(new Date(info.getCallInfo().getDate())));
         cv.put(ReminderInfo.CALL_TYPE, info.getCallInfo().getType().toString());
 
         return cv;
@@ -138,13 +141,22 @@ public class ReminderDao {
     private ReminderInfo cursorToBean(Cursor cursor) {
         ReminderInfo info = new ReminderInfo();
         info.setId(cursor.getInt(cursor.getColumnIndex(ReminderInfo.ID)));
-        info.setDate(cursor.getInt(cursor.getColumnIndex(ReminderInfo.DATE)) * DATE_MULT);
+        try {
+            info.setDate(sdfDate.parse(cursor.getString(cursor.getColumnIndex(ReminderInfo.DATE))).getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();// TODO handle
+        }
         info.setPhone(cursor.getString(cursor.getColumnIndex(ReminderInfo.PHONE)));
 
-        CallInfo callInfo = new CallInfo(cursor.getInt(cursor.getColumnIndex(ReminderInfo.CALL_ID)),
-                cursor.getString(cursor.getColumnIndex(ReminderInfo.PHONE)),
-                cursor.getInt(cursor.getColumnIndex(ReminderInfo.CALL_DATE)) * DATE_MULT,
-                CallInfo.TYPE.valueOf(cursor.getString(cursor.getColumnIndex(ReminderInfo.CALL_TYPE))));
+        CallInfo callInfo = null;
+        try {
+            callInfo = new CallInfo(cursor.getInt(cursor.getColumnIndex(ReminderInfo.CALL_ID)),
+                    cursor.getString(cursor.getColumnIndex(ReminderInfo.PHONE)),
+                    sdfDate.parse(cursor.getString(cursor.getColumnIndex(ReminderInfo.CALL_DATE))).getTime(),
+                    CallInfo.TYPE.valueOf(cursor.getString(cursor.getColumnIndex(ReminderInfo.CALL_TYPE))));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         info.setCallInfo(callInfo);
 
