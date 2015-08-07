@@ -122,7 +122,7 @@ public class AppHelper {
 
         public static int getLEDColor(Context ctx) {
             return PreferenceManager.getDefaultSharedPreferences(ctx).getInt(ctx.getString(R.string
-                    .led_color_key), 0x0000FF);
+                    .led_color_key), ctx.getResources().getColor(R.color.led_blue));
         }
 
         public static boolean getLEDEnabled(Context ctx) {

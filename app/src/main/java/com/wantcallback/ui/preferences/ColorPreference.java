@@ -50,7 +50,7 @@ public class ColorPreference extends Preference {
         setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                int currentValue = getPreferenceManager().getSharedPreferences().getInt(getKey(), 255);
+                int currentValue = getPreferenceManager().getSharedPreferences().getInt(getKey(), ctx.getResources().getColor(R.color.led_blue));
                 final ColorPickerDialog dialog = new ColorPickerDialog();
                 dialog.setColors(colors, currentValue);
                 dialog.setArguments(R.string.led_color_title, DIALOG_COLUMNS, ColorPickerDialog.SIZE_SMALL);
