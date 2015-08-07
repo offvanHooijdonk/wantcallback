@@ -4,9 +4,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.v7.graphics.Palette;
 
 import com.wantcallback.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,4 +89,24 @@ public class ImageHelper {
         return colorsList;
     }
 
+    public static Integer getColorizeOnImage(Context ctx, Uri uri) {
+        Integer color = null;
+        if (uri != null) {
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(ctx.getContentResolver(), uri);
+            } catch (IOException e) {
+                color = null;
+            }
+            if (bitmap != null) {
+                Palette palette = new Palette.Builder(bitmap).generate();
+                Palette.Swatch swatch = palette.getVibrantSwatch();
+                if (swatch != null) {
+                    color = swatch.getRgb();
+                }
+            }
+        }
+
+        return color;
+    }
 }

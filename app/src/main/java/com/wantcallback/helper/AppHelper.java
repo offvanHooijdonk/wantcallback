@@ -3,13 +3,10 @@ package com.wantcallback.helper;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
-import android.provider.MediaStore;
-import android.support.v7.graphics.Palette;
 import android.telephony.PhoneNumberUtils;
 
 import com.wantcallback.R;
@@ -17,7 +14,6 @@ import com.wantcallback.model.CallInfo;
 import com.wantcallback.model.ReminderInfo;
 import com.wantcallback.startup.InitializerIntentService;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -88,29 +84,16 @@ public class AppHelper {
         return formatted;
     }
 
-    public static Integer getColorizeOnImage(Context ctx, Uri uri) {
-        Integer color = null;
-        if (uri != null) {
-            Bitmap bitmap = null;
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(ctx.getContentResolver(), uri);
-            } catch (IOException e) {
-                color = null;
-            }
-            if (bitmap != null) {
-                Palette palette = new Palette.Builder(bitmap).generate();
-                Palette.Swatch swatch = palette.getVibrantSwatch();
-                if (swatch != null) {
-                    color = swatch.getRgb();
-                }
-            }
-        }
-
-        return color;
+    public static Calendar cutToMinutes(Calendar calendar) {
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar;
     }
+
 
     public static class Pref {
         private static final String DEFAULT_TIME_ADD = "10";
+        public static final int OUTDATED_ACTUAL_ALL = -1;
 
         public static int getDefaultReminderMins(Context ctx) {
             return Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ctx).getString(ctx.getString(R.string.default_reminder_time_key), DEFAULT_TIME_ADD));
@@ -120,6 +103,11 @@ public class AppHelper {
             return Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ctx).getString(ctx.getString(R.string
                             .default_postpone_time_key),
                     DEFAULT_TIME_ADD));
+        }
+
+        public static int getOutdatedActualMins(Context ctx) {
+            return Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ctx).getString(ctx.getString(R.string
+                    .outdated_actual_time_key), "0"));
         }
 
         public static int getActionOnRejected(Context ctx) {

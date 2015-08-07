@@ -27,6 +27,9 @@ public class NotificationsUtil {
     private static final int NOTIFICATION_REMINDER = 2;
     public static final int NOTIFICATION_FOREGROUND_SERVICE = 100;
 
+    private static final int LED_ON_MS = 1200;
+    private static final int LED_OFF_MS = 1200;
+
     private Context ctx;
     private static NotificationManager mNotificationManager;
     private ContactsUtil contactsUtil;
@@ -115,8 +118,7 @@ public class NotificationsUtil {
                 .addAction(R.drawable.ic_alarm_black_24dp, "Postpone", createPostponeIntent(reminder, tag, id));
 
         if (AppHelper.Pref.getLEDEnabled(ctx)) {
-            // TODO hardcoded blink time
-            builder.setLights(AppHelper.Pref.getLEDColor(ctx), 1200, 800);
+            builder.setLights(AppHelper.Pref.getLEDColor(ctx), LED_ON_MS, LED_OFF_MS);
         }
 
         getNotificationManager().notify(tag, id, builder.build());

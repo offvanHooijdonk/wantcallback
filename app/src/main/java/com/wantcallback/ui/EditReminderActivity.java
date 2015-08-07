@@ -374,7 +374,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
     }
 
     private void colorizeContactName(Uri imageUri) {
-        Integer color = AppHelper.getColorizeOnImage(that, imageUri);
+        Integer color = ImageHelper.getColorizeOnImage(that, imageUri);
         if (color == null) {
             color = that.getResources().getColor(R.color.contact_name_default_background);
         }

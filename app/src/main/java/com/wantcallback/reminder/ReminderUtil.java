@@ -1,7 +1,6 @@
 package com.wantcallback.reminder;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.wantcallback.dao.impl.ReminderDao;
 import com.wantcallback.helper.AppHelper;
@@ -52,8 +51,7 @@ public class ReminderUtil {
 	public static long calcDefaultRemindDate(Context ctx, long timeMillis) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(timeMillis);
-		calendar.set(Calendar.SECOND, 0);
-		calendar.set(Calendar.MILLISECOND, 0);
+		calendar = AppHelper.cutToMinutes(calendar);
 		calendar.add(Calendar.MINUTE, AppHelper.Pref.getDefaultReminderMins(ctx));
 		return calendar.getTimeInMillis();
 	}
@@ -68,8 +66,6 @@ public class ReminderUtil {
 		}
 	}
 
-	// TODO make preferences that say what time before now reminders considered actual
-
 	/**
 	 * Reads time for which back reminders considered still actual and creates alarms for these reminders. Removes all other reminders
 	 * from DB
@@ -78,16 +74,42 @@ public class ReminderUtil {
 	public static void recreateActualReminders(Context ctx) {
 		ReminderDao dao = new ReminderDao(ctx);
 
-		Calendar now = Calendar.getInstance();
+		Calendar since = getActualSinceTime(ctx);
 
-		List<ReminderInfo> reminders = dao.getAllSince(now.getTime());
+		List<ReminderInfo> reminders = dao.getAllSince(since.getTime());
 
 		for (ReminderInfo r : reminders) {
-			AlarmUtil.createNewReminderAlarm(ctx, r.getId(), new Date(r.getDate()));
+			long remindAt;
+			Calendar now = Calendar.getInstance();
+			Calendar reminderTime = Calendar.getInstance();
+			reminderTime.setTimeInMillis(r.getDate());
+			if (reminderTime.before(now)) {
+				reminderTime.setTimeInMillis(now.getTimeInMillis());
+				reminderTime = AppHelper.cutToMinutes(reminderTime);
+				reminderTime.add(Calendar.MINUTE, 1); // so it is in the future
+				remindAt = reminderTime.getTimeInMillis();
+			} else {
+				remindAt = r.getDate();
+			}
+			AlarmUtil.createNewReminderAlarm(ctx, r.getId(), new Date(remindAt));
 		}
 
 		// remove all, because they are not actual
-		dao.deleteAllBeforeDate(now.getTime());
+		dao.deleteAllBeforeDate(since.getTime());
+	}
+
+	private static Calendar getActualSinceTime(Context ctx) {
+		Calendar calendar = Calendar.getInstance();
+		int minutes = AppHelper.Pref.getOutdatedActualMins(ctx);
+		if (minutes == AppHelper.Pref.OUTDATED_ACTUAL_ALL) {
+			calendar.setTimeInMillis(0);
+		} else {
+			if (minutes != 0) {
+				calendar.add(Calendar.MINUTE, -minutes);
+			}
+		}
+
+		return calendar;
 	}
 
 }

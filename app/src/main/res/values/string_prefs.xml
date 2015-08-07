@@ -39,6 +39,9 @@
     <string name="led_enabled_key">led_enabled</string>
     <string name="led_enabled_title">Enable LED</string>
     <string name="led_enabled_summ">LED will blink when reminder notifications arrives</string>
+    <string name="outdated_actual_time_key">outdated_actual_time</string>
+    <string name="outdated_actual_time_title">Outdated actual after device on</string>
+    <string name="outdated_actual_time_summ">Time for which outdated reminders still actual when the device is turned on or application enabled.</string>
 
     <string-array name="default_postpone_time_values">
         <item>2</item>
@@ -84,5 +87,31 @@
         <item>Create a reminder</item>
         <item>Let me decide</item>
         <item>Do nothing</item>
+    </string-array>
+
+    <string-array name="outdated_actual_time_entries">
+        <item>None</item>
+        <item>10 m</item>
+        <item>20 m</item>
+        <item>30 m</item>
+        <item>45 m</item>
+        <item>1 h</item>
+        <item>3 h</item>
+        <item>6 h</item>
+        <item>12 h</item>
+        <item>All</item>
+    </string-array>
+
+    <string-array name="outdated_actual_time_values">
+        <item>0</item>
+        <item>10</item>
+        <item>20</item>
+        <item>30</item>
+        <item>45</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>720</item>
+        <item>-1</item>
     </string-array>
 </resources>

@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity
     private ReminderRecycleAdapter recycleAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private View emptyView;
+    private View viewAppDisabled;
 
     private ReminderDao reminderDao;
     private List<ReminderInfo> remindersList = new ArrayList<>();
@@ -66,8 +67,6 @@ public class MainActivity extends AppCompatActivity
 
         recyclerList = (RecyclerView) findViewById(R.id.listReminders);
 
-        //TODO add empty view
-
         recyclerList.setHasFixedSize(true);
 
         recyclerList.setLayoutManager(new LinearLayoutManager(that));
@@ -75,24 +74,24 @@ public class MainActivity extends AppCompatActivity
         recycleAdapter = new ReminderRecycleAdapter(that, remindersList, that);
         recyclerList.setAdapter(recycleAdapter);
         emptyView = findViewById(R.id.emptyReminderList);
-        recycleAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onChanged() {
-                checkListEmpty();
-            }
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                checkListEmpty();
-            }
-            @Override
-            public void onItemRangeRemoved(int positionStart, int itemCount) {
-                checkListEmpty();
-            }
-        });
+        viewAppDisabled = findViewById(R.id.viewAppDisabledOverlay);
 
         ItemTouchHelper.Callback callback = new ItemTouchCallback(recycleAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerList);
+
+        recyclerList.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
+            @Override
+            public void onChildViewAttachedToWindow(View view) {
+                emptyView.setVisibility(View.GONE);
+            }
+            @Override
+            public void onChildViewDetachedFromWindow(View view) {
+                if (remindersList.size() == 0) {
+                    emptyView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         btnAddAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,7 +107,7 @@ public class MainActivity extends AppCompatActivity
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                reloadRemindersList();
+                reloadRemindersList(true);
             }
         });
 
@@ -127,7 +126,7 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
-        reloadRemindersList();
+        reloadRemindersList(true);
     }
 
     @Override
@@ -181,21 +180,26 @@ public class MainActivity extends AppCompatActivity
 
     private void displayMainLayout(boolean display) {
         if (display) {
-            btnAddAlarm.show();//setEnabled(true);
-            recyclerList.setEnabled(true);
+            btnAddAlarm.show();
+			// TODO add animation
+            viewAppDisabled.setVisibility(View.GONE);
+            if (remindersList.size() == 0) {
+				// TODO add animation
+                emptyView.setVisibility(View.VISIBLE);
+            }
         } else {
-            btnAddAlarm.hide();//setEnabled(false);
-            recyclerList.setEnabled(false);
+            btnAddAlarm.hide();
+            viewAppDisabled.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
         }
     }
 
-    private void checkListEmpty() {
-        boolean isEmpty = recycleAdapter.getItemCount() == 0;
-        emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-    }
-
-    private void reloadRemindersList() {
+    private void reloadRemindersList(boolean showRefresh) {
         RefreshRemindersListTask task = new RefreshRemindersListTask();
+
+        if (showRefresh && !swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(true);
+        }
 
         task.execute();
     }
@@ -222,7 +226,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
                         ReminderUtil.createNewReminder(that, info.copyToNew());
-                        reloadRemindersList();
+                        reloadRemindersList(false);
                     }
                 })
                 .show();
@@ -236,7 +240,7 @@ public class MainActivity extends AppCompatActivity
             String action = intent.getAction();
 
             if (ACTION_ANY.equals(action)) {
-                that.reloadRemindersList();
+                that.reloadRemindersList(false);
             }
         }
     }
@@ -257,17 +261,6 @@ public class MainActivity extends AppCompatActivity
             if (reminders != null) {
                 remindersList.clear();
                 remindersList.addAll(reminders);
-
-                // test
-                /*if (i == 0) {
-                    ReminderInfo info = new ReminderInfo();
-                    info.setId(456);
-                    info.setDate(new Date().getTime());
-                    info.setPhone("+375447778899");
-                    info.setCallInfo(new CallInfo(456, "+375447778899", new Date().getTime(), CallInfo.TYPE.MISSED));
-                    remindersList.add(info);
-                }
-                i++;*/
                 recycleAdapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -293,7 +286,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void aVoid) {
             if (TASK_RECREATE_ACTUAL_REMINDERS.equals(task)) {
-                that.reloadRemindersList();
+                that.reloadRemindersList(false);
             }
         }
     }

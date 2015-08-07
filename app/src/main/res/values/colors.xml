@@ -7,8 +7,10 @@
     <color name="app_primary_dark">#1976D2</color>
     <color name="app_accent">#00B0FF</color>
     <color name="button_raised_text">#ffffff</color>
+    <color name="app_accent_green">#00C853</color>
+    <color name="fab_green">@color/app_accent_green</color>
 
-    <color name="refresh_one">#00C853</color>
+    <color name="refresh_one">@color/app_accent_green</color>
     <color name="refresh_two">#F50057</color>
     <color name="refresh_three">#FFC400</color>
     <color name="contact_name_overlap">#ffffff</color>
