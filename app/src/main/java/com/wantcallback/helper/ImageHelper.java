@@ -109,4 +109,5 @@ public class ImageHelper {
 
         return color;
     }
+
 }

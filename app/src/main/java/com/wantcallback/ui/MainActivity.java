@@ -25,6 +25,7 @@ import com.wantcallback.helper.AppHelper;
 import com.wantcallback.model.ReminderInfo;
 import com.wantcallback.reminder.ReminderUtil;
 import com.wantcallback.ui.actionbar.AppEnableActionProvider;
+import com.wantcallback.ui.anim.AnimationFade;
 import com.wantcallback.ui.preferences.PreferenceActivity;
 import com.wantcallback.ui.recycler.ItemTouchCallback;
 import com.wantcallback.ui.recycler.ReminderRecycleAdapter;
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity
 
         recyclerList.setLayoutManager(new LinearLayoutManager(that));
 
+        remindersList = reminderDao.getAll();
         recycleAdapter = new ReminderRecycleAdapter(that, remindersList, that);
         recyclerList.setAdapter(recycleAdapter);
         emptyView = findViewById(R.id.emptyReminderList);
@@ -83,12 +85,15 @@ public class MainActivity extends AppCompatActivity
         recyclerList.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
             @Override
             public void onChildViewAttachedToWindow(View view) {
-                emptyView.setVisibility(View.GONE);
+                if (emptyView.getVisibility() == View.VISIBLE) {
+                    animateFade(emptyView, false);
+                }
             }
+
             @Override
             public void onChildViewDetachedFromWindow(View view) {
-                if (remindersList.size() == 0) {
-                    emptyView.setVisibility(View.VISIBLE);
+                if (remindersList.size() == 0 && AppHelper.isApplicationEnabled(that)) {
+                    animateFade(emptyView, true);
                 }
             }
         });
@@ -116,9 +121,9 @@ public class MainActivity extends AppCompatActivity
         registerReceiver(remindersBroadcastReceiver, new IntentFilter(RemindersBroadcastReceiver.ACTION_ANY));
 
         if (AppHelper.isApplicationEnabled(that)) {
-            displayMainLayout(true);
+            displayMainLayout(true, false);
         } else {
-            displayMainLayout(false);
+            displayMainLayout(false, false);
         }
     }
 
@@ -163,13 +168,13 @@ public class MainActivity extends AppCompatActivity
 
         if (isChecked) {
             initApp = true;
-            displayMainLayout(true);
+            displayMainLayout(true, true);
 
             BatchReminderOperationTask task = new BatchReminderOperationTask();
             task.execute(TASK_RECREATE_ACTUAL_REMINDERS);
         } else {
             initApp = false;
-            displayMainLayout(false);
+            displayMainLayout(false, true);
 
             BatchReminderOperationTask task = new BatchReminderOperationTask();
             task.execute(TASK_MUTE_REMINDERS);
@@ -178,20 +183,27 @@ public class MainActivity extends AppCompatActivity
         startService(AppHelper.getInitServiceIntent(that, initApp));
     }
 
-    private void displayMainLayout(boolean display) {
+    private void displayMainLayout(boolean display, boolean animateAll) {
         if (display) {
             btnAddAlarm.show();
-			// TODO add animation
-            viewAppDisabled.setVisibility(View.GONE);
+            if (animateAll) {
+                animateFade(viewAppDisabled, false);
+            }
             if (remindersList.size() == 0) {
-				// TODO add animation
-                emptyView.setVisibility(View.VISIBLE);
+                animateFade(emptyView, true);
             }
         } else {
             btnAddAlarm.hide();
-            viewAppDisabled.setVisibility(View.VISIBLE);
-            emptyView.setVisibility(View.GONE);
+            animateFade(viewAppDisabled, true);
+            if (animateAll && remindersList.size() == 0) {
+                animateFade(emptyView, false);
+            }
         }
+    }
+
+    private void animateFade(View v, boolean in) {
+        AnimationFade anim = new AnimationFade(v, in, 1.0f);
+        anim.runAnimation();
     }
 
     private void reloadRemindersList(boolean showRefresh) {

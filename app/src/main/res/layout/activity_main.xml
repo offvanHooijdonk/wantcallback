@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
             android:layout_marginBottom="56dp"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/textNoReminders"
@@ -67,10 +67,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal|center_vertical"
+        android:layout_marginBottom="8dp"
         android:alpha="0.4"
         android:background="@android:color/white"
         android:clickable="true"
         android:scaleType="center"
-        android:src="@drawable/ic_alarm_off_180dp"/>
+        android:src="@drawable/ic_alarm_off_180dp"
+        android:visibility="gone"/>
 
 </FrameLayout>
