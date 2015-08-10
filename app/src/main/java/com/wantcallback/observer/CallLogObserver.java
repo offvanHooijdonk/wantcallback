@@ -67,7 +67,7 @@ public class CallLogObserver extends ContentObserver {
 	public boolean deliverSelfNotifications() {
 		return true;
 	}
-	
+	// TODO remove reminder after successful call
 	private void onEvent(CallInfo info) {
 		for (OnCallMissRejectListener l : listeners) {
 			if (l != null) {

@@ -253,6 +253,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         }
     }
 
+    // TODO lookup for a contact for a CREATE
     private void displayReminder(ReminderInfo reminder) {
         if (mode == MODE.EDIT || mode == MODE.CREATE) {
             if (mode == MODE.EDIT) {
