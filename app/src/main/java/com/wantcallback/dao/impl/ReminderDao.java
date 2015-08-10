@@ -104,7 +104,7 @@ public class ReminderDao {
         cursor.close();
         return reminders;
     }
-// TODO date must be stored as String
+
     public List<ReminderInfo> getAllSince(Date sinceDate) {
         List<ReminderInfo> reminders = new ArrayList<ReminderInfo>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();

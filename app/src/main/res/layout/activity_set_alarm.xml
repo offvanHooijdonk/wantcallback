@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
+        android:id="@+id/blockForm"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -27,14 +28,13 @@
                 android:textColor="@android:color/holo_green_dark"
                 android:textSize="16sp"/>
 
-            <AutoCompleteTextView
+            <EditText
                 android:id="@+id/inputPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/textHaveReminder"
                 android:layout_marginEnd="@dimen/block_margin_small"
                 android:layout_marginRight="@dimen/block_margin_small"
-                android:completionThreshold="3"
                 android:hint="@string/text_phone_number"
                 android:inputType="phone"
                 android:maxLength="18"
@@ -117,6 +117,19 @@
         </RelativeLayout>
 
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/viewAppDisabledOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:layout_marginBottom="8dp"
+        android:alpha="0.6"
+        android:background="@android:color/white"
+        android:clickable="true"
+        android:scaleType="center"
+        android:src="@drawable/ic_alarm_off_180dp"
+        android:visibility="gone"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/buttonPickUser"

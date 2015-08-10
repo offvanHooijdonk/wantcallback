@@ -19,7 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -58,12 +58,12 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
 
     private TextView textContactName;
     private ImageView ivPhoto;
-    private AutoCompleteTextView inputPhone;
+    private EditText inputPhone;
     private TextView textTime;
     private TextView textToday;
     private TextView textHaveReminder;
     private FloatingActionButton btnSave;
-    private FloatingActionButton buttonPickContact;
+    private FloatingActionButton btnPickContact;
     private ViewGroup blockContactInfo;
     private View viewOverlayContact;
     private View viewDefaultPortraitBackground;
@@ -86,12 +86,12 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
 
         reminderDao = new ReminderDao(this);
 
-        inputPhone = (AutoCompleteTextView) findViewById(R.id.inputPhone);
+        inputPhone = (EditText) findViewById(R.id.inputPhone);
         inputPhone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         textContactName = (TextView) findViewById(R.id.textContactName);
         ivPhoto = (ImageView) findViewById(R.id.photo);
         setImageRatio(ivPhoto);
-        buttonPickContact = (FloatingActionButton) findViewById(R.id.buttonPickUser);
+        btnPickContact = (FloatingActionButton) findViewById(R.id.buttonPickUser);
         textTime = (TextView) findViewById(R.id.textTime);
         textToday = (TextView) findViewById(R.id.textToday);
         textHaveReminder = (TextView) findViewById(R.id.textHaveReminder);
@@ -109,7 +109,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
             }
         });
 
-        buttonPickContact.setOnClickListener(new View.OnClickListener() {
+        btnPickContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent pickContactIntent = new Intent(Intent.ACTION_PICK, Uri.parse("content://contacts"));
@@ -144,7 +144,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                     info.setPhone(AppHelper.formatPhoneNumber(that, inputPhone.getText().toString()));
                     info.setDate(remindDate.getTime());
                     info.setCallInfo(callInfo);
-                    // TODO move to task
+
                     ReminderUtil.createNewReminder(EditReminderActivity.this, info);
 
                     Toast.makeText(EditReminderActivity.this, "Will remind at " + AppHelper.getDateFormat(that).format(remindDate), Toast.LENGTH_LONG).show();
@@ -152,7 +152,6 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                 }
             }
         });
-
         initForm();
     }
 
@@ -191,8 +190,6 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         return isValid;
     }
 
-    // TODO when user picked a contact - he should not be able to edit phone. But it need ability to use AutoComplete field to pick
-    // another contact
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == TAG_PICK_CONTACT) {
@@ -204,7 +201,10 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                 setReminderTime(ReminderUtil.calcDefaultRemindDate(that, Calendar.getInstance().getTimeInMillis()), true);
                 // check if
                 if (contact != null) {
-                    ReminderInfo reminderInfo = reminderDao.findByPhone(contact.getPhoneNumber());
+                    inputPhone.setText(AppHelper.formatPhoneNumber(that, contact.getPhoneNumber()));
+                    inputPhone.setFocusable(false);
+
+                    ReminderInfo reminderInfo = reminderDao.findByPhone(inputPhone.getText().toString());
                     if (reminderInfo != null) {
                         setReminderTime(reminderInfo.getDate(), false);
                         textHaveReminder.setVisibility(View.VISIBLE);
@@ -212,7 +212,6 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                         textHaveReminder.setVisibility(View.GONE);
                     }
 
-                    inputPhone.setText(AppHelper.formatPhoneNumber(that, contact.getPhoneNumber()));
                 } else {
                     Toast.makeText(that, "Could not get contact :(", Toast.LENGTH_LONG).show();
                     inputPhone.setText(null);
@@ -227,7 +226,6 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
             textContactName.setVisibility(View.VISIBLE);
             textContactName.setText(contact.getDisplayName());
 
-            // TODO check if photo has been resized
             if (contact.getPhotoUri() != null) {
                 ivPhoto.setImageURI(contact.getPhotoUri());
                 ivPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -244,7 +242,6 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                 setContactNameBackColor(0x00FFFFFF);
             }
             blockContactInfo.setVisibility(View.VISIBLE);
-            // TODO make this a link to the contact
         } else {
             textContactName.setVisibility(View.GONE);
             textContactName.setText(null);
@@ -253,13 +250,11 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         }
     }
 
-    // TODO lookup for a contact for a CREATE
     private void displayReminder(ReminderInfo reminder) {
         if (mode == MODE.EDIT || mode == MODE.CREATE) {
             if (mode == MODE.EDIT) {
                 textHaveReminder.setVisibility(View.GONE);
                 inputPhone.setText(AppHelper.formatPhoneNumber(that, reminder.getPhone()));
-                // FIXME somehow in this case time always appears Tomorrow
                 setReminderTime(reminder.getDate(), false);
             } else if (mode == MODE.CREATE) {
                 textHaveReminder.setVisibility(View.GONE);
@@ -267,17 +262,17 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                 setReminderTime(ReminderUtil.calcDefaultRemindDate(that, Calendar.getInstance().getTimeInMillis()), true);
             }
 
-            buttonPickContact.setVisibility(View.GONE);
+            btnPickContact.setVisibility(View.GONE);
             inputPhone.setFocusable(false);
 
             ContactsUtil util = new ContactsUtil(that);
-            contact = util.findContactByPhone(reminder.getPhone());
+            contact = util.findContactByPhone(reminder.getCallInfo().getPhone());
 
             fillContactInfo(contact);
         } else if (mode == MODE.BLANK) {
             textHaveReminder.setVisibility(View.GONE);
             inputPhone.setFocusable(true);
-            buttonPickContact.setVisibility(View.VISIBLE);
+            btnPickContact.setVisibility(View.VISIBLE);
 
             blockContactInfo.setVisibility(View.GONE);
             setReminderTime(ReminderUtil.calcDefaultRemindDate(that, Calendar.getInstance().getTimeInMillis()), true);
@@ -286,7 +281,16 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
     }
 
     private void initForm() {
-        // TODO check if application enabled, if not - disable controls and show message
+        // check if application enabled, if not - disable controls and show message
+        if (!AppHelper.isApplicationEnabled(that)) {
+            btnPickContact.hide();
+            btnSave.hide();
+            ViewGroup blockForm = (ViewGroup) findViewById(R.id.blockForm);
+            View viewAppDisabled = findViewById(R.id.viewAppDisabledOverlay);
+            blockForm.setVisibility(View.GONE);
+            viewAppDisabled.setVisibility(View.VISIBLE);
+            return;
+        }
 
         Intent intent = getIntent();
         ReminderInfo reminderInfo = null;
@@ -332,7 +336,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
 
     private void setImageRatio(ImageView iv) {
         Display display = getWindowManager().getDefaultDisplay();
-        DisplayMetrics outMetrics = new DisplayMetrics ();
+        DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
 
         int width = outMetrics.widthPixels;
@@ -344,7 +348,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         calendarRem.setTimeInMillis(time);
         Calendar now = Calendar.getInstance();
 
-        if (! isFutureTime(now, calendarRem) && calculate) {
+        if (!isFutureTime(now, calendarRem) && calculate) {
             calendarRem.add(Calendar.DAY_OF_MONTH, 1);
         }
         remindDate = calendarRem.getTime();
@@ -446,5 +450,13 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Intent intent = new Intent(that, MainActivity.class);
+        startActivity(intent);
+
+        super.onDestroy();
     }
 }
