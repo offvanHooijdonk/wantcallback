@@ -2,6 +2,7 @@
 <resources>
     <color name="text_comment">#90A4AE</color>
     <color name="text_warn">#D32F2F</color>
+    <color name="text_info">#4CAF50</color>
 
     <color name="app_primary">#2196F3</color>
     <color name="app_primary_dark">#1976D2</color>

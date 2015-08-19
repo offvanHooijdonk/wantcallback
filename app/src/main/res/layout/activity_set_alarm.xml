@@ -5,118 +5,160 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/blockForm"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:id="@+id/blockPhoneNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin">
-
-            <TextView
-                android:id="@+id/textHaveReminder"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/block_margin_small"
-                android:layout_marginStart="@dimen/block_margin_small"
-                android:text="@string/have_reminder"
-                android:textColor="@android:color/holo_green_dark"
-                android:textSize="16sp"/>
-
-            <EditText
-                android:id="@+id/inputPhone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/textHaveReminder"
-                android:layout_marginEnd="@dimen/block_margin_small"
-                android:layout_marginRight="@dimen/block_margin_small"
-                android:hint="@string/text_phone_number"
-                android:inputType="phone"
-                android:maxLength="18"
-                android:maxLines="1"/>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/blockContactInfo"
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/blockForm"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/blockPhoneNumber"
-            android:layout_marginTop="@dimen/block_margin_bigger">
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <View
-                android:id="@+id/viewDefaultPortraitBackground"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/photo"/>
+                android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/photo"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:contentDescription="@string/contact_photo"
-                android:scaleType="center"
-                android:src="@drawable/ic_person_white_188dp"/>
+                <RelativeLayout
+                    android:id="@+id/blockPhoneNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/activity_vertical_margin">
 
-            <TextView
-                android:id="@+id/textContactName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/photo"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:paddingBottom="@dimen/contact_name_padding_v"
-                android:paddingEnd="@dimen/contact_name_padding_h"
-                android:paddingLeft="@dimen/contact_name_padding_h"
-                android:paddingRight="@dimen/contact_name_padding_h"
-                android:paddingTop="@dimen/contact_name_padding_v"
-                android:text="Emmanuelino Gonzalez Perreira Maximo el Morales"
-                android:textColor="@color/contact_name_overlap"
-                android:textSize="24sp"/>
+                    <TextView
+                        android:id="@+id/textHaveReminder"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/block_margin_small"
+                        android:layout_marginStart="@dimen/block_margin_small"
+                        android:text="@string/have_reminder"
+                        android:textColor="@color/text_info"
+                        android:textSize="16sp"/>
 
-            <View
-                android:id="@+id/viewOverlayContact"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/photo"
-                android:background="@drawable/selectable_white"
-                android:clickable="true"
-                />
-        </RelativeLayout>
+                    <EditText
+                        android:id="@+id/inputPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/textHaveReminder"
+                        android:layout_marginEnd="@dimen/block_margin_small"
+                        android:layout_marginRight="@dimen/block_margin_small"
+                        android:hint="@string/text_phone_number"
+                        android:inputType="phone"
+                        android:maxLength="18"
+                        android:maxLines="1"/>
+                </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/blockReminderOptions"
+                <RelativeLayout
+                    android:id="@+id/blockContactInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/blockPhoneNumber"
+                    android:layout_marginTop="@dimen/block_margin_bigger">
+
+                    <View
+                        android:id="@+id/viewDefaultPortraitBackground"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/photo"/>
+
+                    <ImageView
+                        android:id="@+id/photo"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:contentDescription="@string/contact_photo"
+                        android:scaleType="center"
+                        android:src="@drawable/ic_person_white_188dp"/>
+
+                    <TextView
+                        android:id="@+id/textContactName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/photo"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:paddingBottom="@dimen/contact_name_padding_v"
+                        android:paddingEnd="@dimen/contact_name_padding_h"
+                        android:paddingLeft="@dimen/contact_name_padding_h"
+                        android:paddingRight="@dimen/contact_name_padding_h"
+                        android:paddingTop="@dimen/contact_name_padding_v"
+                        android:text="Emmanuelino Gonzalez Perreira Maximo el Morales"
+                        android:textColor="@color/contact_name_overlap"
+                        android:textSize="24sp"/>
+
+                    <View
+                        android:id="@+id/viewOverlayContact"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/photo"
+                        android:background="@drawable/selectable_white"
+                        android:clickable="true"
+                        />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/blockReminderOptions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/blockContactInfo"
+                    android:layout_marginTop="32dp">
+
+                    <TextView
+                        android:id="@+id/textTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:background="?android:selectableItemBackground"
+                        android:padding="@dimen/icon_button_padding"
+                        android:text="00:00"
+                        android:textSize="36sp"/>
+
+                    <TextView
+                        android:id="@+id/textToday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/textTime"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/item_vertical_margin"
+                        android:text="@string/today"
+                        android:textSize="16sp"/>
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/blockContactInfo"
-            android:layout_marginTop="32dp">
+            android:layout_height="192dp"
+            android:fitsSystemWindows="true">
 
-            <TextView
-                android:id="@+id/textTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:background="?android:selectableItemBackground"
-                android:padding="@dimen/icon_button_padding"
-                android:text="00:00"
-                android:textSize="36sp"/>
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:contentScrim="@color/app_primary"
+                android:fitsSystemWindows="true">
 
-            <TextView
-                android:id="@+id/textToday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/textTime"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/item_vertical_margin"
-                android:text="@string/today"
-                android:textSize="16sp"/>
-        </RelativeLayout>
+                <android.support.v7.widget.Toolbar
+                    android:layout_width="match_parent"
+                    app:layout_scrollFlags="scroll|enterAlways"
+                    app:layout_collapseMode="pin"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                    android:layout_height="?attr/actionBarSize"/>
 
-    </RelativeLayout>
+                <ImageView
+                    android:id="@+id/photoToolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:contentDescription="@string/contact_photo"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_person_white_188dp"
+                    app:layout_collapseMode="parallax"/>
+            </android.support.design.widget.CollapsingToolbarLayout>
+        </android.support.design.widget.AppBarLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
     <ImageView
         android:id="@+id/viewAppDisabledOverlay"
@@ -151,4 +193,5 @@
         android:src="@drawable/ic_done_white_24dp"
         app:backgroundTint="@color/fab_green"
         app:fabSize="normal"/>
+
 </FrameLayout>
