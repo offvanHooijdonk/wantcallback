@@ -77,6 +77,14 @@
                         android:text="@string/today"
                         android:textSize="16sp"/>
                 </RelativeLayout>
+                <RelativeLayout
+                    android:layout_below="@id/blockReminderOptions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="480dp"/>
+                </RelativeLayout>
 
             </RelativeLayout>
 
