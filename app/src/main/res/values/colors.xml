@@ -16,6 +16,7 @@
     <color name="refresh_three">#FFC400</color>
     <color name="contact_name_overlap">#ffffff</color>
     <color name="contact_name_default_background">#ffffff</color>
+    <color name="toolbar_text">#ffffff</color>
 
     <color name="ripple_white">#CCFFFFFF</color>
 

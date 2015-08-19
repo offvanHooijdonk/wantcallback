@@ -19,5 +19,15 @@
         <item name="android:textColor">@color/button_raised_text</item>
     </style>
 
+    <style name="AppBaseTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+        <item name="colorPrimary">@color/app_primary</item>
+        <item name="colorPrimaryDark">@color/app_primary_dark</item>
+        <item name="colorAccent">@color/app_accent</item>
+
+        <item name="android:colorButtonNormal">@color/app_accent</item>
+        <item name="android:buttonStyle">@style/AppBaseTheme.RaisedButton</item>
+    </style>
 
 </resources>

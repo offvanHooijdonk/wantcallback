@@ -9,8 +9,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
@@ -56,17 +58,15 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
 
     private MODE mode;
 
-    private TextView textContactName;
-    private ImageView ivPhoto;
     private EditText inputPhone;
     private TextView textTime;
     private TextView textToday;
     private TextView textHaveReminder;
     private FloatingActionButton btnSave;
     private FloatingActionButton btnPickContact;
-    private ViewGroup blockContactInfo;
-    private View viewOverlayContact;
-    private View viewDefaultPortraitBackground;
+    private ImageView photoInToolbar;
+    private CollapsingToolbarLayout collapsingToolbar;
+    private Toolbar toolbar;
 
     private long reminderId;
     private Date remindDate = null;
@@ -81,6 +81,9 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
 
         this.that = this;
 
+        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
 
@@ -88,19 +91,14 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
 
         inputPhone = (EditText) findViewById(R.id.inputPhone);
         inputPhone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
-        textContactName = (TextView) findViewById(R.id.textContactName);
-        ivPhoto = (ImageView) findViewById(R.id.photo);
-        setImageRatio(ivPhoto);
         btnPickContact = (FloatingActionButton) findViewById(R.id.buttonPickUser);
         textTime = (TextView) findViewById(R.id.textTime);
         textToday = (TextView) findViewById(R.id.textToday);
         textHaveReminder = (TextView) findViewById(R.id.textHaveReminder);
         btnSave = (FloatingActionButton) findViewById(R.id.btnSave);
-        blockContactInfo = (ViewGroup) findViewById(R.id.blockContactInfo);
-        viewOverlayContact = findViewById(R.id.viewOverlayContact);
-        viewDefaultPortraitBackground = findViewById(R.id.viewDefaultPortraitBackground);
+        photoInToolbar = (ImageView) findViewById(R.id.photoInToolbar);
 
-        viewOverlayContact.setOnClickListener(new View.OnClickListener() {
+        photoInToolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (contact != null) {
@@ -223,30 +221,31 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
 
     private void fillContactInfo(ContactInfo contact) {
         if (contact != null) {
-            textContactName.setVisibility(View.VISIBLE);
-            textContactName.setText(contact.getDisplayName());
+            collapsingToolbar.setTitle(contact.getDisplayName());
 
             if (contact.getPhotoUri() != null) {
-                ivPhoto.setImageURI(contact.getPhotoUri());
-                ivPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                ivPhoto.setImageAlpha(255);
-                viewDefaultPortraitBackground.setVisibility(View.INVISIBLE);
-                colorizeContactName(contact.getPhotoUri());
-            } else {
-                int backColor = ImageHelper.getMaterialColorForPhoneOrName(that, contact.getDisplayName());
-                ivPhoto.setImageResource(R.drawable.ic_person_white_188dp);
-                ivPhoto.setImageAlpha(96);
-                ivPhoto.setScaleType(ImageView.ScaleType.CENTER);
-                viewDefaultPortraitBackground.setVisibility(View.VISIBLE);
-                viewDefaultPortraitBackground.setBackgroundColor(backColor);
-                setContactNameBackColor(0x00FFFFFF);
-            }
-            blockContactInfo.setVisibility(View.VISIBLE);
-        } else {
-            textContactName.setVisibility(View.GONE);
-            textContactName.setText(null);
+                Integer scrimColor = ImageHelper.getColorizeOnImage(that, contact.getPhotoUri());
+                if (scrimColor == null) { // Ooops, cannot get color for image
+                    scrimColor = ImageHelper.getMaterialColorForPhoneOrName(that, contact.getDisplayName());
+                }
+                collapsingToolbar.setContentScrimColor(scrimColor);
+                collapsingToolbar.setBackgroundColor(scrimColor);
 
-            blockContactInfo.setVisibility(View.GONE);
+                photoInToolbar.setImageURI(contact.getPhotoUri());
+                photoInToolbar.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                photoInToolbar.setImageAlpha(255);
+
+            } else {
+                int scrimColor = ImageHelper.getMaterialColorForPhoneOrName(that, contact.getDisplayName());
+                collapsingToolbar.setContentScrimColor(scrimColor);
+                collapsingToolbar.setBackgroundColor(scrimColor);
+
+                photoInToolbar.setScaleType(ImageView.ScaleType.CENTER);
+                photoInToolbar.setImageResource(R.drawable.ic_person_white_188dp);
+                photoInToolbar.setImageAlpha(96);
+            }
+        } else {
+            // TODO remove title text?
         }
     }
 
@@ -274,7 +273,6 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
             inputPhone.setFocusable(true);
             btnPickContact.setVisibility(View.VISIBLE);
 
-            blockContactInfo.setVisibility(View.GONE);
             setReminderTime(ReminderUtil.calcDefaultRemindDate(that, Calendar.getInstance().getTimeInMillis()), true);
         }
 
@@ -390,7 +388,6 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
     private void setContactNameBackColor(int color) {
         ColorDrawable colorDrawable = new ColorDrawable(color);
         colorDrawable.setAlpha(96);
-        textContactName.setBackground(colorDrawable);
     }
 
     @Override
