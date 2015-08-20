@@ -6,7 +6,6 @@
         <item name="colorPrimary">@color/app_primary</item>
         <item name="colorPrimaryDark">@color/app_primary_dark</item>
         <item name="colorAccent">@color/app_accent</item>
-        <!--<item name="toolbarStyle">@style/Widget.AppCompat.Toolbar</item>-->
     </style>
 
     <style name="AppBaseTheme.ActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid">
@@ -20,6 +19,14 @@
 
     <style name="AppBaseTheme.ToolbarTextCollapsed" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/toolbar_text</item>
+    </style>
+
+    <style name="AppBaseTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="actionBarStyle">@style/AppBaseTheme.ActionBar</item>
+
+        <item name="colorPrimary">@color/app_primary</item>
+        <item name="colorPrimaryDark">@color/app_primary_dark</item>
+        <item name="colorAccent">@color/app_accent</item>
     </style>
 
 </resources>

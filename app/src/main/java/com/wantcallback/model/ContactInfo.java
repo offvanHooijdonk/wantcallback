@@ -1,6 +1,7 @@
 package com.wantcallback.model;
 
 import android.net.Uri;
+import android.text.TextUtils;
 
 public class ContactInfo {
 
@@ -48,5 +49,9 @@ public class ContactInfo {
 
 	public void setThumbUri(Uri thumbUri) {
 		this.thumbUri = thumbUri;
+	}
+
+	public String pickIdentifier() {
+		return !TextUtils.isEmpty(displayName) ? displayName : phoneNumber;
 	}
 }

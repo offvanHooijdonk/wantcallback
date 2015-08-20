@@ -18,21 +18,7 @@
     <color name="contact_name_default_background">#ffffff</color>
     <color name="toolbar_text">#ffffff</color>
 
-    <color name="ripple_white">#CCFFFFFF</color>
-
-    <color name="pc_red">#F44336</color>
-    <color name="pc_pink">#E91E63</color>
-    <color name="pc_purple">#9C27B0</color>
-    <color name="pc_deep_purple">#673AB7</color>
-    <color name="pc_indigo">#3F51B5</color>
-    <color name="pc_blue">#2196F3</color>
-    <color name="pc_cyan">#00BCD4</color>
-    <color name="pc_teal">#009688</color>
-    <color name="pc_green">#4CAF50</color>
-    <color name="pc_emerald">#00C853</color>
-    <color name="pc_deep_orange">#FF5722</color>
-    <color name="pc_orange">#FF9800</color>
-    <color name="pc_blue_grey">#607D8B</color>
+    <color name="ripple_white">#a0FFFFFF</color>
 
     <color name="led_blue">#304FFE</color>
     <color name="led_light_blue">#00B0FF</color>

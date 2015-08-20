@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -27,10 +26,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.android.contacts.common.util.MaterialColorMapUtils;
 import com.wantcallback.R;
 import com.wantcallback.dao.impl.ReminderDao;
 import com.wantcallback.helper.AppHelper;
-import com.wantcallback.helper.ImageHelper;
+import com.wantcallback.helper.ColorHelper;
 import com.wantcallback.model.CallInfo;
 import com.wantcallback.model.ContactInfo;
 import com.wantcallback.model.ReminderInfo;
@@ -67,6 +67,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
     private ImageView photoInToolbar;
     private CollapsingToolbarLayout collapsingToolbar;
     private Toolbar toolbar;
+    private View photoOverlay;
 
     private long reminderId;
     private Date remindDate = null;
@@ -97,8 +98,9 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         textHaveReminder = (TextView) findViewById(R.id.textHaveReminder);
         btnSave = (FloatingActionButton) findViewById(R.id.btnSave);
         photoInToolbar = (ImageView) findViewById(R.id.photoInToolbar);
+        photoOverlay = findViewById(R.id.photo_touch_intercept_overlay);
 
-        photoInToolbar.setOnClickListener(new View.OnClickListener() {
+        photoOverlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (contact != null) {
@@ -224,21 +226,20 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
             collapsingToolbar.setTitle(contact.getDisplayName());
 
             if (contact.getPhotoUri() != null) {
-                Integer scrimColor = ImageHelper.getColorizeOnImage(that, contact.getPhotoUri());
-                if (scrimColor == null) { // Ooops, cannot get color for image
-                    scrimColor = ImageHelper.getMaterialColorForPhoneOrName(that, contact.getDisplayName());
-                }
-                collapsingToolbar.setContentScrimColor(scrimColor);
-                collapsingToolbar.setBackgroundColor(scrimColor);
+                MaterialColorMapUtils.MaterialPalette palette = ColorHelper.getMaterialPalette(that, contact.getThumbUri() != null ? contact.getThumbUri() : contact.getPhotoUri());
+
+                collapsingToolbar.setContentScrimColor(palette.mPrimaryColor);
+                ColorHelper.setStatusBarColor(that, palette.mSecondaryColor);
 
                 photoInToolbar.setImageURI(contact.getPhotoUri());
                 photoInToolbar.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 photoInToolbar.setImageAlpha(255);
 
             } else {
-                int scrimColor = ImageHelper.getMaterialColorForPhoneOrName(that, contact.getDisplayName());
-                collapsingToolbar.setContentScrimColor(scrimColor);
-                collapsingToolbar.setBackgroundColor(scrimColor);
+                MaterialColorMapUtils.MaterialPalette palette = ColorHelper.getMaterialColorForPhoneOrName(that, contact.pickIdentifier());
+                collapsingToolbar.setContentScrimColor(palette.mPrimaryColor);
+                collapsingToolbar.setBackgroundColor(palette.mPrimaryColor);
+                ColorHelper.setStatusBarColor(that, palette.mSecondaryColor);
 
                 photoInToolbar.setScaleType(ImageView.ScaleType.CENTER);
                 photoInToolbar.setImageResource(R.drawable.ic_person_white_188dp);
@@ -374,20 +375,6 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         } else {
             textToday.setTextColor(that.getResources().getColor(android.R.color.primary_text_light));
         }
-    }
-
-    private void colorizeContactName(Uri imageUri) {
-        Integer color = ImageHelper.getColorizeOnImage(that, imageUri);
-        if (color == null) {
-            color = that.getResources().getColor(R.color.contact_name_default_background);
-        }
-
-        setContactNameBackColor(color);
-    }
-
-    private void setContactNameBackColor(int color) {
-        ColorDrawable colorDrawable = new ColorDrawable(color);
-        colorDrawable.setAlpha(96);
     }
 
     @Override
