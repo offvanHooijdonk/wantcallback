@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -13,20 +14,23 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.contacts.common.util.MaterialColorMapUtils;
+import com.wantcallback.Constants;
 import com.wantcallback.R;
 import com.wantcallback.dao.impl.ReminderDao;
 import com.wantcallback.helper.AppHelper;
@@ -37,6 +41,7 @@ import com.wantcallback.model.ReminderInfo;
 import com.wantcallback.notifications.NotificationsUtil;
 import com.wantcallback.phone.ContactsUtil;
 import com.wantcallback.reminder.ReminderUtil;
+import com.wantcallback.ui.actionbar.ControllableAppBarLayout;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -58,13 +63,14 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
 
     private MODE mode;
 
-    private EditText inputPhone;
+    private EditTextTrackFixed inputPhone;
     private TextView textTime;
     private TextView textToday;
     private TextView textHaveReminder;
     private FloatingActionButton btnSave;
     private FloatingActionButton btnPickContact;
     private ImageView photoInToolbar;
+    private ControllableAppBarLayout appBarLayout;
     private CollapsingToolbarLayout collapsingToolbar;
     private Toolbar toolbar;
     private View photoOverlay;
@@ -82,6 +88,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
 
         this.that = this;
 
+        appBarLayout = (ControllableAppBarLayout) findViewById(R.id.appBarLayout);
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbar);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -90,7 +97,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
 
         reminderDao = new ReminderDao(this);
 
-        inputPhone = (EditText) findViewById(R.id.inputPhone);
+        inputPhone = (EditTextTrackFixed) findViewById(R.id.inputPhone);
         inputPhone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         btnPickContact = (FloatingActionButton) findViewById(R.id.buttonPickUser);
         textTime = (TextView) findViewById(R.id.textTime);
@@ -98,7 +105,28 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         textHaveReminder = (TextView) findViewById(R.id.textHaveReminder);
         btnSave = (FloatingActionButton) findViewById(R.id.btnSave);
         photoInToolbar = (ImageView) findViewById(R.id.photoInToolbar);
+        setImageRatio(photoInToolbar);
         photoOverlay = findViewById(R.id.photo_touch_intercept_overlay);
+
+        inputPhone.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                String text = inputPhone.getText().toString();
+                if ("+".equals(text)) {
+                    text = "";
+                }
+                collapsingToolbar.setTitle(text);
+                return false;
+            }
+        });
+        inputPhone.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    onPhoneInput();
+                }
+                return false;
+            }
+        });
 
         photoOverlay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,6 +149,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         textTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                onPhoneInput();
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(remindDate);
                 TimePickerDialog timePickerDialog = new TimePickerDialog(that, that, calendar.get(Calendar.HOUR_OF_DAY), calendar.get
@@ -141,7 +170,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                     } else if (mode == MODE.BLANK) {
                         callInfo.setDate(Calendar.getInstance().getTimeInMillis());
                     }
-                    info.setPhone(AppHelper.formatPhoneNumber(that, inputPhone.getText().toString()));
+                    info.setPhone(inputPhone.getText().toString());
                     info.setDate(remindDate.getTime());
                     info.setCallInfo(callInfo);
 
@@ -217,6 +246,9 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                     inputPhone.setText(null);
                 }
                 fillContactInfo(contact);
+                showAppBar(false, false);
+
+                showAppBar(true, true, true);
             }
         }
     }
@@ -236,17 +268,11 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                 photoInToolbar.setImageAlpha(255);
 
             } else {
-                MaterialColorMapUtils.MaterialPalette palette = ColorHelper.getMaterialColorForPhoneOrName(that, contact.pickIdentifier());
-                collapsingToolbar.setContentScrimColor(palette.mPrimaryColor);
-                collapsingToolbar.setBackgroundColor(palette.mPrimaryColor);
-                ColorHelper.setStatusBarColor(that, palette.mSecondaryColor);
-
-                photoInToolbar.setScaleType(ImageView.ScaleType.CENTER);
-                photoInToolbar.setImageResource(R.drawable.ic_person_white_188dp);
-                photoInToolbar.setImageAlpha(96);
+                colorizeAppBar(contact.pickIdentifier());
             }
         } else {
-            // TODO remove title text?
+            collapsingToolbar.setTitle(inputPhone.getText());
+            colorizeAppBar(inputPhone.getText().toString());
         }
     }
 
@@ -254,7 +280,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         if (mode == MODE.EDIT || mode == MODE.CREATE) {
             if (mode == MODE.EDIT) {
                 textHaveReminder.setVisibility(View.GONE);
-                inputPhone.setText(AppHelper.formatPhoneNumber(that, reminder.getPhone()));
+                inputPhone.setText(reminder.getPhone());
                 setReminderTime(reminder.getDate(), false);
             } else if (mode == MODE.CREATE) {
                 textHaveReminder.setVisibility(View.GONE);
@@ -322,6 +348,8 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
             } else if (mode == MODE.BLANK) {
                 callInfo = new CallInfo();
                 callInfo.setType(CallInfo.TYPE.CREATED);
+
+                showAppBar(false, false);
             }
         }
 
@@ -331,6 +359,51 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         }
 
         displayReminder(reminderInfo);
+    }
+
+    private void showAppBar(boolean show, boolean animate) {
+        showAppBar(show, animate, false);
+    }
+
+    private void showAppBar(boolean show, boolean animate, boolean delay) {
+        if (show) {
+            if (animate) {
+                if (delay) {
+                    AnimAppBarDelayTask task = new AnimAppBarDelayTask();
+                    task.execute();
+                } else {
+                    photoInToolbar.setVisibility(View.VISIBLE);
+                    appBarLayout.expandToolbar(true);
+                }
+            } else {
+                photoInToolbar.setVisibility(View.VISIBLE);
+                appBarLayout.expandToolbar(false);
+            }
+        } else {
+            appBarLayout.collapseToolbar(animate);
+            photoInToolbar.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void colorizeAppBar(String identifier) {
+        MaterialColorMapUtils.MaterialPalette palette = ColorHelper.getMaterialColorForPhoneOrName(that, identifier);
+        collapsingToolbar.setContentScrimColor(palette.mPrimaryColor);
+        collapsingToolbar.setBackgroundColor(palette.mPrimaryColor);
+        ColorHelper.setStatusBarColor(that, palette.mSecondaryColor);
+
+        photoInToolbar.setScaleType(ImageView.ScaleType.CENTER);
+        photoInToolbar.setImageResource(R.drawable.ic_person_white_188dp);
+        photoInToolbar.setImageAlpha(96);
+    }
+
+    private void onPhoneInput() {
+        if (!TextUtils.isEmpty(inputPhone.getText().toString())) {
+            colorizeAppBar(inputPhone.getText().toString());
+
+            showAppBar(true, true);
+        } else {
+            showAppBar(false, true);
+        }
     }
 
     private void setImageRatio(ImageView iv) {
@@ -442,5 +515,24 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         startActivity(intent);
 
         super.onDestroy();
+    }
+
+    private class AnimAppBarDelayTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                Thread.sleep(Constants.ANIM_APP_BAR_DELAY);
+            } catch (InterruptedException e) {
+                Toast.makeText(that, e.toString(), Toast.LENGTH_LONG).show();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            photoInToolbar.setVisibility(View.VISIBLE);
+            appBarLayout.expandToolbar(true);
+        }
     }
 }

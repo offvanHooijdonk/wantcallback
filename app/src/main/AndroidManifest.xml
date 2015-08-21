@@ -34,7 +34,6 @@
 
         <activity
             android:name=".ui.EditReminderActivity"
-            android:label="@string/edit_reminder_title"
             android:parentActivityName=".ui.MainActivity"
             android:theme="@style/AppBaseTheme.NoActionBar">
         </activity>

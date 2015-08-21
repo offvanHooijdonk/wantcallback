@@ -8,6 +8,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.telephony.PhoneNumberUtils;
+import android.text.TextUtils;
 
 import com.wantcallback.R;
 import com.wantcallback.model.CallInfo;
@@ -79,6 +80,10 @@ public class AppHelper {
                     .locale.getISO3Country());
         } else {
             formatted = PhoneNumberUtils.formatNumber(phone);
+        }
+
+        if (TextUtils.isEmpty(formatted)) {
+            formatted = phone;
         }
 
         return formatted;

@@ -52,6 +52,6 @@ public class ContactInfo {
 	}
 
 	public String pickIdentifier() {
-		return !TextUtils.isEmpty(displayName) ? displayName : phoneNumber;
+		return !TextUtils.isEmpty(id) ? id : phoneNumber;
 	}
 }

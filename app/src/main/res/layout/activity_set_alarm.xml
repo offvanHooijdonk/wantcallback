@@ -37,7 +37,7 @@
                         android:textColor="@color/text_info"
                         android:textSize="16sp"/>
 
-                    <EditText
+                    <com.wantcallback.ui.EditTextTrackFixed
                         android:id="@+id/inputPhone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -90,7 +90,8 @@
 
         </android.support.v4.widget.NestedScrollView>
 
-        <android.support.design.widget.AppBarLayout
+        <com.wantcallback.ui.actionbar.ControllableAppBarLayout
+            android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="192dp"
             android:fitsSystemWindows="true">
@@ -129,7 +130,7 @@
                     android:layout_height="?attr/actionBarSize"
                     android:background="@android:color/transparent"/>
             </android.support.design.widget.CollapsingToolbarLayout>
-        </android.support.design.widget.AppBarLayout>
+        </com.wantcallback.ui.actionbar.ControllableAppBarLayout>
     </android.support.design.widget.CoordinatorLayout>
 
     <ImageView
