@@ -306,6 +306,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
     }
 
     private void initForm() {
+        mode = MODE.BLANK; // default
         // check if application enabled, if not - disable controls and show message
         if (!AppHelper.isApplicationEnabled(that)) {
             btnPickContact.hide();
