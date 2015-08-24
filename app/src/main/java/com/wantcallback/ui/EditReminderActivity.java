@@ -5,12 +5,15 @@ import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberFormattingTextWatcher;
@@ -237,6 +240,10 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                     if (reminderInfo != null) {
                         setReminderTime(reminderInfo.getDate(), false);
                         textHaveReminder.setVisibility(View.VISIBLE);
+                        reminderId = reminderInfo.getId();
+                        // TODO repaint options menu
+                        mode = MODE.EDIT;
+                        that.supportInvalidateOptionsMenu();
                     } else {
                         textHaveReminder.setVisibility(View.GONE);
                     }
@@ -259,20 +266,17 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
 
             if (contact.getPhotoUri() != null) {
                 MaterialColorMapUtils.MaterialPalette palette = ColorHelper.getMaterialPalette(that, contact.getThumbUri() != null ? contact.getThumbUri() : contact.getPhotoUri());
-
-                collapsingToolbar.setContentScrimColor(palette.mPrimaryColor);
-                ColorHelper.setStatusBarColor(that, palette.mSecondaryColor);
+                colorizeFrom(palette);
 
                 photoInToolbar.setImageURI(contact.getPhotoUri());
                 photoInToolbar.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 photoInToolbar.setImageAlpha(255);
-
             } else {
-                colorizeAppBar(contact.pickIdentifier());
+                colorizeIconAndForm(contact.pickIdentifier());
             }
         } else {
             collapsingToolbar.setTitle(inputPhone.getText());
-            colorizeAppBar(inputPhone.getText().toString());
+            colorizeIconAndForm(inputPhone.getText().toString());
         }
     }
 
@@ -351,6 +355,8 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                 callInfo.setType(CallInfo.TYPE.CREATED);
 
                 showAppBar(false, false);
+
+                colorizeFrom(ColorHelper.getPaletteOnColor(that, that.getResources().getColor(R.color.app_accent)));
             }
         }
 
@@ -386,22 +392,35 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         }
     }
 
-    private void colorizeAppBar(String identifier) {
+    private void colorizeIconAndForm(String identifier) {
         MaterialColorMapUtils.MaterialPalette palette = ColorHelper.getMaterialColorForPhoneOrName(that, identifier);
-        collapsingToolbar.setContentScrimColor(palette.mPrimaryColor);
-        collapsingToolbar.setBackgroundColor(palette.mPrimaryColor);
-        ColorHelper.setStatusBarColor(that, palette.mSecondaryColor);
+        colorizeFrom(palette);
 
         photoInToolbar.setScaleType(ImageView.ScaleType.CENTER);
         photoInToolbar.setImageResource(R.drawable.ic_person_white_188dp);
         photoInToolbar.setImageAlpha(96);
     }
 
+    private void colorizeFrom(MaterialColorMapUtils.MaterialPalette palette) {
+        collapsingToolbar.setContentScrimColor(palette.mPrimaryColor);
+        collapsingToolbar.setBackgroundColor(palette.mPrimaryColor);
+        ColorHelper.setStatusBarColor(that, palette.mSecondaryColor);
+
+        btnPickContact.setBackgroundTintList(ColorStateList.valueOf(palette.mPrimaryColor));
+        btnSave.setBackgroundTintList(ColorStateList.valueOf(palette.mPrimaryColor));
+        textTime.setTextColor(palette.mPrimaryColor);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            inputPhone.setBackgroundTintList(ColorStateList.valueOf(palette.mPrimaryColor));
+        }
+    }
+
     private void onPhoneInput() {
         if (!TextUtils.isEmpty(inputPhone.getText().toString())) {
-            colorizeAppBar(inputPhone.getText().toString());
+            if (contact == null) {
+                colorizeIconAndForm(inputPhone.getText().toString());
 
-            showAppBar(true, true);
+                showAppBar(true, true);
+            }
         } else {
             showAppBar(false, true);
         }
@@ -512,9 +531,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
 
     @Override
     protected void onDestroy() {
-        Intent intent = new Intent(that, MainActivity.class);
-        startActivity(intent);
-
+        NavUtils.navigateUpFromSameTask(that);
         super.onDestroy();
     }
 

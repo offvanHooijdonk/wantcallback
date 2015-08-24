@@ -164,7 +164,6 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin_min"
         android:src="@drawable/ic_done_white_24dp"
-        app:backgroundTint="@color/fab_green"
         app:fabSize="normal"/>
 
 </FrameLayout>

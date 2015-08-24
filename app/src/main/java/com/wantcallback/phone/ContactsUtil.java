@@ -71,6 +71,12 @@ public class ContactsUtil {
 		String id = cur.getString(cur.getColumnIndex(ContactsContract.PhoneLookup._ID));
 		String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 		String defaultPhone = cur.getString(cur.getColumnIndex(PhoneLookup.NUMBER));
+		String lookupKey = cur.getString(cur.getColumnIndex(PhoneLookup.LOOKUP_KEY));
+
+		info.setId(id);
+		info.setDisplayName(name);
+		info.setPhoneNumber(defaultPhone);
+		info.setLookupKey(lookupKey);
 
 		String photoString = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.PHOTO_URI));
 		String thumbString = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI));
@@ -83,10 +89,6 @@ public class ContactsUtil {
 			info.setThumbUri(thumbUri);
 		}
 
-		info.setId(id);
-		info.setDisplayName(name);
-		info.setPhoneNumber(defaultPhone);
-
 		return info;
 	}
 
@@ -95,6 +97,12 @@ public class ContactsUtil {
 		String id = cur.getString(cur.getColumnIndex(ContactsContract.Data.CONTACT_ID));
 		String name = cur.getString(cur.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
 		String defaultPhone = cur.getString(cur.getColumnIndex(ContactsContract.Data.DATA1));
+		String lookupKey = cur.getString(cur.getColumnIndex(ContactsContract.Data.LOOKUP_KEY));
+
+		info.setId(id);
+		info.setDisplayName(name);
+		info.setPhoneNumber(defaultPhone);
+		info.setLookupKey(lookupKey);
 
 		String photoString = cur.getString(cur.getColumnIndex(ContactsContract.Data.PHOTO_URI));
 		String thumbString = cur.getString(cur.getColumnIndex(ContactsContract.Data.PHOTO_THUMBNAIL_URI));
@@ -106,10 +114,6 @@ public class ContactsUtil {
 			Uri thumbUri = Uri.parse(thumbString);
 			info.setThumbUri(thumbUri);
 		}
-
-		info.setId(id);
-		info.setDisplayName(name);
-		info.setPhoneNumber(defaultPhone);
 
 		return info;
 	}

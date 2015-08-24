@@ -62,6 +62,10 @@ public class ColorHelper {
         return color;
     }
 
+    public static MaterialColorMapUtils.MaterialPalette getPaletteOnColor(Context ctx, int color) {
+        return getMaterialColorsUtil(ctx).calculatePrimaryAndSecondaryColor(color);
+    }
+
     private static MaterialColorMapUtils getMaterialColorsUtil(Context ctx) {
         if (utils == null) {
             utils = new MaterialColorMapUtils(ctx.getResources());

@@ -10,6 +10,7 @@ public class ContactInfo {
 	private String phoneNumber;
 	private Uri photoUri;
 	private Uri thumbUri;
+	private String lookupKey;
 
 	public String getId() {
 		return id;
@@ -52,6 +53,14 @@ public class ContactInfo {
 	}
 
 	public String pickIdentifier() {
-		return !TextUtils.isEmpty(id) ? id : phoneNumber;
+		return !TextUtils.isEmpty(lookupKey) ? lookupKey : !TextUtils.isEmpty(id) ? id : phoneNumber;
+	}
+
+	public String getLookupKey() {
+		return lookupKey;
+	}
+
+	public void setLookupKey(String lookupKey) {
+		this.lookupKey = lookupKey;
 	}
 }
