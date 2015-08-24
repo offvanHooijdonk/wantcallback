@@ -144,11 +144,11 @@ public class NotificationsUtil {
     private NotificationCompat.Builder getCommonCallBuilder(String title, String text) {
         NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle().setBigContentTitle(title).bigText(text);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx).setLargeIcon(getLargeIconBitmap(R.drawable.ic_launcher))
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx)//.setLargeIcon(getLargeIconBitmap(R.drawable.ic_launcher))
                 .setContentTitle(title)
                 .setContentText(text)
                 .setStyle(bigText)
-                .setSmallIcon(R.drawable.ic_notify_call)
+                .setSmallIcon(R.drawable.ic_alarm_black_24dp)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory("call").setAutoCancel(true);
 
