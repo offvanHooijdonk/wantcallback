@@ -7,9 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -57,6 +57,8 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
     public static final String EXTRA_NOTIF_ID = "extra_notif_id";
 
     private static final int TAG_PICK_CONTACT = 1;
+
+    private final Handler contactImageExpandHandler = new Handler();
 
     private EditReminderActivity that;
 
@@ -376,8 +378,14 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         if (show) {
             if (animate) {
                 if (delay) {
-                    AnimAppBarDelayTask task = new AnimAppBarDelayTask();
-                    task.execute();
+                    contactImageExpandHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            photoInToolbar.setVisibility(View.VISIBLE);
+                            appBarLayout.expandToolbar(true);
+                        }
+                    }, Constants.ANIM_APP_BAR_DELAY);
+
                 } else {
                     photoInToolbar.setVisibility(View.VISIBLE);
                     appBarLayout.expandToolbar(true);
@@ -535,7 +543,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         super.onDestroy();
     }
 
-    private class AnimAppBarDelayTask extends AsyncTask<Void, Void, Void> {
+    /*private class AnimAppBarDelayTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -552,5 +560,5 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
             photoInToolbar.setVisibility(View.VISIBLE);
             appBarLayout.expandToolbar(true);
         }
-    }
+    }*/
 }
