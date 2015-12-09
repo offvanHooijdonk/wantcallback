@@ -2,7 +2,7 @@
 <resources>
     <string name="default_reminder_time_title">Default Reminder Time</string>
     <string name="default_reminder_time_summ">Time to remind in when you create a default reminder</string>
-    <string name="default_reminder_time_key">defaultReminderTime</string>
+    <string name="default_reminder_time_key" translatable="false">defaultReminderTime</string>
 
     <string-array name="default_reminder_time_values">
         <item>2</item>
@@ -28,18 +28,18 @@
 
     <string name="default_postpone_time_title">Default Postpone Time</string>
     <string name="default_postpone_time_summ">Time to postpone reminder if you want it later</string>
-    <string name="default_postpone_time_key">defaultPostponeTime</string>
-    <string name="action_on_rejected_key">actionOnRejected</string>
+    <string name="default_postpone_time_key" translatable="false">defaultPostponeTime</string>
+    <string name="action_on_rejected_key" translatable="false">actionOnRejected</string>
     <string name="action_on_rejected_title">On Reject Call</string>
-    <string name="action_on_missed_key">actionOnMissed</string>
+    <string name="action_on_missed_key" translatable="false">actionOnMissed</string>
     <string name="action_on_missed_title">On Missed Call</string>
-    <string name="led_color_key">led_color</string>
+    <string name="led_color_key" translatable="false">led_color</string>
     <string name="led_color_title">LED color</string>
     <string name="led_color_summ">Reminder LED color</string>
-    <string name="led_enabled_key">led_enabled</string>
+    <string name="led_enabled_key" translatable="false">led_enabled</string>
     <string name="led_enabled_title">Enable LED</string>
     <string name="led_enabled_summ">LED will blink when reminder notifications arrives</string>
-    <string name="outdated_actual_time_key">outdated_actual_time</string>
+    <string name="outdated_actual_time_key" translatable="false">outdated_actual_time</string>
     <string name="outdated_actual_time_title">Outdated actual after device on</string>
     <string name="outdated_actual_time_summ">Time for which outdated reminders still actual when the device is turned on or application enabled.</string>
 

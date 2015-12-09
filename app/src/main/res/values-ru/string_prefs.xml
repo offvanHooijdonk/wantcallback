@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <string-array name="default_reminder_time_values">
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>30</item>
+        <item>45</item>
+        <item>60</item>
+    </string-array>
+
+    <string-array name="default_reminder_time">
+        <item>2 m</item>
+        <item>5 m</item>
+        <item>10 m</item>
+        <item>15 m</item>
+        <item>20 m</item>
+        <item>30 m</item>
+        <item>45 m</item>
+        <item>1 h</item>
+    </string-array><![CDATA[
+    >
+    ]]>
+    <string name="action_on_rejected_title">On Reject Call</string>
+    <string name="action_on_missed_title">On Missed Call</string>
+    <string name="outdated_actual_time_title" translatable="false">Outdated actual after device on</string>
+    <string name="outdated_actual_time_summ" translatable="false">Time for which outdated reminders still actual when the device is turned on or application enabled.</string>
+
+
+</resources>

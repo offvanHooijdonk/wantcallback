@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Want Call Back</string>
+    <string name="action_call">Позвонить</string>
+    <string name="action_refresh">Обновить</string>
+    <string name="action_remove_reminder">Удалить напоминание</string>
+    <string name="action_settings">Настройки</string>
+    <string name="add_from_contacts">Добавить контакт</string>
+    <string name="btn_save_reminder">Напомнить</string>
+    <string name="call_from_list">Позвонить</string>
+    <string name="contact_photo">Фото</string>
+    <string name="contact_remove_confirm_text">Уверены, что хотите удалить напоминание?</string>
+    <string name="contact_remove_confirm_title">Удалить</string>
+    <string name="created_at_time">Создан в %s</string>
+    <string name="date_expired">Извините, это время уже прошло, выберете заново</string>
+    <string name="date_expired_title">Дата</string>
+    <string name="default_postpone_time_summ">На сколько отложить напоминание</string>
+    <string name="default_postpone_time_title">По умолчанию напомнить через...</string>
+    <string name="default_reminder_time_summ">Время напоминания по умолчанию</string>
+    <string name="default_reminder_time_title">Время напоминания по умолчанию</string>
+    <string name="edit_reminder_title">Напоминание</string>
+    <string name="empty_reminders_main">Все звонки сделаны</string>
+    <string name="foreground_message">Приложение включено</string>
+    <string name="forget">Забыть</string>
+    <string name="have_reminder">Уже есть напоминание для этого номера</string>
+    <string name="led_color_summ">Цвет LED</string>
+    <string name="led_color_title">Цвет LED</string>
+    <string name="led_enabled_title">Включить LED</string>
+    <string name="led_enabled_summ">Будет мигать LED когда появится оповещение</string>
+    <string name="missed_at_time">Пропущен в %s</string>
+    <string name="notif_remind_text_created">Перезвонить %1$s по напоминанию, созданному в %2$s</string>
+    <string name="notif_remind_text_missed">Перезвонить %1$s, который звонил(а) в %2$s</string>
+    <string name="notif_remind_text_rejected">Перезвонить %1$s, который звонил(а) в %2$s</string>
+    <string name="phone_empty" translatable="false">Введите номер телефона</string>
+    <string name="phone_empty_title">Номер</string>
+    <string name="rejected_at_time">Сброшен в %s</string>
+    <string name="snack_title">Напоминание удалено</string>
+    <string name="text_phone_number">Номер телефона</string>
+    <string name="today">Сегодня</string>
+    <string name="tomorrow">Завтра</string>
+    <string name="undo">ОТМЕНА</string>
+    <string name="notif_title_created">Напоминание создано</string>
+    <string name="notif_title_remind">Напоминаем перезвонить</string>
+    <string name="notif_title_wantto_remind">Хотите чтобы вам напомнили?</string>
+    <string name="notif_missed_reminder_created">Звонил %1$s. Напоминание создано на %2$s.</string>
+    <string name="notif_msg_remind_in">Напомнить через %1$sм</string>
+    <string name="notif_rejected_reminder_created">Сброшен %1$s. напоминание создано на %2$s.</string>
+    <string name="notif_msg_rejected_from">Сброшен звонок от %1$s</string>
+    <string name="notif_msg_missed_from">Звонил %1$s</string>
+    <string name="notif_action_call_now">Перезвонить</string>
+    <string name="notif_action_forget">Забыть</string>
+    <string name="notif_action_postpone">Отложить</string>
+</resources>
