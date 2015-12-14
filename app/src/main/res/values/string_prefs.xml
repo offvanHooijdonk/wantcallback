@@ -40,7 +40,7 @@
     <string name="led_enabled_title">Enable LED</string>
     <string name="led_enabled_summ">LED will blink when reminder notifications arrives</string>
     <string name="outdated_actual_time_key" translatable="false">outdated_actual_time</string>
-    <string name="outdated_actual_time_title">Outdated actual after device on</string>
+    <string name="outdated_actual_time_title">Outdated be actual after device on</string>
     <string name="outdated_actual_time_summ">Time for which outdated reminders still actual when the device is turned on or application enabled.</string>
 
     <string-array name="default_postpone_time_values">

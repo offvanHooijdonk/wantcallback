@@ -19,7 +19,7 @@
     <string name="created_at_time">Created at %s</string>
     <string name="forget">Forget</string>
 
-    <string name="foreground_title" translatable="false">Want Call Back</string>
+    <string name="foreground_title">Want Call Back</string>
     <string name="foreground_message">Application is launched</string>
     <string name="action_refresh">Refresh</string>
     <string name="empty_reminders_main">No upcoming reminders</string>
@@ -34,13 +34,14 @@
     <string name="action_remove_reminder">Remove Reminder</string>
     <string name="contact_remove_confirm_title">You want to remove?</string>
     <string name="contact_remove_confirm_text">Sure to remove this reminder?</string>
+    <string name="contact_removed_message">Reminder removed</string>
 
     <string name="notif_remind_text_rejected">Call to %1$s that called you at %2$s</string>
     <string name="notif_remind_text_missed">Call to %1$s that called you at %2$s</string>
     <string name="notif_remind_text_created">Call to %1$s by reminder you created at %2$s</string>
     <string name="notif_title_wantto_remind">Want to remind?</string>
     <string name="notif_action_call_now">Call now</string>
-    <string name="notif_msg_remind_in">Remind in %1$sm</string>
+    <string name="notif_msg_remind_in">Remind in %1$smin</string>
     <string name="notif_msg_rejected_from">Rejected Call from %1$s</string>
     <string name="notif_msg_missed_from">Missed Call from %1$s</string>
     <string name="notif_missed_reminder_created">Missed %1$s. A reminder has been created on %2$s.</string>
@@ -49,4 +50,6 @@
     <string name="notif_title_remind">Remind you to call back</string>
     <string name="notif_action_postpone">Postpone</string>
     <string name="notif_title_created">Reminder created</string>
+    <string name="contact_remove_not_found">Reminder is not found!</string>
+    <string name="reminder_created_message">Will remind at %1$s</string>
 </resources>

@@ -181,7 +181,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
 
                     ReminderUtil.createNewReminder(EditReminderActivity.this, info);
 
-                    Toast.makeText(EditReminderActivity.this, "Will remind at " + AppHelper.getDateFormat(that).format(remindDate), Toast.LENGTH_LONG).show();
+                    Toast.makeText(EditReminderActivity.this, that.getString(R.string.reminder_created_message, AppHelper.getDateFormat(that).format(remindDate)), Toast.LENGTH_LONG).show();
                     finish();
                 }
             }
@@ -523,13 +523,13 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 ReminderUtil.cancelAndRemoveReminder(that, reminderDao.getById(reminderId));
-                                Toast.makeText(that, "Reminder removed!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(that, R.string.contact_removed_message, Toast.LENGTH_LONG).show();
                                 that.finish();
                             }
                         })
                         .show();
             } else {
-                Toast.makeText(that, "Reminder is not found!", Toast.LENGTH_LONG).show();
+                Toast.makeText(that, R.string.contact_remove_not_found, Toast.LENGTH_LONG).show();
                 that.finish();
             }
         }

@@ -22,13 +22,89 @@
         <item>30 m</item>
         <item>45 m</item>
         <item>1 h</item>
-    </string-array><![CDATA[
-    >
-    ]]>
-    <string name="action_on_rejected_title">On Reject Call</string>
-    <string name="action_on_missed_title">On Missed Call</string>
-    <string name="outdated_actual_time_title" translatable="false">Outdated actual after device on</string>
-    <string name="outdated_actual_time_summ" translatable="false">Time for which outdated reminders still actual when the device is turned on or application enabled.</string>
+    </string-array>
+    <string name="default_postpone_time_title">Default Postpone Time</string>
+    <string name="default_postpone_time_summ">Time to postpone reminder if you want it later</string>
+    <string name="action_on_rejected_title">При отклонённом звонке</string>
+    <string name="action_on_missed_title">При пропущенном звонке</string>
+    <string name="outdated_actual_time_title">Просроченные будут актуальны после включения телефона</string>
+    <string name="outdated_actual_time_summ">Время, в течение которого просроченные напоминания будут актиынми после включения телефона</string>
+    <string name="led_color_title">LED color</string>
+    <string name="led_color_summ">Reminder LED color</string>
+    <string name="led_enabled_title">Enable LED</string>
+    <string name="led_enabled_summ">LED will blink when reminder notifications arrives</string>
+    <string name="default_reminder_time_title">Время напоминания по умолчанию</string>
+    <string name="default_reminder_time_summ">Через сколько минут поставить напоминание по умолчанию</string>
 
+    <string-array name="default_postpone_time_values">
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>30</item>
+        <item>45</item>
+        <item>60</item>
+    </string-array>
 
+    <string-array name="default_postpone_time">
+        <item>2 m</item>
+        <item>5 m</item>
+        <item>10 m</item>
+        <item>15 m</item>
+        <item>20 m</item>
+        <item>30 m</item>
+        <item>45 m</item>
+        <item>1 h</item>
+    </string-array>
+
+    <string-array name="action_on_rejected_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="action_on_rejected">
+        <item>Create a reminder</item>
+        <item>Let me decide</item>
+        <item>Do nothing</item>
+    </string-array>
+
+    <string-array name="action_on_missed_values">
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+    </string-array>
+
+    <string-array name="action_on_missed">
+        <item>Create a reminder</item>
+        <item>Let me decide</item>
+        <item>Do nothing</item>
+    </string-array>
+
+    <string-array name="outdated_actual_time_entries">
+        <item>None</item>
+        <item>10 m</item>
+        <item>20 m</item>
+        <item>30 m</item>
+        <item>45 m</item>
+        <item>1 h</item>
+        <item>3 h</item>
+        <item>6 h</item>
+        <item>12 h</item>
+        <item>All</item>
+    </string-array>
+
+    <string-array name="outdated_actual_time_values">
+        <item>0</item>
+        <item>10</item>
+        <item>20</item>
+        <item>30</item>
+        <item>45</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>720</item>
+        <item>-1</item>
+    </string-array>
 </resources>
