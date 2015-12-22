@@ -4,7 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
+import com.wantcallback.Constants;
 import com.wantcallback.dao.DBHelperUtil;
 import com.wantcallback.model.CallInfo;
 import com.wantcallback.model.ReminderInfo;
@@ -112,7 +114,10 @@ public class ReminderDao {
         Cursor cursor = db.query(TABLE, null, ReminderInfo.DATE + " >= ?", new String[]{sdfDate.format(new Date(sinceDate.getTime()))},
                 null, null, ReminderInfo.DATE + "" + " desc");
         if (cursor.moveToFirst()) { // assume phone is a unique field
-            reminders.add(cursorToBean(cursor));
+            ReminderInfo ri = cursorToBean(cursor);
+            if (ri != null) {
+                reminders.add(ri);
+            }
         }
         cursor.close();
         return reminders;
@@ -140,11 +145,15 @@ public class ReminderDao {
 
     private ReminderInfo cursorToBean(Cursor cursor) {
         ReminderInfo info = new ReminderInfo();
-        info.setId(cursor.getInt(cursor.getColumnIndex(ReminderInfo.ID)));
+        Integer id = cursor.getInt(cursor.getColumnIndex(ReminderInfo.ID));
+        info.setId(id);
+        String dateStr = cursor.getString(cursor.getColumnIndex(ReminderInfo.DATE));
         try {
-            info.setDate(sdfDate.parse(cursor.getString(cursor.getColumnIndex(ReminderInfo.DATE))).getTime());
+
+            info.setDate(sdfDate.parse(dateStr).getTime());
         } catch (ParseException e) {
-            e.printStackTrace();// TODO handle
+            Log.e(Constants.LOG_TAG, String.format("Error parsing date '%s' from object #%s", dateStr, id), e);
+            return null;
         }
         info.setPhone(cursor.getString(cursor.getColumnIndex(ReminderInfo.PHONE)));
 

@@ -79,6 +79,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
     private CollapsingToolbarLayout collapsingToolbar;
     private Toolbar toolbar;
     private View photoOverlay;
+    private ViewGroup blockForm;
 
     private long reminderId;
     private Date remindDate = null;
@@ -243,7 +244,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                         setReminderTime(reminderInfo.getDate(), false);
                         textHaveReminder.setVisibility(View.VISIBLE);
                         reminderId = reminderInfo.getId();
-                        // TODO repaint options menu
+
                         mode = MODE.EDIT;
                         that.supportInvalidateOptionsMenu();
                     } else {
@@ -317,7 +318,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         if (!AppHelper.isApplicationEnabled(that)) {
             btnPickContact.hide();
             btnSave.hide();
-            ViewGroup blockForm = (ViewGroup) findViewById(R.id.blockForm);
+            blockForm = (ViewGroup) findViewById(R.id.blockForm);
             View viewAppDisabled = findViewById(R.id.viewAppDisabledOverlay);
             blockForm.setVisibility(View.GONE);
             viewAppDisabled.setVisibility(View.VISIBLE);
@@ -341,7 +342,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                 if (reminderInfo != null) {
                     callInfo = reminderInfo.getCallInfo();
                 } else {
-                    // TODO handle this case
+                    Toast.makeText(that, "Reminder not found!", Toast.LENGTH_LONG).show();
                     mode = MODE.BLANK;
                 }
             } else if (mode == MODE.CREATE) {

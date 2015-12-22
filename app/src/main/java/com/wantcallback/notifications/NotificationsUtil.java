@@ -116,6 +116,7 @@ public class NotificationsUtil {
         NotificationCompat.Builder builder = getCommonCallBuilder(ctx.getString(R.string.notif_title_remind), text)
                 .setTicker("Call back to " + reminder.getPhone())
                 .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
+                .setAutoCancel(true)
                 .setContentIntent(createEditReminderIntent(reminder, tag, id))
                 .setDeleteIntent(createForgetIntent(reminder, tag, id))
                 .addAction(R.drawable.ic_call_black_24dp, ctx.getString(R.string.notif_action_call_now), createDialerIntent(reminder.getCallInfo()))

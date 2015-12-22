@@ -28,26 +28,29 @@ public class StandardMissRejectListener implements OnCallMissRejectListener {
     public void onCallMissed(CallInfo call) {
         int action = AppHelper.Pref.getActionOnMissed(ctx);
 
-        if (call.getPhone() != null && !"".equals(call.getPhone())) {
-            ReminderInfo reminderInfo = reminderDao.findByPhone(call.getPhone());
-            // TODO make this logic configurable
-            if (reminderInfo == null) { // no reminders yet
-                if (action == ACTION_MISSED_CREATE) {
+        if (action == ACTION_MISSED_CREATE) {
+            if (!isHiddenNumber(call)) {
+                ReminderInfo reminderInfo = reminderDao.findByPhone(call.getPhone());
+                if (reminderInfo == null) {
                     reminderInfo = AppHelper.convertCallToReminder(call);
 
                     ReminderUtil.createNewDefaultReminder(ctx, reminderInfo);
                     sendBroadCastToActivity(ctx);
                     notifyUtil.showMissedCallCreatedNotification(reminderInfo);
-                } else if (action == ACTION_MISSED_DECIDE) {
-                    notifyUtil.showMissedCallDecideNotification(call);
-                } else if (action == ACTION_MISSED_NONE) {
-                    // do nothing
+                } else {
+                    // if reminder exists - do nothing
                 }
             } else {
-                // TODO if reminder exists
+                // hidden number - do nothing
             }
-        } else {
-            // TODO hidden number
+        } else if (action == ACTION_MISSED_DECIDE) {
+            if (!isHiddenNumber(call)) {
+                notifyUtil.showMissedCallDecideNotification(call);
+            } else {
+                // hidden number - do nothing
+            }
+        } else if (action == ACTION_MISSED_NONE) {
+            // do nothing
         }
 
     }
@@ -56,32 +59,39 @@ public class StandardMissRejectListener implements OnCallMissRejectListener {
     public void onCallRejected(CallInfo call) {
         int action = AppHelper.Pref.getActionOnRejected(ctx);
 
-        if (call.getPhone() != null && !"".equals(call.getPhone())) {
-            if (call.getPhone() != null && !"".equals(call.getPhone())) {
+        if (action == ACTION_REJECTED_CREATE) {
+            if (!isHiddenNumber(call)) {
                 ReminderInfo reminderInfo = reminderDao.findByPhone(call.getPhone());
-                if (reminderInfo == null) { // no reminders yet
-                    if (action == ACTION_REJECTED_CREATE) {
-                        reminderInfo = AppHelper.convertCallToReminder(call);
+                if (reminderInfo == null) {
+                    reminderInfo = AppHelper.convertCallToReminder(call);
 
-                        ReminderUtil.createNewDefaultReminder(ctx, reminderInfo);
-                        sendBroadCastToActivity(ctx);
-                        notifyUtil.showRejectedCallCreatedNotification(reminderInfo);
-                    } else if (action == ACTION_REJECTED_DECIDE) {
-                        notifyUtil.showRejectedCallDecideNotification(call);
-                    } else if (action == ACTION_REJECTED_NONE) {
-                        // do nothing
-                    }
+                    ReminderUtil.createNewDefaultReminder(ctx, reminderInfo);
+                    sendBroadCastToActivity(ctx);
+                    notifyUtil.showRejectedCallCreatedNotification(reminderInfo);
+                } else {
+                    // if reminder exists - do nothing
                 }
             } else {
-                // TODO if reminder exists
+                // hidden number - do nothing
             }
-        } else {
-            // TODO hidden number
+        } else if (action == ACTION_REJECTED_DECIDE) {
+            if (!isHiddenNumber(call)) {
+                notifyUtil.showRejectedCallDecideNotification(call);
+            } else {
+                // hidden number - do nothing
+            }
+        } else if (action == ACTION_REJECTED_NONE) {
+            // do nothing
         }
+
     }
 
     private void sendBroadCastToActivity(Context ctx) {
         ctx.sendBroadcast(new Intent(MainActivity.RemindersBroadcastReceiver.ACTION_ANY));
+    }
+
+    private boolean isHiddenNumber(CallInfo callInfo) {
+        return callInfo.getPhone() != null && !"".equals(callInfo.getPhone());
     }
 
 }

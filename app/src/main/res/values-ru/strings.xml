@@ -9,10 +9,10 @@
     <string name="btn_save_reminder">Напомнить</string>
     <string name="call_from_list">Позвонить</string>
     <string name="contact_photo">Фото</string>
-    <string name="contact_remove_confirm_text">Уверены, что хотите удалить напоминание?</string>
+    <string name="contact_remove_confirm_text">Точно удалить напоминание?</string>
     <string name="contact_remove_confirm_title">Удалить</string>
     <string name="created_at_time">Создан в %s</string>
-    <string name="date_expired">Извините, это время уже прошло, выберете заново</string>
+    <string name="date_expired">Это время уже прошло, выберите новое</string>
     <string name="date_expired_title">Дата</string>
     <string name="edit_reminder_title">Напоминание</string>
     <string name="empty_reminders_main">Все звонки сделаны</string>
@@ -33,7 +33,7 @@
     <string name="undo">ОТМЕНА</string>
     <string name="notif_title_created">Напоминание создано</string>
     <string name="notif_title_remind">Напоминаем перезвонить</string>
-    <string name="notif_title_wantto_remind">Хотите чтобы вам напомнили?</string>
+    <string name="notif_title_wantto_remind">Напомнить перезвонить?</string>
     <string name="notif_missed_reminder_created">Звонил %1$s. Напоминание создано на %2$s.</string>
     <string name="notif_msg_remind_in">Напомнить через %1$sм</string>
     <string name="notif_rejected_reminder_created">Сброшен %1$s. напоминание создано на %2$s.</string>
