@@ -63,4 +63,9 @@ public class ContactInfo {
 	public void setLookupKey(String lookupKey) {
 		this.lookupKey = lookupKey;
 	}
+
+	@Override
+	public String toString() {
+		return String.format("%s; %s; %s; %s;", id, displayName, phoneNumber, lookupKey);
+	}
 }

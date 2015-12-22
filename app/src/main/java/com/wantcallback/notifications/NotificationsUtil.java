@@ -9,7 +9,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
+import com.wantcallback.Constants;
 import com.wantcallback.R;
 import com.wantcallback.helper.AppHelper;
 import com.wantcallback.model.CallInfo;
@@ -19,6 +21,7 @@ import com.wantcallback.phone.ContactsUtil;
 import com.wantcallback.ui.EditReminderActivity;
 import com.wantcallback.ui.MainActivity;
 
+import java.io.IOException;
 import java.util.Date;
 
 public class NotificationsUtil {
@@ -50,7 +53,7 @@ public class NotificationsUtil {
                 .setSmallIcon(R.drawable.ic_alarm_on_white_24dp)
                 .setContentIntent(createEditReminderIntent(reminder, tag, id)) // Open reminder settings
                 .addAction(R.drawable.ic_call_black_24dp, ctx.getString(R.string.notif_action_call_now), createDialerIntent(reminder.getCallInfo())) // Dial missed call
-                        .addAction(R.drawable.ic_forget, ctx.getString(R.string.notif_action_forget), createForgetIntent(reminder, tag, id)); // remove reminder created
+                .addAction(R.drawable.ic_forget, ctx.getString(R.string.notif_action_forget), createForgetIntent(reminder, tag, id)); // remove reminder created
 
         getNotificationManager().notify(tag, id, builder.build());
     }
@@ -108,9 +111,9 @@ public class NotificationsUtil {
         String tag = reminder.getPhone();
         int id = NOTIFICATION_REMINDER;
         String text = String.format(ctx.getString(
-                        reminder.getCallInfo().getType() == CallInfo.TYPE.MISSED ? R.string.notif_remind_text_missed :
-                                reminder.getCallInfo().getType() == CallInfo.TYPE.REJECTED ? R.string.notif_remind_text_rejected : R.string.notif_remind_text_created
-                )
+                reminder.getCallInfo().getType() == CallInfo.TYPE.MISSED ? R.string.notif_remind_text_missed :
+                        reminder.getCallInfo().getType() == CallInfo.TYPE.REJECTED ? R.string.notif_remind_text_rejected : R.string.notif_remind_text_created
+        )
                 , getCallerLabel(reminder.getCallInfo()), AppHelper.getTimeFormat(ctx).format(new Date(reminder.getCallInfo().getDate())));
 
         NotificationCompat.Builder builder = getCommonCallBuilder(ctx.getString(R.string.notif_title_remind), text)
@@ -121,6 +124,12 @@ public class NotificationsUtil {
                 .setDeleteIntent(createForgetIntent(reminder, tag, id))
                 .addAction(R.drawable.ic_call_black_24dp, ctx.getString(R.string.notif_action_call_now), createDialerIntent(reminder.getCallInfo()))
                 .addAction(R.drawable.ic_alarm_black_24dp, ctx.getString(R.string.notif_action_postpone), createPostponeIntent(reminder, tag, id));
+
+        try {
+            builder.setLargeIcon(contactsUtil.findContactPhotoByNumber(reminder.getPhone()));
+        } catch (IOException e) {
+            Log.e(Constants.LOG_TAG, String.format("Error getting image for phone %s", reminder.getPhone()), e);
+        }
 
         if (AppHelper.Pref.getLEDEnabled(ctx)) {
             builder.setLights(AppHelper.Pref.getLEDColor(ctx), LED_ON_MS, LED_OFF_MS);
