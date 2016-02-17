@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/blockPhoneNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <TextView
+            android:id="@+id/textHaveReminder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/block_margin_small"
+            android:layout_marginStart="@dimen/block_margin_small"
+            android:text="@string/have_reminder"
+            android:textColor="@color/text_info"
+            android:textSize="16sp"/>
+
+        <com.wantcallback.ui.EditTextTrackFixed
+            android:id="@+id/inputPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textHaveReminder"
+            android:layout_marginEnd="@dimen/block_margin_small"
+            android:layout_marginRight="@dimen/block_margin_small"
+            android:hint="@string/text_phone_number"
+            android:inputType="phone"
+            android:maxLength="18"
+            android:maxLines="1"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/blockReminderOptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/blockPhoneNumber"
+        android:layout_marginTop="32dp">
+
+        <TextView
+            android:id="@+id/textTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="?android:selectableItemBackground"
+            android:padding="@dimen/icon_button_padding"
+            android:text="00:00"
+            android:textSize="36sp"/>
+
+        <TextView
+            android:id="@+id/textToday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textTime"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/item_vertical_margin"
+            android:text="@string/today"
+            android:textSize="16sp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/blockReminderOptions">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="480dp"/>
+    </RelativeLayout>
+
+</RelativeLayout>
