@@ -26,6 +26,7 @@ import com.wantcallback.model.ReminderInfo;
 import com.wantcallback.reminder.ReminderUtil;
 import com.wantcallback.ui.actionbar.AppEnableActionProvider;
 import com.wantcallback.ui.anim.AnimationFade;
+import com.wantcallback.ui.editreminder.EditReminderActivity;
 import com.wantcallback.ui.preferences.PreferenceActivity;
 import com.wantcallback.ui.recycler.ItemTouchCallback;
 import com.wantcallback.ui.recycler.ReminderRecycleAdapter;

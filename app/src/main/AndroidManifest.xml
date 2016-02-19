@@ -33,7 +33,7 @@
         </activity>
 
         <activity
-            android:name=".ui.EditReminderActivity"
+            android:name=".ui.editreminder.EditReminderActivity"
             android:parentActivityName=".ui.MainActivity"
             android:theme="@style/AppBaseTheme.NoActionBar"
             android:configChanges="orientation|screenSize">

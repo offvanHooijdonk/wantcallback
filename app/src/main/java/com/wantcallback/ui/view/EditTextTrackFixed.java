@@ -1,4 +1,4 @@
-package com.wantcallback.ui;
+package com.wantcallback.ui.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;

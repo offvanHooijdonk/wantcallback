@@ -22,7 +22,7 @@
             android:textColor="@color/text_info"
             android:textSize="16sp"/>
 
-        <com.wantcallback.ui.EditTextTrackFixed
+        <com.wantcallback.ui.view.EditTextTrackFixed
             android:id="@+id/inputPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

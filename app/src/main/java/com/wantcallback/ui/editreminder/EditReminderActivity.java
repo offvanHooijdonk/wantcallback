@@ -1,4 +1,4 @@
-package com.wantcallback.ui;
+package com.wantcallback.ui.editreminder;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -44,6 +44,7 @@ import com.wantcallback.model.ReminderInfo;
 import com.wantcallback.notifications.NotificationsUtil;
 import com.wantcallback.phone.ContactsUtil;
 import com.wantcallback.reminder.ReminderUtil;
+import com.wantcallback.ui.view.EditTextTrackFixed;
 import com.wantcallback.ui.actionbar.ControllableAppBarLayout;
 
 import java.util.Calendar;

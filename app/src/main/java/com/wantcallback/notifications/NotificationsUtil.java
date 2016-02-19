@@ -18,7 +18,7 @@ import com.wantcallback.model.CallInfo;
 import com.wantcallback.model.ContactInfo;
 import com.wantcallback.model.ReminderInfo;
 import com.wantcallback.phone.ContactsUtil;
-import com.wantcallback.ui.EditReminderActivity;
+import com.wantcallback.ui.editreminder.EditReminderActivity;
 import com.wantcallback.ui.MainActivity;
 
 import java.io.IOException;
