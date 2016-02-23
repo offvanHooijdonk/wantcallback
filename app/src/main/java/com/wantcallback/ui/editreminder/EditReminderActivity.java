@@ -79,7 +79,8 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
     private ControllableAppBarLayout appBarLayout;
     private CollapsingToolbarLayout collapsingToolbar;
     private Toolbar toolbar;
-    private View photoOverlay;
+    /*private View photoOverlay;*/
+    private PortraitFragment fragContactImage;
     private ViewGroup blockForm;
 
     private long reminderId;
@@ -104,6 +105,8 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
 
         reminderDao = new ReminderDao(this);
 
+        initForm();
+
         inputPhone = (EditTextTrackFixed) findViewById(R.id.inputPhone);
         inputPhone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         btnPickContact = (FloatingActionButton) findViewById(R.id.buttonPickUser);
@@ -113,7 +116,10 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         btnSave = (FloatingActionButton) findViewById(R.id.btnSave);
         photoInToolbar = (ImageView) findViewById(R.id.photoInToolbar);
         setImageRatio(photoInToolbar);
-        photoOverlay = findViewById(R.id.photo_touch_intercept_overlay);
+
+        fragContactImage = new PortraitFragment();
+        getFragmentManager().beginTransaction().add(R.id.frameContactImage, fragContactImage).commit();
+        /*photoOverlay = findViewById(R.id.photo_touch_intercept_overlay);*/
 
         inputPhone.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -135,14 +141,14 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
             }
         });
 
-        photoOverlay.setOnClickListener(new View.OnClickListener() {
+        /*photoOverlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (contact != null) {
                     that.startActivity(AppHelper.Intents.createContactIntent(contact.getId()));
                 }
             }
-        });
+        });*/
 
         btnPickContact.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,7 +194,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                 }
             }
         });
-        initForm();
+        //initForm();
     }
 
     private boolean validateForm() {
@@ -313,6 +319,10 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
 
     }
 
+
+    /**
+     * check which data we got on the screen, set variables to pass them to correspondent fragments
+     */
     private void initForm() {
         mode = MODE.BLANK; // default
         // check if application enabled, if not - disable controls and show message
@@ -323,53 +333,53 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
             View viewAppDisabled = findViewById(R.id.viewAppDisabledOverlay);
             blockForm.setVisibility(View.GONE);
             viewAppDisabled.setVisibility(View.VISIBLE);
-            return;
-        }
+        } else {
 
-        Intent intent = getIntent();
-        ReminderInfo reminderInfo = null;
-        String notifTag = null;
-        int notifId = -1;
-        if (intent.getExtras() != null) {
-            mode = MODE.valueOf(intent.getExtras().getString(EXTRA_MODE));
+            Intent intent = getIntent();
+            ReminderInfo reminderInfo = null;
+            String notifTag = null;
+            int notifId = -1;
+            if (intent.getExtras() != null) {
+                mode = MODE.valueOf(intent.getExtras().getString(EXTRA_MODE));
 
-            if (mode == MODE.EDIT) {
-                notifTag = intent.getExtras().getString(EXTRA_NOTIF_TAG, null);
-                notifId = intent.getExtras().getInt(EXTRA_NOTIF_ID);
+                if (mode == MODE.EDIT) {
+                    notifTag = intent.getExtras().getString(EXTRA_NOTIF_TAG, null);
+                    notifId = intent.getExtras().getInt(EXTRA_NOTIF_ID);
 
-                reminderId = intent.getExtras().getLong(EXTRA_REMINDER_ID);
-                reminderInfo = reminderDao.getById(reminderId);
+                    reminderId = intent.getExtras().getLong(EXTRA_REMINDER_ID);
+                    reminderInfo = reminderDao.getById(reminderId);
 
-                if (reminderInfo != null) {
-                    callInfo = reminderInfo.getCallInfo();
-                } else {
-                    Toast.makeText(that, "Reminder not found!", Toast.LENGTH_LONG).show();
-                    mode = MODE.BLANK;
+                    if (reminderInfo != null) {
+                        callInfo = reminderInfo.getCallInfo();
+                    } else {
+                        Toast.makeText(that, "Reminder not found!", Toast.LENGTH_LONG).show();
+                        mode = MODE.BLANK;
+                    }
+                } else if (mode == MODE.CREATE) {
+                    callInfo = intent.getExtras().getParcelable(EXTRA_CALL_INFO);
+
+                    notifTag = intent.getExtras().getString(EXTRA_NOTIF_TAG, null);
+                    notifId = intent.getExtras().getInt(EXTRA_NOTIF_ID);
+
+                    reminderInfo = new ReminderInfo();
+                    reminderInfo.setCallInfo(callInfo);
+                } else if (mode == MODE.BLANK) {
+                    callInfo = new CallInfo();
+                    callInfo.setType(CallInfo.TYPE.CREATED);
+
+                    showAppBar(false, false);
+
+                    colorizeFrom(ColorHelper.getPaletteOnColor(that, that.getResources().getColor(R.color.app_accent)));
                 }
-            } else if (mode == MODE.CREATE) {
-                callInfo = intent.getExtras().getParcelable(EXTRA_CALL_INFO);
-
-                notifTag = intent.getExtras().getString(EXTRA_NOTIF_TAG, null);
-                notifId = intent.getExtras().getInt(EXTRA_NOTIF_ID);
-
-                reminderInfo = new ReminderInfo();
-                reminderInfo.setCallInfo(callInfo);
-            } else if (mode == MODE.BLANK) {
-                callInfo = new CallInfo();
-                callInfo.setType(CallInfo.TYPE.CREATED);
-
-                showAppBar(false, false);
-
-                colorizeFrom(ColorHelper.getPaletteOnColor(that, that.getResources().getColor(R.color.app_accent)));
             }
-        }
 
-        if (notifTag != null) {
-            NotificationsUtil notificationsUtil = new NotificationsUtil(this);
-            notificationsUtil.dismissNotification(notifTag, notifId);
-        }
+            if (notifTag != null) {
+                NotificationsUtil notificationsUtil = new NotificationsUtil(this);
+                notificationsUtil.dismissNotification(notifTag, notifId);
+            }
 
-        displayReminder(reminderInfo);
+            displayReminder(reminderInfo);
+        }
     }
 
     private void showAppBar(boolean show, boolean animate) {

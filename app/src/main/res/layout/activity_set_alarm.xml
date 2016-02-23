@@ -35,7 +35,10 @@
                 app:expandedTitleTextAppearance="@style/AppBaseTheme.ToolbarTextExpanded"
                 app:collapsedTitleTextAppearance="@style/AppBaseTheme.ToolbarTextCollapsed">
 
-                <include layout="@layout/fr_portrait_on_form" />
+                <FrameLayout
+                    android:id="@+id/frameContactImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
