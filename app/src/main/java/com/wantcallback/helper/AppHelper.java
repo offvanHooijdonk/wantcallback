@@ -137,14 +137,14 @@ public class AppHelper {
     }
 
     public static class Intents {
-        public static Intent createDialerIntent(String phoneNumber) {
+        public static Intent buildDialerIntent(String phoneNumber) {
             Intent intent = new Intent(Intent.ACTION_DIAL);
             intent.setData(Uri.parse("tel:" + phoneNumber));
 
             return intent;
         }
 
-        public static Intent createContactIntent(String contactId) {
+        public static Intent buildContactIntent(String contactId) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, contactId));
 

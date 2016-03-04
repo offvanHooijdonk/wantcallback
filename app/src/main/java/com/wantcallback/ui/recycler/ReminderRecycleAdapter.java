@@ -203,14 +203,14 @@ public class ReminderRecycleAdapter extends RecyclerView.Adapter<ReminderRecycle
                 vh.imageCircle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ctx.startActivity(AppHelper.Intents.createContactIntent(contact.getId()));
+                        ctx.startActivity(AppHelper.Intents.buildContactIntent(contact.getId()));
                     }
                 });
             } else {
                 vh.imageCircle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ctx.startActivity(AppHelper.Intents.createDialerIntent(reminder.getPhone()));
+                        ctx.startActivity(AppHelper.Intents.buildDialerIntent(reminder.getPhone()));
                     }
                 });
             }

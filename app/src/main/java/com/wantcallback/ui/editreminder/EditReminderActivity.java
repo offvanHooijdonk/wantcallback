@@ -88,6 +88,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
     private ReminderDao reminderDao;
     private CallInfo callInfo = null;
     private ContactInfo contact = null;
+    private ReminderInfo reminderInfo = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,10 +115,11 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         textToday = (TextView) findViewById(R.id.textToday);
         textHaveReminder = (TextView) findViewById(R.id.textHaveReminder);
         btnSave = (FloatingActionButton) findViewById(R.id.btnSave);
-        photoInToolbar = (ImageView) findViewById(R.id.photoInToolbar);
-        setImageRatio(photoInToolbar);
 
         fragContactImage = new PortraitFragment();
+        fragContactImage.setMode(mode);
+        fragContactImage.setContact(contact);
+        fragContactImage.setReminderInfo(reminderInfo);
         getFragmentManager().beginTransaction().add(R.id.frameContactImage, fragContactImage).commit();
         /*photoOverlay = findViewById(R.id.photo_touch_intercept_overlay);*/
 
@@ -145,7 +147,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
             @Override
             public void onClick(View v) {
                 if (contact != null) {
-                    that.startActivity(AppHelper.Intents.createContactIntent(contact.getId()));
+                    that.startActivity(AppHelper.Intents.buildContactIntent(contact.getId()));
                 }
             }
         });*/
@@ -278,9 +280,9 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                 MaterialColorMapUtils.MaterialPalette palette = ColorHelper.getMaterialPalette(that, contact.getThumbUri() != null ? contact.getThumbUri() : contact.getPhotoUri());
                 colorizeFrom(palette);
 
-                photoInToolbar.setImageURI(contact.getPhotoUri());
+                /*photoInToolbar.setImageURI(contact.getPhotoUri());
                 photoInToolbar.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                photoInToolbar.setImageAlpha(255);
+                photoInToolbar.setImageAlpha(255);*/
             } else {
                 colorizeIconAndForm(contact.pickIdentifier());
             }
@@ -329,14 +331,14 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         if (!AppHelper.isApplicationEnabled(that)) {
             btnPickContact.hide();
             btnSave.hide();
-            blockForm = (ViewGroup) findViewById(R.id.blockForm);
+            //blockForm = (ViewGroup) findViewById(R.id.blockForm);
             View viewAppDisabled = findViewById(R.id.viewAppDisabledOverlay);
-            blockForm.setVisibility(View.GONE);
+            //blockForm.setVisibility(View.GONE);
             viewAppDisabled.setVisibility(View.VISIBLE);
         } else {
 
             Intent intent = getIntent();
-            ReminderInfo reminderInfo = null;
+
             String notifTag = null;
             int notifId = -1;
             if (intent.getExtras() != null) {
@@ -369,6 +371,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
 
                     showAppBar(false, false);
 
+                    // TODO move some decorations from this method
                     colorizeFrom(ColorHelper.getPaletteOnColor(that, that.getResources().getColor(R.color.app_accent)));
                 }
             }
@@ -416,9 +419,6 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         MaterialColorMapUtils.MaterialPalette palette = ColorHelper.getMaterialColorForPhoneOrName(that, identifier);
         colorizeFrom(palette);
 
-        photoInToolbar.setScaleType(ImageView.ScaleType.CENTER);
-        photoInToolbar.setImageResource(R.drawable.ic_person_white_188dp);
-        photoInToolbar.setImageAlpha(96);
     }
 
     private void colorizeFrom(MaterialColorMapUtils.MaterialPalette palette) {
@@ -524,7 +524,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_call) {
-            that.startActivity(AppHelper.Intents.createDialerIntent(inputPhone.getText().toString()));
+            that.startActivity(AppHelper.Intents.buildDialerIntent(inputPhone.getText().toString()));
         } else if (item.getItemId() == R.id.action_remove_reminder) {
             ReminderInfo reminder = reminderDao.getById(reminderId);
             if (reminder != null) {
