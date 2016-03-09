@@ -19,15 +19,12 @@ import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -44,8 +41,8 @@ import com.wantcallback.model.ReminderInfo;
 import com.wantcallback.notifications.NotificationsUtil;
 import com.wantcallback.phone.ContactsUtil;
 import com.wantcallback.reminder.ReminderUtil;
-import com.wantcallback.ui.view.EditTextTrackFixed;
 import com.wantcallback.ui.actionbar.ControllableAppBarLayout;
+import com.wantcallback.ui.view.EditTextTrackFixed;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -75,11 +72,9 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
     private TextView textHaveReminder;
     private FloatingActionButton btnSave;
     private FloatingActionButton btnPickContact;
-    private ImageView photoInToolbar;
     private ControllableAppBarLayout appBarLayout;
     private CollapsingToolbarLayout collapsingToolbar;
     private Toolbar toolbar;
-    /*private View photoOverlay;*/
     private PortraitFragment fragContactImage;
     private ViewGroup blockForm;
 
@@ -104,6 +99,17 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
 
+        if (!AppHelper.isApplicationEnabled(that)) {
+            btnPickContact.hide();
+            btnSave.hide();
+            //blockForm = (ViewGroup) findViewById(R.id.blockForm);
+            View viewAppDisabled = findViewById(R.id.viewAppDisabledOverlay);
+            //blockForm.setVisibility(View.GONE);
+            viewAppDisabled.setVisibility(View.VISIBLE);
+
+            return;
+        }
+
         reminderDao = new ReminderDao(this);
 
         initForm();
@@ -121,7 +127,6 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         fragContactImage.setContact(contact);
         fragContactImage.setReminderInfo(reminderInfo);
         getFragmentManager().beginTransaction().add(R.id.frameContactImage, fragContactImage).commit();
-        /*photoOverlay = findViewById(R.id.photo_touch_intercept_overlay);*/
 
         inputPhone.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -197,6 +202,14 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
             }
         });
         //initForm();
+
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+
+        displayForm(reminderInfo);
     }
 
     private boolean validateForm() {
@@ -248,6 +261,9 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                     inputPhone.setText(AppHelper.formatPhoneNumber(that, contact.getPhoneNumber()));
                     inputPhone.setFocusable(false);
 
+                    fragContactImage.setContact(contact);
+                    fragContactImage.drawUI();
+
                     ReminderInfo reminderInfo = reminderDao.findByPhone(inputPhone.getText().toString());
                     if (reminderInfo != null) {
                         setReminderTime(reminderInfo.getDate(), false);
@@ -278,11 +294,9 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
 
             if (contact.getPhotoUri() != null) {
                 MaterialColorMapUtils.MaterialPalette palette = ColorHelper.getMaterialPalette(that, contact.getThumbUri() != null ? contact.getThumbUri() : contact.getPhotoUri());
-                colorizeFrom(palette);
+                //colorizeForm(palette);
 
-                /*photoInToolbar.setImageURI(contact.getPhotoUri());
-                photoInToolbar.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                photoInToolbar.setImageAlpha(255);*/
+
             } else {
                 colorizeIconAndForm(contact.pickIdentifier());
             }
@@ -292,7 +306,7 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         }
     }
 
-    private void displayReminder(ReminderInfo reminder) {
+    private void displayForm(ReminderInfo reminder) {
         if (mode == MODE.EDIT || mode == MODE.CREATE) {
             if (mode == MODE.EDIT) {
                 textHaveReminder.setVisibility(View.GONE);
@@ -317,6 +331,11 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
             btnPickContact.setVisibility(View.VISIBLE);
 
             setReminderTime(ReminderUtil.calcDefaultRemindDate(that, Calendar.getInstance().getTimeInMillis()), true);
+
+            showAppBar(false, false);
+
+            // TODO move some decorations from this method
+            colorizeForm(ColorHelper.getPaletteOnColor(that, that.getResources().getColor(R.color.app_accent)));
         }
 
     }
@@ -327,62 +346,45 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
      */
     private void initForm() {
         mode = MODE.BLANK; // default
-        // check if application enabled, if not - disable controls and show message
-        if (!AppHelper.isApplicationEnabled(that)) {
-            btnPickContact.hide();
-            btnSave.hide();
-            //blockForm = (ViewGroup) findViewById(R.id.blockForm);
-            View viewAppDisabled = findViewById(R.id.viewAppDisabledOverlay);
-            //blockForm.setVisibility(View.GONE);
-            viewAppDisabled.setVisibility(View.VISIBLE);
-        } else {
+        Intent intent = getIntent();
 
-            Intent intent = getIntent();
+        String notifTag = null;
+        int notifId = -1;
+        if (intent.getExtras() != null) {
+            mode = MODE.valueOf(intent.getExtras().getString(EXTRA_MODE));
 
-            String notifTag = null;
-            int notifId = -1;
-            if (intent.getExtras() != null) {
-                mode = MODE.valueOf(intent.getExtras().getString(EXTRA_MODE));
+            if (mode == MODE.EDIT) {
+                notifTag = intent.getExtras().getString(EXTRA_NOTIF_TAG, null);
+                notifId = intent.getExtras().getInt(EXTRA_NOTIF_ID);
 
-                if (mode == MODE.EDIT) {
-                    notifTag = intent.getExtras().getString(EXTRA_NOTIF_TAG, null);
-                    notifId = intent.getExtras().getInt(EXTRA_NOTIF_ID);
+                reminderId = intent.getExtras().getLong(EXTRA_REMINDER_ID);
+                reminderInfo = reminderDao.getById(reminderId);
 
-                    reminderId = intent.getExtras().getLong(EXTRA_REMINDER_ID);
-                    reminderInfo = reminderDao.getById(reminderId);
-
-                    if (reminderInfo != null) {
-                        callInfo = reminderInfo.getCallInfo();
-                    } else {
-                        Toast.makeText(that, "Reminder not found!", Toast.LENGTH_LONG).show();
-                        mode = MODE.BLANK;
-                    }
-                } else if (mode == MODE.CREATE) {
-                    callInfo = intent.getExtras().getParcelable(EXTRA_CALL_INFO);
-
-                    notifTag = intent.getExtras().getString(EXTRA_NOTIF_TAG, null);
-                    notifId = intent.getExtras().getInt(EXTRA_NOTIF_ID);
-
-                    reminderInfo = new ReminderInfo();
-                    reminderInfo.setCallInfo(callInfo);
-                } else if (mode == MODE.BLANK) {
-                    callInfo = new CallInfo();
-                    callInfo.setType(CallInfo.TYPE.CREATED);
-
-                    showAppBar(false, false);
-
-                    // TODO move some decorations from this method
-                    colorizeFrom(ColorHelper.getPaletteOnColor(that, that.getResources().getColor(R.color.app_accent)));
+                if (reminderInfo != null) {
+                    callInfo = reminderInfo.getCallInfo();
+                } else {
+                    Toast.makeText(that, "Reminder not found!", Toast.LENGTH_LONG).show();
+                    mode = MODE.BLANK;
                 }
-            }
+            } else if (mode == MODE.CREATE) {
+                callInfo = intent.getExtras().getParcelable(EXTRA_CALL_INFO);
 
-            if (notifTag != null) {
-                NotificationsUtil notificationsUtil = new NotificationsUtil(this);
-                notificationsUtil.dismissNotification(notifTag, notifId);
-            }
+                notifTag = intent.getExtras().getString(EXTRA_NOTIF_TAG, null);
+                notifId = intent.getExtras().getInt(EXTRA_NOTIF_ID);
 
-            displayReminder(reminderInfo);
+                reminderInfo = new ReminderInfo();
+                reminderInfo.setCallInfo(callInfo);
+            } else if (mode == MODE.BLANK) {
+                callInfo = new CallInfo();
+                callInfo.setType(CallInfo.TYPE.CREATED);
+            }
         }
+
+        if (notifTag != null) {
+            NotificationsUtil notificationsUtil = new NotificationsUtil(this);
+            notificationsUtil.dismissNotification(notifTag, notifId);
+        }
+
     }
 
     private void showAppBar(boolean show, boolean animate) {
@@ -396,35 +398,37 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
                     contactImageExpandHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            photoInToolbar.setVisibility(View.VISIBLE);
+                            fragContactImage.showPortrait(true);
                             appBarLayout.expandToolbar(true);
                         }
                     }, Constants.ANIM_APP_BAR_DELAY);
 
                 } else {
-                    photoInToolbar.setVisibility(View.VISIBLE);
+                    fragContactImage.showPortrait(true);
                     appBarLayout.expandToolbar(true);
                 }
             } else {
-                photoInToolbar.setVisibility(View.VISIBLE);
+                fragContactImage.showPortrait(true);
                 appBarLayout.expandToolbar(false);
             }
         } else {
             appBarLayout.collapseToolbar(animate);
-            photoInToolbar.setVisibility(View.INVISIBLE);
+            fragContactImage.showPortrait(false);
         }
     }
 
     private void colorizeIconAndForm(String identifier) {
         MaterialColorMapUtils.MaterialPalette palette = ColorHelper.getMaterialColorForPhoneOrName(that, identifier);
-        colorizeFrom(palette);
+        colorizeForm(palette);
 
     }
 
-    private void colorizeFrom(MaterialColorMapUtils.MaterialPalette palette) {
+    private void colorizeForm(MaterialColorMapUtils.MaterialPalette palette) {
         collapsingToolbar.setContentScrimColor(palette.mPrimaryColor);
         collapsingToolbar.setBackgroundColor(palette.mPrimaryColor);
         ColorHelper.setStatusBarColor(that, palette.mSecondaryColor);
+
+        fragContactImage.drawUI();
 
         btnPickContact.setBackgroundTintList(ColorStateList.valueOf(palette.mPrimaryColor));
         btnSave.setBackgroundTintList(ColorStateList.valueOf(palette.mPrimaryColor));
@@ -437,6 +441,10 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
     private void onPhoneInput() {
         if (!TextUtils.isEmpty(inputPhone.getText().toString())) {
             if (contact == null) {
+                contact = new ContactInfo();
+                contact.setPhoneNumber(inputPhone.getText().toString().trim());
+                fragContactImage.setContact(contact);
+
                 colorizeIconAndForm(inputPhone.getText().toString());
 
                 showAppBar(true, true);
@@ -444,15 +452,6 @@ public class EditReminderActivity extends AppCompatActivity implements TimePicke
         } else {
             showAppBar(false, true);
         }
-    }
-
-    private void setImageRatio(ImageView iv) {
-        Display display = getWindowManager().getDefaultDisplay();
-        DisplayMetrics outMetrics = new DisplayMetrics();
-        display.getMetrics(outMetrics);
-
-        int width = outMetrics.widthPixels;
-        iv.getLayoutParams().height = width * 9 / 16;
     }
 
     private void setReminderTime(long time, boolean calculate) {

@@ -21,7 +21,7 @@ import com.wantcallback.model.ReminderInfo;
 /**
  * Created by Yahor_Fralou on 2/19/2016.
  */
-public class PortraitFragment extends Fragment implements IColorableFragment {
+public class PortraitFragment extends Fragment implements IFormFragment {
 
     private ImageView photoInToolbar;
     private View photoOverlay;
@@ -33,25 +33,43 @@ public class PortraitFragment extends Fragment implements IColorableFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fr_portrait_on_form, container);
+        View v = inflater.inflate(R.layout.fr_portrait_on_form, container, false);
 
-        photoInToolbar = (ImageView) getActivity().findViewById(R.id.photoInToolbar);
+        photoInToolbar = (ImageView) v.findViewById(R.id.photoInToolbar);
         setImageMeasures(photoInToolbar);
-        photoOverlay = getActivity().findViewById(R.id.photo_touch_intercept_overlay);
+        photoOverlay = v.findViewById(R.id.photo_touch_intercept_overlay);
 
         initForm();
 
         return v;
     }
 
-    private void initForm() {
-        if (mode == EditReminderActivity.MODE.BLANK) {
-
-        } else if (mode == EditReminderActivity.MODE.CREATE) {
-
-        } else if (mode == EditReminderActivity.MODE.EDIT) {
-
+    /**
+     * Show portrait, set colors if need
+     */
+    @Override
+    public void drawUI() {
+        if (contact != null) {
+            showContactPortrait();
+        } else {
+            MaterialColorMapUtils.MaterialPalette palette = ColorHelper.getPaletteOnColor(getActivity(), getActivity().getResources().getColor(R.color.app_primary));
+            showDefaultPortrait(palette.mPrimaryColor);
         }
+    }
+
+    /**
+     * Show controls, show portrait if any, set colors
+     */
+    private void initForm() {
+        drawUI();
+
+        /*if (mode == EditReminderActivity.MODE.BLANK) {
+            // do nothing special
+        } else if (mode == EditReminderActivity.MODE.CREATE) {
+            showContactPortrait();
+        } else if (mode == EditReminderActivity.MODE.EDIT) {
+            showContactPortrait();
+        }*/
 
         photoOverlay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,10 +81,18 @@ public class PortraitFragment extends Fragment implements IColorableFragment {
         });
     }
 
-    private void displayPortrait() {
-        photoInToolbar.setImageURI(contact.getPhotoUri());
-        photoInToolbar.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        photoInToolbar.setImageAlpha(255);
+    /**
+     * if contact has an image - show it, else - show default image in correspondent color
+     */
+    private void showContactPortrait() {
+        if (contact.getPhotoUri() != null) {
+            photoInToolbar.setImageURI(contact.getPhotoUri());
+            photoInToolbar.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            photoInToolbar.setImageAlpha(255);
+        } else {
+            MaterialColorMapUtils.MaterialPalette palette = ColorHelper.getMaterialColorForPhoneOrName(getActivity(), contact.pickIdentifier());
+            showDefaultPortrait(palette.mPrimaryColor);
+        }
     }
 
     private void setImageMeasures(ImageView iv) {
@@ -83,6 +109,22 @@ public class PortraitFragment extends Fragment implements IColorableFragment {
         }
     }
 
+    private void showDefaultPortrait(int color) {
+        photoInToolbar.setScaleType(ImageView.ScaleType.CENTER);
+        photoInToolbar.setImageResource(R.drawable.ic_person_white_188dp);
+        photoInToolbar.setImageAlpha(96);
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (this.getView() != null) {
+                this.getView().setBackgroundColor(color);
+            }
+        }
+    }
+
+    public void showPortrait(boolean show) {
+        photoInToolbar.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+    }
+
     public void setContact(ContactInfo contact) {
         this.contact = contact;
     }
@@ -95,33 +137,4 @@ public class PortraitFragment extends Fragment implements IColorableFragment {
         this.mode = mode;
     }
 
-    @Override
-    public void colorUI(int color) {
-        // TODO add colors
-
-        if (contact == null || contact.getPhotoUri() == null || contact.getThumbUri() == null) {
-            photoInToolbar.setScaleType(ImageView.ScaleType.CENTER);
-            photoInToolbar.setImageResource(R.drawable.ic_person_white_188dp);
-            photoInToolbar.setImageAlpha(96);
-
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                if (this.getView() != null) {
-                    this.getView().setBackgroundColor(color);
-                }
-            }
-        }
-
-    }
-
-    @Override
-    public void colorUI() {
-        MaterialColorMapUtils.MaterialPalette palette;
-        if (contact != null) {
-            palette = ColorHelper.getMaterialColorForPhoneOrName(getActivity(), contact.pickIdentifier());
-        } else {
-            palette = ColorHelper.getPaletteOnColor(getActivity(), getActivity().getResources().getColor(R.color.app_primary));
-        }
-
-        colorUI(palette.mPrimaryColor);
-    }
 }
